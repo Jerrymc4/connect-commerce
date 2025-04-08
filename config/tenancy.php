@@ -3,10 +3,11 @@
 declare(strict_types=1);
 
 use Stancl\Tenancy\Database\Models\Domain;
-use Stancl\Tenancy\Database\Models\Tenant;
+use Stancl\Tenancy\Hooks\Database;
+use App\Models\Store;
 
 return [
-    'tenant_model' => Tenant::class,
+    'tenant_model' => Store::class,
     'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
 
     'domain_model' => Domain::class,
@@ -17,9 +18,11 @@ return [
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
     'central_domains' => [
-        '127.0.0.1',
-        'localhost',
+       'connectcommerce.test',
+       'admin.connectcommerce.test',
+       'localhost',
     ],
+
 
     /**
      * Tenancy bootstrappers are executed when tenancy is initialized.
@@ -46,7 +49,12 @@ return [
          * Note: don't name your template connection tenant. That name is reserved by package.
          */
         'template_tenant_connection' => null,
-
+        'tenant_connection' => 'mysql',
+        'tenant_database_connection_name' => 'db_name',
+        'tenant_database_creation' => [
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+        ],
         /**
          * Tenant database names are created like this:
          * prefix + tenant_id + suffix.
