@@ -21,13 +21,14 @@ class CreateTenantDatabase
     /**
      * Handle the event.
      */
-    public function handle(TenantCreated $event): void
-    {
-        $tenant = $event->tenant;
-        $databaseName = $tenant->database;
+    // public function handle(TenantCreated $event): void
+    // {
+    //     xdebug_break();
+    //     $tenant = $event->tenant;
+    //     $databaseName = $tenant->database;
 
-        DB::connection('central')->statement(
-            "CREATE DATABASE `$databaseName` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
-        );
-    }
+    //     DB::connection('central')->statement(
+    //         "CREATE DATABASE `$databaseName` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+    //     );
+    // }
 }

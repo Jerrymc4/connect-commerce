@@ -18,6 +18,6 @@ class Store extends BaseTenant implements TenantWithDatabase
         'id',
         'name',
         'user_id',
-        'database',
+        'tenancy_db_name',
     ];
 }
