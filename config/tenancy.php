@@ -19,8 +19,6 @@ return [
      */
     'central_domains' => [
        'connectcommerce.test',
-       'admin.connectcommerce.test',
-       'localhost',
     ],
 
 
