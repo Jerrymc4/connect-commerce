@@ -17,7 +17,26 @@ class Store extends BaseTenant implements TenantWithDatabase
     protected $fillable = [
         'id',
         'name',
-        'user_id',
         'tenancy_db_name',
+        'data',
     ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'data' => 'array',
+    ];
+
+    /**
+     * Get the user ID from the data array.
+     *
+     * @return int|null
+     */
+    public function getUserId()
+    {
+        return $this->data['user_id'] ?? null;
+    }
 }

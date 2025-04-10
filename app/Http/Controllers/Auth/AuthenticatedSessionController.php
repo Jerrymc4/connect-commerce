@@ -7,46 +7,93 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\View\View;
+use App\Services\StoreService;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
-    public function create(): Response
+    protected StoreService $storeService;
+
+    public function __construct(StoreService $storeService)
     {
-        return Inertia::render('Auth/Login', [
-            'canResetPassword' => Route::has('password.request'),
+        $this->storeService = $storeService;
+    }
+
+    /**
+     * Show the login view.
+     */
+    public function create(): View
+    {
+        return view('auth.login', [
+            'canResetPassword' => route('password.request'),
             'status' => session('status'),
         ]);
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Handle an authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        try {
+            $user = Auth::user();
+            $store = $this->storeService->getStoreByOwnerId($user->id);
+
+            if ($store && $store->domains->isNotEmpty()) {
+                $domain = $store->domains->first()->domain;
+
+                $protocol = app()->environment('production') ? 'https' : 'http';
+                return redirect()->away("https://{$domain}/dashboard");
+            }
+        } catch (\Exception $e) {
+            Log::error('Error redirecting to store dashboard: ' . $e->getMessage());
+        }
+
+        // Fallback to central dashboard
+        return redirect()->away(('https://connectcommerce.test'));
     }
 
     /**
-     * Destroy an authenticated session.
+     * Log out the user.
      */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        // Optional redirect override
+        if ($request->has('redirect_to')) {
+            $redirectUrl = $request->input('redirect_to');
+            $centralDomain = config('tenancy.central_domains.0', 'connectcommerce.test');
+
+            // Ensure the URL is valid and either the central domain or a tenant domain
+            if (
+                filter_var($redirectUrl, FILTER_VALIDATE_URL) &&
+                (str_contains($redirectUrl, $centralDomain) || str_contains($redirectUrl, '.connectcommerce.test'))
+            ) {
+                return redirect()->to($redirectUrl);
+            }
+        }
+
+        // Check if we're on a tenant domain
+        $centralDomain = config('tenancy.central_domains.0', 'connectcommerce.test');
+        $currentHost = $request->getHost();
+        
+        // If we're on a tenant domain, redirect to that domain's login page
+        if ($currentHost !== $centralDomain && str_contains($currentHost, '.connectcommerce.test')) {
+            // Use scheme from request or default to https
+            $scheme = $request->getScheme() ?: 'https';
+            return redirect()->to("$scheme://$currentHost/login");
+        }
+        
+        // Default: redirect to central domain
+        return redirect()->to("https://$centralDomain");
     }
 }

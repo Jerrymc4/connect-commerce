@@ -121,9 +121,22 @@ class TenancyServiceProvider extends ServiceProvider
     protected function mapRoutes()
     {
         $this->app->booted(function () {
+            // Map tenant routes if they exist
             if (file_exists(base_path('routes/tenant.php'))) {
                 Route::namespace(static::$controllerNamespace)
                     ->group(base_path('routes/tenant.php'));
+            }
+            
+            // Map central domain routes if they exist
+            if (file_exists(base_path('routes/central.php'))) {
+                $centralDomains = config('tenancy.central_domains', ['connectcommerce.test']);
+                
+                foreach ($centralDomains as $domain) {
+                    Route::namespace(static::$controllerNamespace)
+                        ->middleware(['web'])
+                        ->domain($domain)
+                        ->group(base_path('routes/central.php'));
+                }
             }
         });
     }
@@ -134,11 +147,13 @@ class TenancyServiceProvider extends ServiceProvider
             // Even higher priority than the initialization middleware
             Middleware\PreventAccessFromCentralDomains::class,
 
+            // Only include domain/subdomain middleware that you're actually using
+            // Comment out any that aren't needed to prevent middleware conflicts
             Middleware\InitializeTenancyByDomain::class,
-            Middleware\InitializeTenancyBySubdomain::class,
-            Middleware\InitializeTenancyByDomainOrSubdomain::class,
-            Middleware\InitializeTenancyByPath::class,
-            Middleware\InitializeTenancyByRequestData::class,
+            // Middleware\InitializeTenancyBySubdomain::class,
+            // Middleware\InitializeTenancyByDomainOrSubdomain::class,
+            // Middleware\InitializeTenancyByPath::class,
+            // Middleware\InitializeTenancyByRequestData::class,
         ];
 
         foreach (array_reverse($tenancyMiddleware) as $middleware) {
