@@ -471,10 +471,6 @@
                                 <i class="fas fa-box mr-3"></i>
                                 Products
                             </a>
-                            <a href="{{ route('store.discounts', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('store.discounts*') ? 'active' : '' }}">
-                                <i class="fas fa-tag mr-3"></i>
-                                Discounts
-                            </a>
                         </div>
                     </div>
                     <div class="sidebar-section">
@@ -493,11 +489,7 @@
                     <div class="sidebar-section">
                         <h3 class="sidebar-section-title">Configuration</h3>
                         <div class="mt-2 space-y-1">
-                            <a href="{{ route('store.themes', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('store.themes*') ? 'active' : '' }}">
-                                <i class="fas fa-paint-brush mr-3"></i>
-                                Theme
-                            </a>
-                            <a href="{{ route('store.settings', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('store.settings*') ? 'active' : '' }}">
+                            <a href="{{ route('store.settings', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('store.settings*') || request()->routeIs('store.themes*') || request()->routeIs('store.discounts*') ? 'active' : '' }}">
                                 <i class="fas fa-cog mr-3"></i>
                                 Settings
                             </a>

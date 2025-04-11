@@ -6,16 +6,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Discount;
+use App\Models\Product;
+use Illuminate\Support\Str;
 
 class SettingController extends Controller
 {
     /**
      * Display the store settings form.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         // Get the current tenant/store
         $store = tenant();
+        
+        // Get the active tab from the request or default to 'general'
+        $activeTab = $request->tab ?? 'general';
         
         // Get store settings from store data
         $storeSettings = $store->data['settings'] ?? [
@@ -74,6 +80,46 @@ class SettingController extends Controller
             ],
         ];
         
+        // Get theme settings
+        $themeSettings = $store->data['theme'] ?? [
+            'colors' => [
+                'primary' => '#3B82F6',
+                'secondary' => '#10B981',
+                'accent' => '#8B5CF6',
+                'background' => '#FFFFFF',
+                'text' => '#111827',
+            ],
+            'typography' => [
+                'heading_font' => 'Inter',
+                'body_font' => 'Inter',
+                'base_size' => '16px',
+            ],
+            'layout' => [
+                'header_style' => 'default',
+                'footer_style' => 'default',
+                'sidebar_position' => 'left',
+            ],
+            'components' => [
+                'button_style' => 'rounded',
+                'card_style' => 'shadow',
+            ],
+            'custom_css' => '',
+        ];
+        
+        // Get available fonts
+        $availableFonts = [
+            'Inter' => 'Inter',
+            'Roboto' => 'Roboto',
+            'Open Sans' => 'Open Sans',
+            'Lato' => 'Lato',
+            'Montserrat' => 'Montserrat',
+            'Poppins' => 'Poppins',
+        ];
+        
+        // Get discounts if that tab is active
+        $discounts = $activeTab === 'discounts' ? Discount::orderBy('created_at', 'desc')->paginate(10) : null;
+        $products = $activeTab === 'discounts' ? Product::select('id', 'name')->get() : null;
+        
         // Get currency options
         $currencies = [
             'USD' => 'US Dollar ($)',
@@ -124,6 +170,11 @@ class SettingController extends Controller
         
         return view('store.settings', compact(
             'storeSettings', 
+            'themeSettings',
+            'availableFonts',
+            'discounts',
+            'products',
+            'activeTab',
             'currencies', 
             'weightUnits', 
             'dimensionUnits', 
@@ -141,66 +192,192 @@ class SettingController extends Controller
         $store = tenant();
         $storeData = $store->data ?? [];
         
-        // Build validation rules based on the form structure
-        $validated = $request->validate([
-            'general.store_name' => 'required|string|max:255',
-            'general.store_email' => 'required|email|max:255',
-            'general.store_phone' => 'nullable|string|max:20',
-            'general.store_address' => 'nullable|string',
-            'general.legal_name' => 'nullable|string|max:255',
-            'general.tax_id' => 'nullable|string|max:100',
-            
-            'regional.currency' => 'required|string|max:3',
-            'regional.weight_unit' => 'required|string|max:10',
-            'regional.dimension_unit' => 'required|string|max:10',
-            'regional.timezone' => 'required|string',
-            'regional.date_format' => 'required|string|max:20',
-            
-            'checkout.guest_checkout' => 'boolean',
-            'checkout.terms_and_conditions' => 'boolean',
-            'checkout.terms_text' => 'nullable|string',
-            'checkout.order_notes' => 'boolean',
-            
-            'shipping.free_shipping_enabled' => 'boolean',
-            'shipping.free_shipping_threshold' => 'nullable|numeric|min:0',
-            'shipping.shipping_origin_address' => 'nullable|string',
-            'shipping.shipping_origin_city' => 'nullable|string|max:100',
-            'shipping.shipping_origin_state' => 'nullable|string|max:100',
-            'shipping.shipping_origin_zip' => 'nullable|string|max:20',
-            'shipping.shipping_origin_country' => 'required|string|max:2',
-            
-            'tax.tax_calculation' => 'required|string|in:automatic,manual',
-            'tax.tax_included_in_prices' => 'boolean',
-            'tax.default_tax_rate' => 'nullable|numeric|min:0',
-            'tax.tax_display' => 'required|string|in:including,excluding',
-            
-            'email.sender_name' => 'required|string|max:255',
-            'email.sender_email' => 'required|email|max:255',
-            'email.order_confirmation' => 'boolean',
-            'email.order_shipped' => 'boolean',
-            'email.order_refunded' => 'boolean',
-            'email.welcome_email' => 'boolean',
-            'email.email_header' => 'nullable|string',
-            'email.email_footer' => 'nullable|string',
-            
-            'privacy.cookie_notice' => 'boolean',
-            'privacy.cookie_message' => 'nullable|string',
-            'privacy.privacy_policy' => 'nullable|string',
-            'privacy.terms_of_service' => 'nullable|string',
-            'privacy.refund_policy' => 'nullable|string',
-        ]);
+        // Determine which section is being updated
+        $section = $request->section ?? 'general_settings';
         
-        // Update the store name if it has changed
-        if ($validated['general']['store_name'] !== $store->name) {
-            $store->name = $validated['general']['store_name'];
+        if ($section === 'general_settings') {
+            // Build validation rules based on the form structure
+            $validated = $request->validate([
+                'general.store_name' => 'required|string|max:255',
+                'general.store_email' => 'required|email|max:255',
+                'general.store_phone' => 'nullable|string|max:20',
+                'general.store_address' => 'nullable|string',
+                'general.legal_name' => 'nullable|string|max:255',
+                'general.tax_id' => 'nullable|string|max:100',
+                
+                'regional.currency' => 'required|string|max:3',
+                'regional.weight_unit' => 'required|string|max:10',
+                'regional.dimension_unit' => 'required|string|max:10',
+                'regional.timezone' => 'required|string',
+                'regional.date_format' => 'required|string|max:20',
+                
+                'checkout.guest_checkout' => 'boolean',
+                'checkout.terms_and_conditions' => 'boolean',
+                'checkout.terms_text' => 'nullable|string',
+                'checkout.order_notes' => 'boolean',
+                
+                'shipping.free_shipping_enabled' => 'boolean',
+                'shipping.free_shipping_threshold' => 'nullable|numeric|min:0',
+                'shipping.shipping_origin_address' => 'nullable|string',
+                'shipping.shipping_origin_city' => 'nullable|string|max:100',
+                'shipping.shipping_origin_state' => 'nullable|string|max:100',
+                'shipping.shipping_origin_zip' => 'nullable|string|max:20',
+                'shipping.shipping_origin_country' => 'required|string|max:2',
+                
+                'tax.tax_calculation' => 'required|string|in:automatic,manual',
+                'tax.tax_included_in_prices' => 'boolean',
+                'tax.default_tax_rate' => 'nullable|numeric|min:0',
+                'tax.tax_display' => 'required|string|in:including,excluding',
+                
+                'email.sender_name' => 'required|string|max:255',
+                'email.sender_email' => 'required|email|max:255',
+                'email.order_confirmation' => 'boolean',
+                'email.order_shipped' => 'boolean',
+                'email.order_refunded' => 'boolean',
+                'email.welcome_email' => 'boolean',
+                'email.email_header' => 'nullable|string',
+                'email.email_footer' => 'nullable|string',
+                
+                'privacy.cookie_notice' => 'boolean',
+                'privacy.cookie_message' => 'nullable|string',
+                'privacy.privacy_policy' => 'nullable|string',
+                'privacy.terms_of_service' => 'nullable|string',
+                'privacy.refund_policy' => 'nullable|string',
+            ]);
+            
+            // Update the store name if it has changed
+            if ($validated['general']['store_name'] !== $store->name) {
+                $store->name = $validated['general']['store_name'];
+            }
+            
+            // Update store settings in data field
+            $storeData['settings'] = $validated;
+            $store->data = $storeData;
+            $store->save();
+            
+            return redirect()->route('store.settings', ['tab' => 'general'])
+                ->with('success', 'Store settings saved successfully');
+        }
+        elseif ($section === 'theme_settings') {
+            // Validate theme settings
+            $validated = $request->validate([
+                'colors.primary' => 'required|string|max:25',
+                'colors.secondary' => 'required|string|max:25',
+                'colors.accent' => 'required|string|max:25',
+                'colors.background' => 'required|string|max:25',
+                'colors.text' => 'required|string|max:25',
+                'typography.heading_font' => 'required|string|max:50',
+                'typography.body_font' => 'required|string|max:50',
+                'typography.base_size' => 'required|string|max:10',
+                'layout.header_style' => 'required|string|max:50',
+                'layout.footer_style' => 'required|string|max:50',
+                'layout.sidebar_position' => 'required|string|max:50',
+                'components.button_style' => 'required|string|max:50',
+                'components.card_style' => 'required|string|max:50',
+                'custom_css' => 'nullable|string',
+            ]);
+            
+            // Update theme settings
+            $storeData['theme'] = $validated;
+            $store->data = $storeData;
+            $store->save();
+            
+            return redirect()->route('store.settings', ['tab' => 'theme'])
+                ->with('success', 'Theme settings updated successfully');
         }
         
-        // Update store settings in data field
-        $storeData['settings'] = $validated;
-        $store->data = $storeData;
-        $store->save();
-        
+        // If we made it here, something went wrong
         return redirect()->route('store.settings')
-            ->with('success', 'Store settings saved successfully');
+            ->with('error', 'Invalid settings section');
+    }
+    
+    /**
+     * Store a new discount.
+     */
+    public function storeDiscount(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:discounts',
+            'type' => 'required|in:percentage,fixed_amount,free_shipping',
+            'value' => 'required_if:type,percentage,fixed_amount|nullable|numeric|min:0',
+            'min_order_amount' => 'nullable|numeric|min:0',
+            'starts_at' => 'nullable|date',
+            'ends_at' => 'nullable|date|after_or_equal:starts_at',
+            'usage_limit' => 'nullable|integer|min:0',
+            'individual_use_only' => 'boolean',
+            'exclude_sale_items' => 'boolean',
+            'status' => 'required|in:active,inactive',
+            'products' => 'nullable|array',
+            'products.*' => 'exists:products,id',
+        ]);
+        
+        // Generate a code if not provided
+        if (empty($validated['code'])) {
+            $validated['code'] = strtoupper(Str::random(8));
+        } else {
+            $validated['code'] = strtoupper($validated['code']);
+        }
+        
+        $discount = Discount::create($validated);
+        
+        // Attach selected products if any
+        if (isset($validated['products'])) {
+            $discount->products()->attach($validated['products']);
+        }
+        
+        return redirect()->route('store.settings', ['tab' => 'discounts'])
+            ->with('success', 'Discount created successfully');
+    }
+    
+    /**
+     * Update an existing discount.
+     */
+    public function updateDiscount(Request $request, string $id)
+    {
+        $discount = Discount::findOrFail($id);
+        
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:discounts,code,' . $id,
+            'type' => 'required|in:percentage,fixed_amount,free_shipping',
+            'value' => 'required_if:type,percentage,fixed_amount|nullable|numeric|min:0',
+            'min_order_amount' => 'nullable|numeric|min:0',
+            'starts_at' => 'nullable|date',
+            'ends_at' => 'nullable|date|after_or_equal:starts_at',
+            'usage_limit' => 'nullable|integer|min:0',
+            'individual_use_only' => 'boolean',
+            'exclude_sale_items' => 'boolean',
+            'status' => 'required|in:active,inactive',
+            'products' => 'nullable|array',
+            'products.*' => 'exists:products,id',
+        ]);
+        
+        // Convert code to uppercase
+        $validated['code'] = strtoupper($validated['code']);
+        
+        $discount->update($validated);
+        
+        // Sync selected products
+        if (isset($validated['products'])) {
+            $discount->products()->sync($validated['products']);
+        } else {
+            $discount->products()->detach();
+        }
+        
+        return redirect()->route('store.settings', ['tab' => 'discounts'])
+            ->with('success', 'Discount updated successfully');
+    }
+    
+    /**
+     * Delete a discount.
+     */
+    public function destroyDiscount(string $id)
+    {
+        $discount = Discount::findOrFail($id);
+        $discount->delete();
+        
+        return redirect()->route('store.settings', ['tab' => 'discounts'])
+            ->with('success', 'Discount deleted successfully');
     }
 } 

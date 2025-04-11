@@ -75,21 +75,29 @@ Route::middleware([
         Route::put('/customers/{id}', [CustomerController::class, 'update'])->name('store.customers.update');
         Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('store.customers.destroy');
         
-        // Theme Management
-        Route::get('/theme', [ThemeController::class, 'index'])->name('store.themes');
-        Route::put('/theme', [ThemeController::class, 'update'])->name('store.themes.update');
-        
-        // Store Settings
+        // Integrated Settings
         Route::get('/settings', [SettingController::class, 'index'])->name('store.settings');
         Route::put('/settings', [SettingController::class, 'update'])->name('store.settings.update');
+        Route::post('/settings/discounts', [SettingController::class, 'storeDiscount'])->name('store.settings.discounts.store');
+        Route::put('/settings/discounts/{id}', [SettingController::class, 'updateDiscount'])->name('store.settings.discounts.update');
+        Route::delete('/settings/discounts/{id}', [SettingController::class, 'destroyDiscount'])->name('store.settings.discounts.destroy');
         
-        // Discounts and Promotions
-        Route::get('/discounts', [DiscountController::class, 'index'])->name('store.discounts');
-        Route::get('/discounts/create', [DiscountController::class, 'create'])->name('store.discounts.create');
-        Route::post('/discounts', [DiscountController::class, 'store'])->name('store.discounts.store');
-        Route::get('/discounts/{id}/edit', [DiscountController::class, 'edit'])->name('store.discounts.edit');
-        Route::put('/discounts/{id}', [DiscountController::class, 'update'])->name('store.discounts.update');
-        Route::delete('/discounts/{id}', [DiscountController::class, 'destroy'])->name('store.discounts.destroy');
+        // Old routes - these will redirect to the new settings page with the appropriate tab
+        Route::get('/theme', function() { 
+            return redirect()->route('store.settings', ['tab' => 'theme']); 
+        })->name('store.themes');
+        
+        Route::get('/discounts', function() {
+            return redirect()->route('store.settings', ['tab' => 'discounts']); 
+        })->name('store.discounts');
+        
+        Route::get('/discounts/create', function() {
+            return redirect()->route('store.settings', ['tab' => 'discounts', 'action' => 'create']); 
+        })->name('store.discounts.create');
+        
+        Route::get('/discounts/{id}/edit', function($id) {
+            return redirect()->route('store.settings', ['tab' => 'discounts', 'action' => 'edit', 'id' => $id]); 
+        })->name('store.discounts.edit');
     });
 
     // User account routes
