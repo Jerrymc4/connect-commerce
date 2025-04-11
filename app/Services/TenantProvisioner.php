@@ -5,10 +5,8 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\Store;
-use App\Models\User;
 
 class TenantProvisioner
 {
@@ -46,27 +44,6 @@ class TenantProvisioner
                 '--force' => true,
             ]);
         });
-
-        // 6. Copy the central user to the tenant database if a userId was provided
-        if ($userId) {
-            // Get the central user
-            $centralUser = User::find($userId);
-            
-            if ($centralUser) {
-                // Copy user to tenant database
-                $store->run(function () use ($centralUser) {
-                    DB::table('users')->insert([
-                        'name' => $centralUser->name,
-                        'email' => $centralUser->email,
-                        'password' => $centralUser->password, // Already hashed
-                        'email_verified_at' => $centralUser->email_verified_at,
-                        'remember_token' => $centralUser->remember_token,
-                        'created_at' => $centralUser->created_at,
-                        'updated_at' => $centralUser->updated_at,
-                    ]);
-                });
-            }
-        }
 
         return $store;
     }

@@ -98,12 +98,6 @@ class StoreService
     public function updateStore(array $data, string $id): Store
     {
         $store = Store::findOrFail($id);
-        
-        // If we're updating data and it already exists, merge the arrays instead of replacing
-        if (isset($data['data']) && is_array($data['data']) && is_array($store->data)) {
-            $data['data'] = array_merge($store->data, $data['data']);
-        }
-        
         $store->update($data);
         return $store;
     }
