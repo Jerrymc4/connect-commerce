@@ -38,24 +38,22 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+        
+        // Regenerate the session properly
         $request->session()->regenerate();
+        
+        // Get current host and context
+        $currentHost = $request->getHost();
+        $centralDomain = config('tenancy.central_domains.0', 'connectcommerce.test');
+        $isCentralDomain = $currentHost === $centralDomain;
 
-        try {
-            $user = Auth::user();
-            $store = $this->storeService->getStoreByOwnerId($user->id);
-
-            if ($store && $store->domains->isNotEmpty()) {
-                $domain = $store->domains->first()->domain;
-
-                $protocol = app()->environment('production') ? 'https' : 'http';
-                return redirect()->away("https://{$domain}/dashboard");
-            }
-        } catch (\Exception $e) {
-            Log::error('Error redirecting to store dashboard: ' . $e->getMessage());
+        // If on tenant domain, go to the dashboard
+        if (!$isCentralDomain) {
+            return redirect('/dashboard');
         }
-
-        // Fallback to central dashboard
-        return redirect()->away(('https://connectcommerce.test'));
+        
+        // If on central domain, redirect to landing page
+        return redirect('/');
     }
 
     /**
@@ -68,32 +66,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Optional redirect override
-        if ($request->has('redirect_to')) {
-            $redirectUrl = $request->input('redirect_to');
-            $centralDomain = config('tenancy.central_domains.0', 'connectcommerce.test');
-
-            // Ensure the URL is valid and either the central domain or a tenant domain
-            if (
-                filter_var($redirectUrl, FILTER_VALIDATE_URL) &&
-                (str_contains($redirectUrl, $centralDomain) || str_contains($redirectUrl, '.connectcommerce.test'))
-            ) {
-                return redirect()->to($redirectUrl);
-            }
-        }
-
-        // Check if we're on a tenant domain
-        $centralDomain = config('tenancy.central_domains.0', 'connectcommerce.test');
-        $currentHost = $request->getHost();
-        
-        // If we're on a tenant domain, redirect to that domain's login page
-        if ($currentHost !== $centralDomain && str_contains($currentHost, '.connectcommerce.test')) {
-            // Use scheme from request or default to https
-            $scheme = $request->getScheme() ?: 'https';
-            return redirect()->to("$scheme://$currentHost/login");
-        }
-        
-        // Default: redirect to central domain
-        return redirect()->to("https://$centralDomain");
+        // Simply redirect to login
+        return redirect('/login');
     }
 }

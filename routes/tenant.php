@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\TenantAssetController;
+use Illuminate\Support\Facades\Auth;
 
 // Route to serve assets for tenants
 Route::get('build/{path}', [TenantAssetController::class, 'serveAsset'])
@@ -36,7 +37,14 @@ Route::middleware([
 
     Route::middleware(['auth'])->group(function () {
         Route::get('/', fn () => view('storefront.home', ['tenant' => tenant('id'), 'storeName' => tenant()->name]))->name('storefront.home');
-        Route::get('/dashboard', fn () => view('dashboard', ['tenant' => tenant('id'), 'storeName' => tenant()->name]))->name('store.dashboard');
+        
+        // Dashboard route for the tenant
+        Route::get('/dashboard', function () {
+            return view('dashboard', [
+                'tenant' => tenant('id'), 
+                'storeName' => tenant()->name
+            ]);
+        })->name('store.dashboard');
 
         Route::get('verify-email', EmailVerificationPromptController::class)->name('tenant.verification.notice');
         Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)->middleware(['signed', 'throttle:6,1'])->name('tenant.verification.verify');
