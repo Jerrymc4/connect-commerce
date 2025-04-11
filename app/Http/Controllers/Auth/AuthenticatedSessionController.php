@@ -37,26 +37,23 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        xdebug_break();
         $request->authenticate();
+        
+        // Regenerate the session properly
         $request->session()->regenerate();
+        
+        // Get current host and context
+        $currentHost = $request->getHost();
+        $centralDomain = config('tenancy.central_domains.0', 'connectcommerce.test');
+        $isCentralDomain = $currentHost === $centralDomain;
 
-        try {
-            $user = Auth::user();
-            $store = $this->storeService->getStoreByOwnerId($user->id);
-
-            if ($store && $store->domains->isNotEmpty()) {
-                $domain = $store->domains->first()->domain;
-
-                $protocol = app()->environment('production') ? 'https' : 'http';
-                return redirect()->away("https://{$domain}/dashboard");
-            }
-        } catch (\Exception $e) {
-            Log::error('Error redirecting to store dashboard: ' . $e->getMessage());
+        // If on tenant domain, go to the dashboard
+        if (!$isCentralDomain) {
+            return redirect('/dashboard');
         }
-
-        // Fallback to central dashboard
-        return redirect()->away(('https://connectcommerce.test'));
+        
+        // If on central domain, redirect to landing page
+        return redirect('/');
     }
 
     /**
@@ -64,26 +61,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        xdebug_break();
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Optional redirect override
-        if ($request->has('redirect_to')) {
-            $redirectUrl = $request->input('redirect_to');
-            $centralDomain = config('tenancy.central_domains.0', 'connectcommerce.test');
-
-            if (
-                filter_var($redirectUrl, FILTER_VALIDATE_URL) &&
-                (str_contains($redirectUrl, $centralDomain) || str_contains($redirectUrl, '.connectcommerce.test'))
-            ) {
-                return redirect($redirectUrl);
-            }
-        }
-
-        $centralDomain = config('tenancy.central_domains.0', 'connectcommerce.test');
-        return redirect("https://$centralDomain");
+        // Simply redirect to login
+        return redirect('/login');
     }
 }

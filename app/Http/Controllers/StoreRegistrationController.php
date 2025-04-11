@@ -53,13 +53,25 @@ class StoreRegistrationController extends Controller
 
         event(new Registered($user));
 
+        // Create the store with the user_id properly stored in the data array
         $store = $this->storeService->createStore([
             'name' => $request->store_name,
-            'user_id' => $user->id,
+            'data' => [
+                'user_id' => $user->id,
+            ],
         ]);
 
-        Auth::login($user);
+        // Create the domain for the store
+        $domain = $request->domain . '.' . config('tenancy.central_domains.0', 'connectcommerce.test');
+        $store->domains()->create(['domain' => $domain]);
 
+        // Login the user manually on the central domain
+        Auth::login($user);
+        
+        // Make sure to regenerate the session for this login
+        $request->session()->regenerate();
+
+        // Continue to onboarding on the central domain
         return redirect()->route('store.onboarding');
     }
 
@@ -68,12 +80,12 @@ class StoreRegistrationController extends Controller
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function onboarding()
+    public function showOnboarding()
     {
         $store = $this->storeService->getStoreByOwnerId(Auth::id());
         
         if (!$store) {
-            return redirect()->route('dashboard')->with('error', 'No store found for your account.');
+            return redirect()->route('login')->with('error', 'No store found for your account.');
         }
 
         return view('central.registration.onboarding', [
@@ -92,7 +104,7 @@ class StoreRegistrationController extends Controller
         $store = $this->storeService->getStoreByOwnerId(Auth::id());
         
         if (!$store) {
-            return redirect()->route('dashboard')->with('error', 'No store found for your account.');
+            return redirect()->route('login')->with('error', 'No store found for your account.');
         }
 
         $request->validate([
@@ -108,15 +120,34 @@ class StoreRegistrationController extends Controller
             $logoPath = $request->file('logo')->store('logos', 'public');
         }
 
-        // Update store details
+        // Get the existing data
+        $data = $store->data;
+        
+        // Add the new fields to the data array
+        $data['logo'] = $logoPath;
+        $data['description'] = $request->description;
+        $data['contact_email'] = $request->contact_email;
+        $data['business_type'] = $request->business_type;
+        $data['onboarding_completed'] = true;
+
+        // Update store with the complete data array
         $this->storeService->updateStore([
-            'logo' => $logoPath,
-            'description' => $request->description,
-            'contact_email' => $request->contact_email,
-            'business_type' => $request->business_type,
-            'onboarding_completed' => true,
+            'data' => $data
         ], $store->id);
 
-        return redirect()->route('dashboard')->with('success', 'Your store has been set up successfully!');
+        // Get the store domain if available
+        if ($store->domains->isNotEmpty()) {
+            $domain = $store->domains->first()->domain;
+            
+            // Redirect to the tenant domain with a success message
+            $protocol = $request->secure() ? 'https://' : 'http://';
+            return redirect()->to($protocol . $domain . '/login')
+                ->with('status', 'store-created')
+                ->with('message', 'Your store has been set up successfully! Please log in to access your dashboard.');
+        }
+
+        // If no domain is set up, redirect to the central domain
+        $centralDomain = config('tenancy.central_domains.0', 'connectcommerce.test');
+        return redirect()->to("https://$centralDomain")->with('success', 'Your store has been set up successfully!');
     }
 } 

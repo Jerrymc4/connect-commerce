@@ -37,8 +37,16 @@ class StoreFinderController extends Controller
 
         if (!$store) {
             Log::warning('Store not found', ['searchTerm' => $searchTerm]);
+            
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'error' => 'Store not found',
+                    'message' => 'We could not find a store with that name. Please try again or contact support.'
+                ], 404);
+            }
+            
             return back()->withErrors([
-                'store_name' => 'We couldn’t find a store with that name. Please try again or contact support.',
+                'store_name' => 'We could not find a store with that name. Please try again or contact support.',
             ]);
         }
 
@@ -46,6 +54,14 @@ class StoreFinderController extends Controller
 
         if ($store->domains->isEmpty()) {
             Log::warning('Store found but no domains', ['storeId' => $store->id]);
+            
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'error' => 'Store not configured',
+                    'message' => 'This store exists but is not fully set up yet. Please contact support.'
+                ], 404);
+            }
+            
             return back()->withErrors([
                 'store_name' => 'This store exists but is not fully set up yet. Please contact support.',
             ]);
@@ -60,7 +76,7 @@ class StoreFinderController extends Controller
         ]);
 
         // For htmx or API clients
-        if ($request->expectsJson()) {
+        if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'redirect' => true,
                 'url' => $loginUrl,
