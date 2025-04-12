@@ -43,7 +43,7 @@
     <div class="card-enhanced">
         <div class="card-header">
             <h3 class="text-lg font-semibold text-primary flex items-center">
-                <i class="fas fa-box text-blue-500 mr-2"></i>
+                <i class="fas fa-box text-gray-500 mr-2"></i>
                 {{ isset($product) ? 'Edit Product' : 'Product Details' }}
             </h3>
         </div>
@@ -57,9 +57,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <!-- Product Name -->
                     <div>
-                        <label for="name" class="form-label">Product Name <span class="text-red-500">*</span></label>
+                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                            <i class="fas fa-tag text-blue-500 mr-2"></i>
+                            Product Name <span class="text-red-500 ml-1">*</span>
+                        </label>
                         <input type="text" name="name" id="name" value="{{ $product->name ?? old('name') }}" 
-                            class="form-control @error('name') border-red-500 @enderror" required
+                            class="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2.5 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200 @error('name') border-red-500 @enderror" 
+                            required placeholder="Enter product name"
                             onkeyup="generateSlug(this.value)">
                         @error('name')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -68,9 +72,13 @@
                     
                     <!-- SKU -->
                     <div>
-                        <label for="sku" class="form-label">SKU <span class="text-red-500">*</span></label>
+                        <label for="sku" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                            <i class="fas fa-barcode text-blue-500 mr-2"></i>
+                            SKU <span class="text-red-500 ml-1">*</span>
+                        </label>
                         <input type="text" name="sku" id="sku" value="{{ $product->sku ?? old('sku') }}" 
-                            class="form-control @error('sku') border-red-500 @enderror" required>
+                            class="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2.5 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200 @error('sku') border-red-500 @enderror"
+                            required placeholder="Product SKU">
                         @error('sku')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -78,8 +86,11 @@
                     
                     <!-- Slug (Display Only) -->
                     <div>
-                        <label class="form-label">Slug (Auto-generated)</label>
-                        <div id="slug-display" class="p-2 bg-gray-100 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                            <i class="fas fa-link text-blue-500 mr-2"></i>
+                            Slug (Auto-generated)
+                        </label>
+                        <div id="slug-display" class="p-2.5 bg-gray-50 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 font-mono text-sm">
                             {{ $product->slug ?? 'Generated when you type the product name' }}
                         </div>
                         <input type="hidden" name="slug" id="slug" value="{{ $product->slug ?? old('slug') }}">
@@ -87,14 +98,15 @@
                     
                     <!-- Price -->
                     <div>
-                        <label for="price" class="form-label">Price <span class="text-red-500">*</span></label>
+                        <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                            <i class="fas fa-dollar-sign text-blue-500 mr-2"></i>
+                            Price <span class="text-red-500 ml-1">*</span>
+                        </label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-500 dark:text-gray-400">$</span>
-                            </div>
                             <input type="number" step="0.01" min="0" name="price" id="price" 
                                 value="{{ $product->price ?? old('price') }}" 
-                                class="form-control pl-7 @error('price') border-red-500 @enderror" required>
+                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2.5 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200 @error('price') border-red-500 @enderror"
+                                required placeholder="0.00">
                         </div>
                         @error('price')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -103,14 +115,15 @@
                     
                     <!-- Sale Price -->
                     <div>
-                        <label for="sale_price" class="form-label">Sale Price</label>
+                        <label for="sale_price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                            <i class="fas fa-tags text-blue-500 mr-2"></i>
+                            Sale Price
+                        </label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-500 dark:text-gray-400">$</span>
-                            </div>
                             <input type="number" step="0.01" min="0" name="sale_price" id="sale_price" 
                                 value="{{ $product->sale_price ?? old('sale_price') }}" 
-                                class="form-control pl-7 @error('sale_price') border-red-500 @enderror">
+                                class="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2.5 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200 @error('sale_price') border-red-500 @enderror"
+                                placeholder="0.00">
                         </div>
                         @error('sale_price')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -119,8 +132,11 @@
                     
                     <!-- Status -->
                     <div>
-                        <label for="status" class="form-label">Status <span class="text-red-500">*</span></label>
-                        <select name="status" id="status" class="form-control @error('status') border-red-500 @enderror" required>
+                        <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                            <i class="fas fa-toggle-on text-blue-500 mr-2"></i>
+                            Status <span class="text-red-500 ml-1">*</span>
+                        </label>
+                        <select name="status" id="status" class="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2.5 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200 @error('status') border-red-500 @enderror" required>
                             <option value="active" {{ (isset($product) && $product->status == 'active') || old('status') == 'active' ? 'selected' : '' }}>Active</option>
                             <option value="draft" {{ (isset($product) && $product->status == 'draft') || old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                             <option value="out_of_stock" {{ (isset($product) && $product->status == 'out_of_stock') || old('status') == 'out_of_stock' ? 'selected' : '' }}>Out of Stock</option>
@@ -133,9 +149,13 @@
                 
                 <!-- Description -->
                 <div class="mb-6">
-                    <label for="description" class="form-label">Description</label>
+                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                        <i class="fas fa-align-left text-blue-500 mr-2"></i>
+                        Description
+                    </label>
                     <textarea name="description" id="description" rows="5" 
-                        class="form-control @error('description') border-red-500 @enderror">{{ $product->description ?? old('description') }}</textarea>
+                        class="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2.5 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200 @error('description') border-red-500 @enderror"
+                        placeholder="Enter product description">{{ $product->description ?? old('description') }}</textarea>
                     @error('description')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
@@ -144,10 +164,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <!-- Stock -->
                     <div>
-                        <label for="stock" class="form-label">Stock Quantity</label>
+                        <label for="stock" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                            <i class="fas fa-cubes text-blue-500 mr-2"></i>
+                            Stock Quantity
+                        </label>
                         <input type="number" min="0" name="stock" id="stock" 
                             value="{{ $product->stock ?? old('stock', 0) }}" 
-                            class="form-control @error('stock') border-red-500 @enderror">
+                            class="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2.5 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200 @error('stock') border-red-500 @enderror"
+                            placeholder="0">
                         @error('stock')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -155,10 +179,14 @@
                     
                     <!-- Weight -->
                     <div>
-                        <label for="weight" class="form-label">Weight (lbs)</label>
+                        <label for="weight" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                            <i class="fas fa-weight text-blue-500 mr-2"></i>
+                            Weight (lbs)
+                        </label>
                         <input type="number" step="0.01" min="0" name="weight" id="weight" 
                             value="{{ $product->weight ?? old('weight') }}" 
-                            class="form-control @error('weight') border-red-500 @enderror">
+                            class="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2.5 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200 @error('weight') border-red-500 @enderror"
+                            placeholder="0.00">
                         @error('weight')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -166,11 +194,14 @@
                     
                     <!-- Dimensions -->
                     <div>
-                        <label for="dimensions" class="form-label">Dimensions (L × W × H inches)</label>
+                        <label for="dimensions" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                            <i class="fas fa-ruler-combined text-blue-500 mr-2"></i>
+                            Dimensions (L × W × H inches)
+                        </label>
                         <input type="text" name="dimensions" id="dimensions" 
                             value="{{ $product->dimensions ?? old('dimensions') }}" 
                             placeholder="e.g. 10 × 5 × 2" 
-                            class="form-control @error('dimensions') border-red-500 @enderror">
+                            class="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2.5 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200 @error('dimensions') border-red-500 @enderror">
                         @error('dimensions')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -179,9 +210,12 @@
                 
                 <!-- Product Image -->
                 <div class="mb-6">
-                    <label class="form-label">Product Image</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                        <i class="fas fa-image text-blue-500 mr-2"></i>
+                        Product Image
+                    </label>
                     <div class="flex items-start gap-4">
-                        <div class="h-32 w-32 flex-shrink-0 rounded border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
+                        <div class="h-32 w-32 flex-shrink-0 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
                             @if(isset($product) && $product->image)
                                 <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
                             @else
@@ -189,13 +223,14 @@
                             @endif
                         </div>
                         <div>
-                            <div class="relative bg-white dark:bg-gray-800 py-2 px-3 border border-gray-300 dark:border-gray-600 rounded shadow-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 mb-2">
-                                <label for="image" class="cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300">
+                            <div class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors cursor-pointer">
+                                <label for="image" class="cursor-pointer">
+                                    <i class="fas fa-upload mr-2"></i>
                                     <span>Upload image</span>
                                     <input type="file" name="image" id="image" accept="image/*" class="sr-only">
                                 </label>
                             </div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">PNG, JPG, GIF up to 2MB</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">PNG, JPG, GIF up to 2MB</p>
                             @error('image')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -204,21 +239,24 @@
                 </div>
                 
                 <!-- Inventory Tracking -->
-                <div class="mb-6">
+                <div class="mb-6 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
                     <div class="flex items-center">
                         <input type="checkbox" name="track_inventory" id="track_inventory" value="1" 
                             {{ (isset($product) && $product->track_inventory) || old('track_inventory') ? 'checked' : '' }} 
-                            class="h-4 w-4 text-blue-600 dark:text-blue-500 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500">
+                            class="h-5 w-5 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500">
                         <label for="track_inventory" class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                             Track inventory for this product
                         </label>
                     </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 ml-7">When enabled, stock will be reduced with each sale</p>
                 </div>
                 
                 <!-- Submit Buttons -->
-                <div class="flex justify-end gap-3">
-                    <a href="{{ route('store.products', [], false) }}" class="btn-secondary">Cancel</a>
-                    <button type="submit" class="btn-primary">
+                <div class="flex justify-end gap-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <a href="{{ route('store.products', [], false) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                        Cancel
+                    </a>
+                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                         <i class="fas {{ isset($product) ? 'fa-save' : 'fa-plus' }} mr-2"></i>
                         {{ isset($product) ? 'Update Product' : 'Create Product' }}
                     </button>

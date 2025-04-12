@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Repositories\Interfaces\AuditLogRepositoryInterface;
+use App\Repositories\Repositories\AuditLogRepository;
+use App\Services\AuditLogService;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
@@ -14,7 +17,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register the AuditLogRepository
+        $this->app->bind(AuditLogRepositoryInterface::class, AuditLogRepository::class);
+        
+        // Register the AuditLogService
+        $this->app->singleton(AuditLogService::class, function ($app) {
+            return new AuditLogService(
+                $app->make(AuditLogRepositoryInterface::class)
+            );
+        });
     }
 
     /**

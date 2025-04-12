@@ -299,63 +299,7 @@
     
     <!-- Store Management Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <!-- Configuration Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <!-- Settings Card (now including Theme and Discounts) -->
-            <div class="bg-card rounded-lg shadow-sm border border-border-color overflow-hidden hover:shadow-md transition-shadow duration-300">
-                <div class="p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-gray-100 dark:bg-gray-700 rounded-full p-2 mr-3">
-                            <i class="fas fa-cog text-gray-600 dark:text-gray-300"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-primary">Store Settings</h3>
-                    </div>
-                    <p class="text-secondary mb-4">Configure all aspects of your store including themes, discounts, shipping, and more.</p>
-                    <div class="space-y-3">
-                        <div class="flex items-center">
-                            <i class="fas fa-paint-brush text-indigo-600 dark:text-indigo-300 w-5 text-center mr-2"></i>
-                            <a href="{{ route('store.settings', ['tab' => 'theme'], false) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium">Theme settings</a>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-tag text-yellow-600 dark:text-yellow-300 w-5 text-center mr-2"></i>
-                            <a href="{{ route('store.settings', ['tab' => 'discounts'], false) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300 font-medium">Discount settings</a>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-sliders-h text-blue-600 dark:text-blue-300 w-5 text-center mr-2"></i>
-                            <a href="{{ route('store.settings', ['tab' => 'general'], false) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">General settings</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Orders Card (to fill space) -->
-            <div class="bg-card rounded-lg shadow-sm border border-border-color overflow-hidden hover:shadow-md transition-shadow duration-300">
-                <div class="p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-green-100 dark:bg-green-900/50 rounded-full p-2 mr-3">
-                            <i class="fas fa-shipping-fast text-green-600 dark:text-green-300"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-primary">Orders</h3>
-                    </div>
-                    <p class="text-secondary mb-4">Manage customer orders, process fulfillment, and generate invoices.</p>
-                    <a href="{{ route('store.orders', [], false) }}" class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 font-medium">Process orders →</a>
-                </div>
-            </div>
-            
-            <!-- Products Card (to fill space) -->
-            <div class="bg-card rounded-lg shadow-sm border border-border-color overflow-hidden hover:shadow-md transition-shadow duration-300">
-                <div class="p-6">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-blue-100 dark:bg-blue-900/50 rounded-full p-2 mr-3">
-                            <i class="fas fa-box text-blue-600 dark:text-blue-300"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-primary">Products</h3>
-                    </div>
-                    <p class="text-secondary mb-4">Manage your product catalog, add new items, and update inventory.</p>
-                    <a href="{{ route('store.products', [], false) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">Manage products →</a>
-                </div>
-            </div>
-        </div>
+
     </div>
     
     <!-- Recent Activity -->

@@ -5,10 +5,23 @@ namespace App\Http\Controllers\Store;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Services\AuditLogService;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
+    protected AuditLogService $auditLogService;
+    
+    /**
+     * Create a new controller instance.
+     *
+     * @param AuditLogService $auditLogService
+     */
+    public function __construct(AuditLogService $auditLogService)
+    {
+        $this->auditLogService = $auditLogService;
+    }
+    
     /**
      * Display a listing of products.
      */
@@ -34,6 +47,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|max:100|unique:products',
+            'slug' => 'required|string|max:255|unique:products',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'sale_price' => 'nullable|numeric|min:0',
@@ -51,7 +65,10 @@ class ProductController extends Controller
             $validated['image'] = $imagePath;
         }
         
-        Product::create($validated);
+        $product = Product::create($validated);
+        
+        // Log product creation to audit log
+        $this->auditLogService->logCreated($product, ['module' => 'products']);
         
         return redirect()->route('store.products')
             ->with('success', 'Product created successfully');
@@ -82,9 +99,13 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         
+        // Store original values for audit log
+        $originalValues = $product->getAttributes();
+        
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|max:100|unique:products,sku,' . $id,
+            'slug' => 'required|string|max:255|unique:products,slug,' . $id,
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'sale_price' => 'nullable|numeric|min:0',
@@ -104,6 +125,9 @@ class ProductController extends Controller
         
         $product->update($validated);
         
+        // Log product update to audit log
+        $this->auditLogService->logUpdated($product, $originalValues, ['module' => 'products']);
+        
         return redirect()->route('store.products')
             ->with('success', 'Product updated successfully');
     }
@@ -114,6 +138,10 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::findOrFail($id);
+        
+        // Log product deletion to audit log before deleting
+        $this->auditLogService->logDeleted($product, ['module' => 'products']);
+        
         $product->delete();
         
         return redirect()->route('store.products')

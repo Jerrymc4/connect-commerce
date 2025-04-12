@@ -493,6 +493,10 @@
                                 <i class="fas fa-cog mr-3"></i>
                                 Settings
                             </a>
+                            <a href="{{ route('store.audit-logs.index', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('store.audit-logs*') ? 'active' : '' }}">
+                                <i class="fas fa-history mr-3"></i>
+                                Audit Logs
+                            </a>
                         </div>
                     </div>
                 </nav>

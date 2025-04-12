@@ -19,6 +19,7 @@ use App\Http\Controllers\Store\CustomerController;
 use App\Http\Controllers\Store\ThemeController;
 use App\Http\Controllers\Store\SettingController;
 use App\Http\Controllers\Store\DiscountController;
+use App\Http\Controllers\Store\AuditLogController;
 use Illuminate\Support\Facades\Auth;
 
 // Route to serve assets for tenants
@@ -74,6 +75,11 @@ Route::middleware([
         Route::get('/customers/{id}/edit', [CustomerController::class, 'edit'])->name('store.customers.edit');
         Route::put('/customers/{id}', [CustomerController::class, 'update'])->name('store.customers.update');
         Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('store.customers.destroy');
+        
+        // Audit Logs Management
+        Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('store.audit-logs.index');
+        Route::get('/audit-logs/{id}', [AuditLogController::class, 'show'])->name('store.audit-logs.show');
+        Route::get('/audit-logs/export', [AuditLogController::class, 'export'])->name('store.audit-logs.export');
         
         // Integrated Settings
         Route::get('/settings', [SettingController::class, 'index'])->name('store.settings');

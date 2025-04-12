@@ -69,6 +69,14 @@ class Order extends Model
     }
 
     /**
+     * Get the customer that placed the order.
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    /**
      * Get the items for the order.
      */
     public function orderItems(): HasMany

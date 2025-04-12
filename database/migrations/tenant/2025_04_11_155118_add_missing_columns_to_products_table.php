@@ -13,16 +13,35 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            // Add missing columns
-            $table->decimal('sale_price', 10, 2)->nullable();
-            $table->decimal('weight', 10, 2)->nullable();
-            $table->string('dimensions')->nullable();
-            $table->string('image')->nullable();
-            $table->uuid('store_id')->nullable();
-            $table->boolean('track_inventory')->default(false);
+            // Add columns only if they don't exist
+            if (!Schema::hasColumn('products', 'sale_price')) {
+                $table->decimal('sale_price', 10, 2)->nullable();
+            }
             
-            // Add the new status column
-            $table->string('status')->default('active');
+            if (!Schema::hasColumn('products', 'weight')) {
+                $table->decimal('weight', 10, 2)->nullable();
+            }
+            
+            if (!Schema::hasColumn('products', 'dimensions')) {
+                $table->string('dimensions')->nullable();
+            }
+            
+            if (!Schema::hasColumn('products', 'image')) {
+                $table->string('image')->nullable();
+            }
+            
+            if (!Schema::hasColumn('products', 'store_id')) {
+                $table->uuid('store_id')->nullable();
+            }
+            
+            if (!Schema::hasColumn('products', 'track_inventory')) {
+                $table->boolean('track_inventory')->default(false);
+            }
+            
+            // Add the new status column if it doesn't exist
+            if (!Schema::hasColumn('products', 'status')) {
+                $table->string('status')->default('active');
+            }
         });
         
         // Set all products to active status by default
@@ -55,20 +74,17 @@ return new class extends Migration
         
         // Remove added columns
         Schema::table('products', function (Blueprint $table) {
-            // Check and drop status if it exists
-            if (Schema::hasColumn('products', 'status')) {
-                $table->dropColumn('status');
-            }
+            // Check and drop each column individually if it exists
+            $columnsToCheck = [
+                'status', 'sale_price', 'weight', 'dimensions', 
+                'image', 'store_id', 'track_inventory'
+            ];
             
-            // Drop other columns that were added
-            $table->dropColumn([
-                'sale_price',
-                'weight',
-                'dimensions',
-                'image',
-                'store_id',
-                'track_inventory'
-            ]);
+            foreach ($columnsToCheck as $column) {
+                if (Schema::hasColumn('products', $column)) {
+                    $table->dropColumn($column);
+                }
+            }
         });
     }
 };
