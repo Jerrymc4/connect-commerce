@@ -24,7 +24,7 @@ class Authenticate extends Middleware
         
         // For tenant domains, redirect to tenant login
         if ($isTenantDomain) {
-            return 'login';
+            return 'admin/login';
         }
         
         // For central domain, use standard login route

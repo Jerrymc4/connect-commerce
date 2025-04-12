@@ -68,7 +68,7 @@ class StoreFinderController extends Controller
         }
 
         $domain = $store->domains->first()->domain;
-        $loginUrl = "https://{$domain}/login";
+        $loginUrl = "https://{$domain}/admin/login";
 
         Log::info('Redirecting to tenant domain', [
             'storeId' => $store->id,
