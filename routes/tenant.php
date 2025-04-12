@@ -49,7 +49,7 @@ Route::middleware([
     // Store Admin Dashboard - All authenticated routes
     Route::middleware(['auth'])->prefix('admin')->group(function () {
         // Dashboard
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('store.dashboard');
+        Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('store.dashboard');
         
         // Products Management
         Route::get('/products', [ProductController::class, 'index'])->name('store.products');

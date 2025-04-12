@@ -49,7 +49,7 @@ class AuthenticatedSessionController extends Controller
 
         // If on tenant domain, go to the dashboard
         if (!$isCentralDomain) {
-            return redirect('/dashboard');
+            return redirect('/admin/dashboard');
         }
         
         // If on central domain, redirect to landing page
