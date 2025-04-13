@@ -3,16 +3,49 @@
 namespace App\Http\Controllers\Storefront;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\Interfaces\CustomerRepositoryInterface;
+use App\Repositories\Interfaces\OrderRepositoryInterface;
+use App\Repositories\Interfaces\PaymentMethodRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use App\Models\Customer;
-use App\Models\Order;
-use App\Models\PaymentMethod;
 
 class AccountController extends Controller
 {
+    /**
+     * @var OrderRepositoryInterface
+     */
+    protected $orderRepository;
+    
+    /**
+     * @var PaymentMethodRepositoryInterface
+     */
+    protected $paymentMethodRepository;
+    
+    /**
+     * @var CustomerRepositoryInterface
+     */
+    protected $customerRepository;
+    
+    /**
+     * AccountController constructor.
+     *
+     * @param OrderRepositoryInterface $orderRepository
+     * @param PaymentMethodRepositoryInterface $paymentMethodRepository
+     * @param CustomerRepositoryInterface $customerRepository
+     */
+    public function __construct(
+        OrderRepositoryInterface $orderRepository,
+        PaymentMethodRepositoryInterface $paymentMethodRepository,
+        CustomerRepositoryInterface $customerRepository
+    ) {
+        $this->orderRepository = $orderRepository;
+        $this->paymentMethodRepository = $paymentMethodRepository;
+        $this->customerRepository = $customerRepository;
+    }
+    
     /**
      * Show the customer account dashboard.
      *
@@ -23,10 +56,7 @@ class AccountController extends Controller
         $customer = Auth::guard('customer')->user();
         
         // Get recent orders
-        $recentOrders = Order::where('customer_id', $customer->id)
-            ->latest()
-            ->take(3)
-            ->get();
+        $recentOrders = $this->orderRepository->getRecentOrdersByCustomerId($customer->id, 3);
             
         return view('storefront.account.index', compact('customer', 'recentOrders'));
     }
@@ -58,7 +88,8 @@ class AccountController extends Controller
             'phone' => ['nullable', 'string', 'max:20'],
         ]);
         
-        $customer->update($validated);
+        // Use the customer repository to update the profile
+        $this->customerRepository->updateProfile($customer, $validated);
         
         return redirect()->route('customer.profile')->with('success', 'Profile updated successfully.');
     }
@@ -85,16 +116,15 @@ class AccountController extends Controller
         
         $validated = $request->validate([
             'current_password' => ['required', 'string', function ($attribute, $value, $fail) use ($customer) {
-                if (!Hash::check($value, $customer->password)) {
+                if (!Auth::guard('customer')->attempt(['email' => $customer->email, 'password' => $value])) {
                     $fail('The current password is incorrect.');
                 }
             }],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
         
-        $customer->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        // Use the customer repository to update the password
+        $this->customerRepository->updatePassword($customer, $validated['password']);
         
         return redirect()->route('customer.password')->with('success', 'Password updated successfully.');
     }
@@ -107,9 +137,7 @@ class AccountController extends Controller
     public function orders()
     {
         $customer = Auth::guard('customer')->user();
-        $orders = Order::where('customer_id', $customer->id)
-            ->latest()
-            ->paginate(10);
+        $orders = $this->orderRepository->getPaginatedOrdersByCustomerId($customer->id, 10);
             
         return view('storefront.account.orders', compact('orders'));
     }
@@ -123,9 +151,12 @@ class AccountController extends Controller
     public function showOrder($id)
     {
         $customer = Auth::guard('customer')->user();
-        $order = Order::where('customer_id', $customer->id)
-            ->where('id', $id)
-            ->firstOrFail();
+        $order = $this->orderRepository->getCustomerOrder($id, $customer->id);
+        
+        if (!$order) {
+            return redirect()->route('customer.orders')
+                ->with('error', 'The requested order could not be found.');
+        }
             
         return view('storefront.account.order-detail', compact('order'));
     }
@@ -151,7 +182,7 @@ class AccountController extends Controller
     public function paymentMethods()
     {
         $customer = Auth::guard('customer')->user();
-        $paymentMethods = PaymentMethod::where('customer_id', $customer->id)->get();
+        $paymentMethods = $this->paymentMethodRepository->getByCustomerId($customer->id);
         
         return view('storefront.account.payment-methods', compact('paymentMethods'));
     }
@@ -187,21 +218,21 @@ class AccountController extends Controller
         
         // In a real app, this would involve a payment processor integration
         // Here we're just storing the data (which you shouldn't do with real card data)
-        $paymentMethod = new PaymentMethod();
-        $paymentMethod->customer_id = $customer->id;
-        $paymentMethod->card_type = $this->detectCardType($validated['card_number']);
-        $paymentMethod->last_four = substr($validated['card_number'], -4);
-        $paymentMethod->holder_name = $validated['card_holder'];
-        $paymentMethod->expiry_month = $validated['expiry_month'];
-        $paymentMethod->expiry_year = $validated['expiry_year'];
-        $paymentMethod->is_default = $request->has('is_default');
-        $paymentMethod->save();
+        $paymentMethodData = [
+            'customer_id' => $customer->id,
+            'card_type' => $this->detectCardType($validated['card_number']),
+            'last_four' => substr($validated['card_number'], -4),
+            'holder_name' => $validated['card_holder'],
+            'expiry_month' => $validated['expiry_month'],
+            'expiry_year' => $validated['expiry_year'],
+            'is_default' => $request->has('is_default'),
+        ];
+        
+        $paymentMethod = $this->paymentMethodRepository->create($paymentMethodData);
         
         if ($paymentMethod->is_default) {
             // Make all other payment methods non-default
-            PaymentMethod::where('customer_id', $customer->id)
-                ->where('id', '!=', $paymentMethod->id)
-                ->update(['is_default' => false]);
+            $this->paymentMethodRepository->setAsDefault($paymentMethod);
         }
         
         return redirect()->route('customer.payment-methods')->with('success', 'Payment method added successfully.');
@@ -216,11 +247,14 @@ class AccountController extends Controller
     public function deletePaymentMethod($id)
     {
         $customer = Auth::guard('customer')->user();
-        $paymentMethod = PaymentMethod::where('customer_id', $customer->id)
-            ->where('id', $id)
-            ->firstOrFail();
+        $paymentMethod = $this->paymentMethodRepository->getCustomerPaymentMethod($id, $customer->id);
+        
+        if (!$paymentMethod) {
+            return redirect()->route('customer.payment-methods')
+                ->with('error', 'The payment method could not be found.');
+        }
             
-        $paymentMethod->delete();
+        $this->paymentMethodRepository->delete($paymentMethod);
         
         return redirect()->route('customer.payment-methods')->with('success', 'Payment method removed successfully.');
     }

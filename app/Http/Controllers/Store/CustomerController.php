@@ -4,36 +4,44 @@ namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Customer;
-use App\Models\Address;
+use App\Repositories\Interfaces\CustomerRepositoryInterface;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
 {
+    /**
+     * @var CustomerRepositoryInterface
+     */
+    protected $customerRepository;
+    
+    /**
+     * CustomerController constructor.
+     *
+     * @param CustomerRepositoryInterface $customerRepository
+     */
+    public function __construct(CustomerRepositoryInterface $customerRepository)
+    {
+        $this->customerRepository = $customerRepository;
+    }
+    
     /**
      * Display a listing of customers.
      */
     public function index(Request $request): View
     {
-        $query = Customer::query();
+        $filters = [];
         
-        // Search by name or email
+        // Add search filter if provided
         if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
-            });
+            $filters['search'] = $request->search;
         }
         
-        // Sort customers
+        // Get sort parameters
         $sort = $request->sort ?? 'created_at';
         $direction = $request->direction ?? 'desc';
-        $query->orderBy($sort, $direction);
         
-        $customers = $query->paginate(15);
+        // Get paginated customers with filters and sorting
+        $customers = $this->customerRepository->searchCustomers($filters, $sort, $direction, 15);
         
         return view('store.customers.index', compact('customers'));
     }
@@ -75,8 +83,6 @@ class CustomerController extends Controller
                 'state' => $validated['state'] ?? null,
                 'zipcode' => $validated['zipcode'] ?? null,
                 'country' => $validated['country'] ?? null,
-                'is_default' => true,
-                'type' => 'both' // Both shipping and billing
             ];
             
             // Remove address fields from validated data before creating customer
@@ -91,11 +97,11 @@ class CustomerController extends Controller
         }
         
         // Create customer with remaining validated data
-        $customer = Customer::create($validated);
+        $customer = $this->customerRepository->create($validated);
         
         // If we have address data, create the address
         if ($addressData) {
-            $customer->addresses()->create($addressData);
+            $this->customerRepository->updateOrCreateAddress($customer, $addressData);
         }
         
         return redirect()->route('store.customers')
@@ -107,10 +113,13 @@ class CustomerController extends Controller
      */
     public function show(string $id): View
     {
-        $customer = Customer::findOrFail($id);
-        $orders = $customer->orders()->latest()->get();
+        $customer = $this->customerRepository->getCustomerWithOrders((int)$id);
         
-        return view('store.customers.show', compact('customer', 'orders'));
+        if (!$customer) {
+            abort(404, 'Customer not found');
+        }
+        
+        return view('store.customers.show', compact('customer'));
     }
 
     /**
@@ -118,7 +127,12 @@ class CustomerController extends Controller
      */
     public function edit(string $id): View
     {
-        $customer = Customer::findOrFail($id);
+        $customer = $this->customerRepository->getById((int)$id);
+        
+        if (!$customer) {
+            abort(404, 'Customer not found');
+        }
+        
         return view('store.customers.form', compact('customer'));
     }
 
@@ -127,7 +141,11 @@ class CustomerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $customer = Customer::findOrFail($id);
+        $customer = $this->customerRepository->getById((int)$id);
+        
+        if (!$customer) {
+            abort(404, 'Customer not found');
+        }
         
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
@@ -153,8 +171,6 @@ class CustomerController extends Controller
                 'state' => $validated['state'] ?? null,
                 'zipcode' => $validated['zipcode'] ?? null,
                 'country' => $validated['country'] ?? null,
-                'is_default' => true,
-                'type' => 'both' // Both shipping and billing
             ];
             
             // Remove address fields from validated data before updating customer
@@ -171,23 +187,17 @@ class CustomerController extends Controller
         // Only update password if provided
         if (empty($validated['password'])) {
             unset($validated['password']);
+        } else {
+            $this->customerRepository->updatePassword($customer, $validated['password']);
+            unset($validated['password']);
         }
         
         // Update customer with validated data
-        $customer->update($validated);
+        $this->customerRepository->updateProfile($customer, $validated);
         
         // Update or create the default address
         if ($addressData) {
-            $defaultAddress = $customer->addresses()
-                ->where('is_default', true)
-                ->where('type', 'both')
-                ->first();
-                
-            if ($defaultAddress) {
-                $defaultAddress->update($addressData);
-            } else {
-                $customer->addresses()->create($addressData);
-            }
+            $this->customerRepository->updateOrCreateAddress($customer, $addressData);
         }
         
         return redirect()->route('store.customers')
@@ -199,8 +209,13 @@ class CustomerController extends Controller
      */
     public function destroy(string $id)
     {
-        $customer = Customer::findOrFail($id);
-        $customer->delete();
+        $customer = $this->customerRepository->getById((int)$id);
+        
+        if (!$customer) {
+            abort(404, 'Customer not found');
+        }
+        
+        $this->customerRepository->delete($customer);
         
         return redirect()->route('store.customers')
             ->with('success', 'Customer deleted successfully');

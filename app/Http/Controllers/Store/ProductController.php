@@ -4,22 +4,34 @@ namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Services\AuditLogService;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
+    /**
+     * @var AuditLogService
+     */
     protected AuditLogService $auditLogService;
+    
+    /**
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepository;
     
     /**
      * Create a new controller instance.
      *
      * @param AuditLogService $auditLogService
+     * @param ProductRepositoryInterface $productRepository
      */
-    public function __construct(AuditLogService $auditLogService)
-    {
+    public function __construct(
+        AuditLogService $auditLogService,
+        ProductRepositoryInterface $productRepository
+    ) {
         $this->auditLogService = $auditLogService;
+        $this->productRepository = $productRepository;
     }
     
     /**
@@ -27,7 +39,7 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        $products = Product::latest()->paginate(10);
+        $products = $this->productRepository->getPaginatedProducts([], 10);
         return view('store.products.index', compact('products'));
     }
 
@@ -65,7 +77,7 @@ class ProductController extends Controller
             $validated['image'] = $imagePath;
         }
         
-        $product = Product::create($validated);
+        $product = $this->productRepository->create($validated);
         
         // Log product creation to audit log
         $this->auditLogService->logCreated($product, ['module' => 'products']);
@@ -79,7 +91,12 @@ class ProductController extends Controller
      */
     public function show(string $id): View
     {
-        $product = Product::findOrFail($id);
+        $product = $this->productRepository->getById($id);
+        
+        if (!$product) {
+            abort(404, 'Product not found');
+        }
+        
         return view('store.products.show', compact('product'));
     }
 
@@ -88,7 +105,12 @@ class ProductController extends Controller
      */
     public function edit(string $id): View
     {
-        $product = Product::findOrFail($id);
+        $product = $this->productRepository->getById($id);
+        
+        if (!$product) {
+            abort(404, 'Product not found');
+        }
+        
         return view('store.products.form', compact('product'));
     }
 
@@ -97,7 +119,11 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $product = Product::findOrFail($id);
+        $product = $this->productRepository->getById($id);
+        
+        if (!$product) {
+            abort(404, 'Product not found');
+        }
         
         // Store original values for audit log
         $originalValues = $product->getAttributes();
@@ -123,7 +149,7 @@ class ProductController extends Controller
             $validated['image'] = $imagePath;
         }
         
-        $product->update($validated);
+        $this->productRepository->update($product, $validated);
         
         // Log product update to audit log
         $this->auditLogService->logUpdated($product, $originalValues, ['module' => 'products']);
@@ -137,12 +163,16 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product = Product::findOrFail($id);
+        $product = $this->productRepository->getById($id);
+        
+        if (!$product) {
+            abort(404, 'Product not found');
+        }
         
         // Log product deletion to audit log before deleting
         $this->auditLogService->logDeleted($product, ['module' => 'products']);
         
-        $product->delete();
+        $this->productRepository->delete($product);
         
         return redirect()->route('store.products')
             ->with('success', 'Product deleted successfully');

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Repositories;
+namespace App\Repositories\Eloquent;
 
 use App\Models\AuditLog;
 use App\Repositories\Interfaces\AuditLogRepositoryInterface;

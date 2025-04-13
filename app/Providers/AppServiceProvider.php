@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Repositories\Interfaces\AuditLogRepositoryInterface;
-use App\Repositories\Repositories\AuditLogRepository;
+use App\Repositories\Eloquent\AuditLogRepository;
 use App\Services\AuditLogService;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
