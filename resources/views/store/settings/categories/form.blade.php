@@ -1,4 +1,4 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container px-4 mx-auto">
@@ -9,7 +9,7 @@
         </div>
         
         <div>
-            <a href="{{ route('store.settings', ['tab' => 'categories'], false) }}" class="btn-secondary">
+            <a href="{{ route('admin.settings', ['tab' => 'categories'], false) }}" class="btn-secondary">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Categories
             </a>
@@ -48,7 +48,7 @@
             </h3>
         </div>
         <div class="card-body">
-            <form action="{{ isset($category) ? route('store.settings.categories.update', $category->id, false) : route('store.settings.categories.store', [], false) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ isset($category) ? route('admin.settings.categories.update', $category->id, false) : route('admin.settings.categories.store', [], false) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if(isset($category))
                     @method('PUT')
@@ -148,7 +148,7 @@
                 
                 <!-- Submit Buttons -->
                 <div class="flex justify-end gap-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                    <a href="{{ route('store.settings', ['tab' => 'categories'], false) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    <a href="{{ route('admin.settings', ['tab' => 'categories'], false) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                         Cancel
                     </a>
                     <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">

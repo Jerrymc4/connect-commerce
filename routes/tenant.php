@@ -188,7 +188,7 @@ Route::middleware([
     // Store Admin Dashboard - All authenticated routes
     Route::middleware(['auth'])->prefix('admin')->group(function () {
         // Dashboard
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('store.dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
         
         // Preview Store - redirects to storefront home
         Route::get('/preview-store', function() {
@@ -196,67 +196,67 @@ Route::middleware([
         })->name('store.preview');
         
         // Products Management
-        Route::get('/products', [ProductController::class, 'index'])->name('store.products');
-        Route::get('/products/create', [ProductController::class, 'create'])->name('store.products.create');
-        Route::post('/products', [ProductController::class, 'store'])->name('store.products.store');
-        Route::get('/products/{id}', [ProductController::class, 'show'])->name('store.products.show');
-        Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('store.products.edit');
-        Route::put('/products/{id}', [ProductController::class, 'update'])->name('store.products.update');
-        Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('store.products.destroy');
+        Route::get('/products', [ProductController::class, 'index'])->name('admin.products');
+        Route::get('/products/create', [ProductController::class, 'create'])->name('admin.products.create');
+        Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store');
+        Route::get('/products/{id}', [ProductController::class, 'show'])->name('admin.products.show');
+        Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
+        Route::put('/products/{id}', [ProductController::class, 'update'])->name('admin.products.update');
+        Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
         
         // Orders Management
-        Route::get('/orders', [OrderController::class, 'index'])->name('store.orders');
-        Route::get('/orders/{id}', [OrderController::class, 'show'])->name('store.orders.show');
-        Route::get('/orders/{id}/edit', [OrderController::class, 'edit'])->name('store.orders.edit');
-        Route::put('/orders/{id}', [OrderController::class, 'update'])->name('store.orders.update');
-        Route::get('/orders/{id}/invoice', [OrderController::class, 'invoice'])->name('store.orders.invoice');
+        Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
+        Route::get('/orders/{id}', [OrderController::class, 'show'])->name('admin.orders.show');
+        Route::get('/orders/{id}/edit', [OrderController::class, 'edit'])->name('admin.orders.edit');
+        Route::put('/orders/{id}', [OrderController::class, 'update'])->name('admin.orders.update');
+        Route::get('/orders/{id}/invoice', [OrderController::class, 'invoice'])->name('admin.orders.invoice');
         
         // Customers Management
-        Route::get('/customers', [CustomerController::class, 'index'])->name('store.customers');
-        Route::get('/customers/create', [CustomerController::class, 'create'])->name('store.customers.create');
-        Route::post('/customers', [CustomerController::class, 'store'])->name('store.customers.store');
-        Route::get('/customers/{id}', [CustomerController::class, 'show'])->name('store.customers.show');
-        Route::get('/customers/{id}/edit', [CustomerController::class, 'edit'])->name('store.customers.edit');
-        Route::put('/customers/{id}', [CustomerController::class, 'update'])->name('store.customers.update');
-        Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('store.customers.destroy');
+        Route::get('/customers', [CustomerController::class, 'index'])->name('admin.customers');
+        Route::get('/customers/create', [CustomerController::class, 'create'])->name('admin.customers.create');
+        Route::post('/customers', [CustomerController::class, 'store'])->name('admin.customers.store');
+        Route::get('/customers/{id}', [CustomerController::class, 'show'])->name('admin.customers.show');
+        Route::get('/customers/{id}/edit', [CustomerController::class, 'edit'])->name('admin.customers.edit');
+        Route::put('/customers/{id}', [CustomerController::class, 'update'])->name('admin.customers.update');
+        Route::delete('/customers/{id}', [CustomerController::class, 'destroy'])->name('admin.customers.destroy');
         
         // Audit Logs Management
-        Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('store.audit-logs.index');
-        Route::get('/audit-logs/{id}', [AuditLogController::class, 'show'])->name('store.audit-logs.show');
-        Route::get('/audit-logs/export', [AuditLogController::class, 'export'])->name('store.audit-logs.export');
+        Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('admin.audit-logs.index');
+        Route::get('/audit-logs/{id}', [AuditLogController::class, 'show'])->name('admin.audit-logs.show');
+        Route::get('/audit-logs/export', [AuditLogController::class, 'export'])->name('admin.audit-logs.export');
         
         // Integrated Settings
-        Route::get('/settings', [SettingController::class, 'index'])->name('store.settings');
-        Route::put('/settings', [SettingController::class, 'update'])->name('store.settings.update');
+        Route::get('/settings', [SettingController::class, 'index'])->name('admin.settings');
+        Route::put('/settings', [SettingController::class, 'update'])->name('admin.settings.update');
         
         // Categories Management
-        Route::get('/settings/categories/create', [CategoryController::class, 'create'])->name('store.settings.categories.create');
-        Route::post('/settings/categories', [CategoryController::class, 'store'])->name('store.settings.categories.store');
-        Route::get('/settings/categories/{id}/edit', [CategoryController::class, 'edit'])->name('store.settings.categories.edit');
-        Route::put('/settings/categories/{id}', [CategoryController::class, 'update'])->name('store.settings.categories.update');
-        Route::delete('/settings/categories/{id}', [CategoryController::class, 'destroy'])->name('store.settings.categories.destroy');
+        Route::get('/settings/categories/create', [CategoryController::class, 'create'])->name('admin.settings.categories.create');
+        Route::post('/settings/categories', [CategoryController::class, 'store'])->name('admin.settings.categories.store');
+        Route::get('/settings/categories/{id}/edit', [CategoryController::class, 'edit'])->name('admin.settings.categories.edit');
+        Route::put('/settings/categories/{id}', [CategoryController::class, 'update'])->name('admin.settings.categories.update');
+        Route::delete('/settings/categories/{id}', [CategoryController::class, 'destroy'])->name('admin.settings.categories.destroy');
         
         // Discounts Management
-        Route::post('/settings/discounts', [SettingController::class, 'storeDiscount'])->name('store.settings.discounts.store');
-        Route::put('/settings/discounts/{id}', [SettingController::class, 'updateDiscount'])->name('store.settings.discounts.update');
-        Route::delete('/settings/discounts/{id}', [SettingController::class, 'destroyDiscount'])->name('store.settings.discounts.destroy');
+        Route::post('/settings/discounts', [SettingController::class, 'storeDiscount'])->name('admin.settings.discounts.store');
+        Route::put('/settings/discounts/{id}', [SettingController::class, 'updateDiscount'])->name('admin.settings.discounts.update');
+        Route::delete('/settings/discounts/{id}', [SettingController::class, 'destroyDiscount'])->name('admin.settings.discounts.destroy');
         
         // Old routes - these will redirect to the new settings page with the appropriate tab
         Route::get('/theme', function() { 
             return redirect()->route('store.settings', ['tab' => 'theme']); 
-        })->name('store.themes');
+        })->name('admin.themes');
         
         Route::get('/discounts', function() {
-            return redirect()->route('store.settings', ['tab' => 'discounts']); 
-        })->name('store.discounts');
+            return redirect()->route('admin.settings', ['tab' => 'discounts']); 
+        })->name('admin.discounts');
         
         Route::get('/discounts/create', function() {
-            return redirect()->route('store.settings', ['tab' => 'discounts', 'action' => 'create']); 
-        })->name('store.discounts.create');
+            return redirect()->route('admin.settings', ['tab' => 'discounts', 'action' => 'create']); 
+        })->name('admin.discounts.create');
         
         Route::get('/discounts/{id}/edit', function($id) {
-            return redirect()->route('store.settings', ['tab' => 'discounts', 'action' => 'edit', 'id' => $id]); 
-        })->name('store.discounts.edit');
+            return redirect()->route('admin.settings', ['tab' => 'discounts', 'action' => 'edit', 'id' => $id]); 
+        })->name('admin.discounts.edit');
     });
 
     // User account routes

@@ -1,4 +1,4 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container px-3 mx-auto">
@@ -9,7 +9,7 @@
         </div>
         
         <div>
-            <a href="{{ route('store.products', [], false) }}" class="btn-secondary">
+            <a href="{{ route('admin.products', [], false) }}" class="btn-secondary">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Products
             </a>
@@ -48,7 +48,7 @@
             </h3>
         </div>
         <div class="card-body">
-            <form action="{{ isset($product) ? route('store.products.update', $product->id, false) : route('store.products.store', [], false) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ isset($product) ? route('admin.products.update', $product->id, false) : route('admin.products.store', [], false) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if(isset($product))
                     @method('PUT')
@@ -281,7 +281,7 @@
                 
                 <!-- Submit Buttons -->
                 <div class="flex justify-end gap-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                    <a href="{{ route('store.products', [], false) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                    <a href="{{ route('admin.products', [], false) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                         Cancel
                     </a>
                     <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">

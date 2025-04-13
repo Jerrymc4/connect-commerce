@@ -1,4 +1,4 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container px-3 mx-auto">
@@ -9,7 +9,7 @@
         </div>
         
         <div class="flex space-x-3">
-            <a href="{{ route('store.orders.show', $order->id, false) }}" class="btn-secondary">
+            <a href="{{ route('admin.orders.show', $order->id, false) }}" class="btn-secondary">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Order
             </a>

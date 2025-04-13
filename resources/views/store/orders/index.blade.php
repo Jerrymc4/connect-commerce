@@ -1,4 +1,4 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container px-4 mx-auto">
@@ -167,10 +167,10 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end space-x-2">
-                                    <a href="{{ route('store.orders.edit', $order->id) }}" class="text-accent hover:text-accent/80 transition-colors">
+                                    <a href="{{ route('admin.orders.edit', $order->id) }}" class="text-accent hover:text-accent/80 transition-colors">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="{{ route('store.orders.invoice', $order->id) }}" class="text-secondary hover:text-primary transition-colors">
+                                    <a href="{{ route('admin.orders.invoice', $order->id) }}" class="text-secondary hover:text-primary transition-colors">
                                         <i class="fas fa-file-invoice"></i>
                                     </a>
                                     <button type="button" class="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors">

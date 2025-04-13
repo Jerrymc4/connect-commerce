@@ -1,4 +1,4 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container mx-auto py-6">
@@ -6,7 +6,7 @@
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
             {{ isset($customer) ? 'Edit Customer' : 'Add New Customer' }}
         </h1>
-        <a href="{{ route('store.customers', [], false) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors">
+        <a href="{{ route('.customers', [], false) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors">
             <i class="fas fa-arrow-left mr-2"></i>Back to Customers
         </a>
     </div>
@@ -19,7 +19,7 @@
             </h2>
         </div>
         <div class="p-6">
-            <form method="POST" action="{{ isset($customer) ? route('store.customers.update', $customer->id, false) : route('store.customers.store', [], false) }}">
+            <form method="POST" action="{{ isset($customer) ? route('.customers.update', $customer->id, false) : route('.customers.store', [], false) }}">
                 @csrf
                 @if(isset($customer))
                     @method('PUT')
@@ -203,7 +203,7 @@
                 </div>
 
                 <div class="flex justify-end space-x-3 border-t border-gray-200 dark:border-gray-700 pt-4 mt-6">
-                    <a href="{{ route('store.customers', [], false) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors">
+                    <a href="{{ route('.customers', [], false) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors">
                         <i class="fas fa-times mr-2"></i>Cancel
                     </a>
                     <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors">

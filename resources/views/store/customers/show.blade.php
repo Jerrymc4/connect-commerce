@@ -1,14 +1,14 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container mx-auto py-6">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Customer Profile</h1>
         <div class="flex space-x-3">
-            <a href="{{ route('store.customers.edit', $customer->id, false) }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors">
+            <a href="{{ route('admin.customers.edit', $customer->id, false) }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors">
                 <i class="fas fa-edit mr-2"></i>Edit
             </a>
-            <a href="{{ route('store.customers', [], false) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors">
+            <a href="{{ route('admin.customers', [], false) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors">
                 <i class="fas fa-arrow-left mr-2"></i>Back
             </a>
         </div>
@@ -88,7 +88,7 @@
                     <div class="space-y-3">
                         <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Actions</h3>
                         <div class="space-y-2">
-                            <form action="{{ route('store.customers.destroy', $customer->id, false) }}" method="POST" 
+                            <form action="{{ route('admin.customers.destroy', $customer->id, false) }}" method="POST" 
                                   onsubmit="return confirm('Are you sure you want to delete this customer? This action cannot be undone.');" 
                                   class="w-full">
                                 @csrf
@@ -167,7 +167,7 @@
                                     ${{ number_format($order->total, 2) }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right">
-                                    <a href="{{ route('store.orders.show', $order->id, false) }}" 
+                                    <a href="{{ route('admin.orders.show', $order->id, false) }}" 
                                        class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-200 p-1 rounded hover:bg-blue-100 dark:hover:bg-blue-900/20"
                                        title="View Order Details">
                                         <i class="fas fa-eye"></i>

@@ -1,4 +1,4 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container px-3 mx-auto">
@@ -9,7 +9,7 @@
         </div>
         
         <div>
-            <a href="{{ route('store.audit-logs.index', [], false) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 inline-flex items-center transition-colors">
+            <a href="{{ route('admin.audit-logs.index', [], false) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 inline-flex items-center transition-colors">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Logs
             </a>

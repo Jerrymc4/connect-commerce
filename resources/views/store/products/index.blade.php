@@ -1,4 +1,4 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container px-3 mx-auto">
@@ -9,7 +9,7 @@
         </div>
         
         <div>
-            <a href="{{ route('store.products.create', [], false) }}" class="btn-primary">
+            <a href="{{ route('admin.products.create', [], false) }}" class="btn-primary">
                 <i class="fas fa-plus mr-2"></i>
                 Add New Product
             </a>
@@ -47,7 +47,7 @@
                 Products
             </h3>
             <div class="flex items-center space-x-2">
-                <form action="{{ route('store.products', [], false) }}" method="get" class="flex">
+                <form action="{{ route('admin.products', [], false) }}" method="get" class="flex">
                     <input type="text" name="search" placeholder="Search products..." value="{{ request('search') }}" class="form-control rounded-r-none border-r-0">
                     <button type="submit" class="btn-primary rounded-l-none">
                         <i class="fas fa-search"></i>
@@ -93,13 +93,13 @@
                         </td>
                         <td class="text-center">
                             <div class="flex justify-center space-x-2">
-                                <a href="{{ route('store.products.edit', $product->id, false) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300" title="Edit">
+                                <a href="{{ route('admin.products.edit', $product->id, false) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="{{ route('store.products.show', $product->id, false) }}" class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300" title="View">
+                                <a href="{{ route('admin.products.show', $product->id, false) }}" class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300" title="View">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <form action="{{ route('store.products.destroy', $product->id, false) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                <form action="{{ route('admin.products.destroy', $product->id, false) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300" title="Delete">

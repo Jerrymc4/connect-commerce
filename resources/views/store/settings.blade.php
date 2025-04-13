@@ -1,4 +1,4 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container px-4 mx-auto">
@@ -37,16 +37,16 @@
     <!-- Tabs -->
     <div class="mb-6 border-b border-border-color">
         <div class="flex flex-wrap -mb-px">
-            <a href="{{ route('store.settings', ['tab' => 'general'], false) }}" class="inline-block py-4 px-4 text-center border-b-2 {{ $activeTab == 'general' ? 'border-accent text-accent font-medium' : 'border-transparent hover:text-primary hover:border-border-color' }}">
+            <a href="{{ route('admin.settings', ['tab' => 'general'], false) }}" class="inline-block py-4 px-4 text-center border-b-2 {{ $activeTab == 'general' ? 'border-accent text-accent font-medium' : 'border-transparent hover:text-primary hover:border-border-color' }}">
                 <i class="fas fa-cog mr-2"></i> General
             </a>
-            <a href="{{ route('store.settings', ['tab' => 'theme'], false) }}" class="inline-block py-4 px-4 text-center border-b-2 {{ $activeTab == 'theme' ? 'border-accent text-accent font-medium' : 'border-transparent hover:text-primary hover:border-border-color' }}">
+            <a href="{{ route('admin.settings', ['tab' => 'theme'], false) }}" class="inline-block py-4 px-4 text-center border-b-2 {{ $activeTab == 'theme' ? 'border-accent text-accent font-medium' : 'border-transparent hover:text-primary hover:border-border-color' }}">
                 <i class="fas fa-paint-brush mr-2"></i> Theme
             </a>
-            <a href="{{ route('store.settings', ['tab' => 'categories'], false) }}" class="inline-block py-4 px-4 text-center border-b-2 {{ $activeTab == 'categories' ? 'border-accent text-accent font-medium' : 'border-transparent hover:text-primary hover:border-border-color' }}">
+            <a href="{{ route('admin.settings', ['tab' => 'categories'], false) }}" class="inline-block py-4 px-4 text-center border-b-2 {{ $activeTab == 'categories' ? 'border-accent text-accent font-medium' : 'border-transparent hover:text-primary hover:border-border-color' }}">
                 <i class="fas fa-list mr-2"></i> Categories
             </a>
-            <a href="{{ route('store.settings', ['tab' => 'discounts'], false) }}" class="inline-block py-4 px-4 text-center border-b-2 {{ $activeTab == 'discounts' ? 'border-accent text-accent font-medium' : 'border-transparent hover:text-primary hover:border-border-color' }}">
+            <a href="{{ route('admin.settings', ['tab' => 'discounts'], false) }}" class="inline-block py-4 px-4 text-center border-b-2 {{ $activeTab == 'discounts' ? 'border-accent text-accent font-medium' : 'border-transparent hover:text-primary hover:border-border-color' }}">
                 <i class="fas fa-tag mr-2"></i> Discounts
             </a>
         </div>
@@ -55,7 +55,7 @@
     <!-- General Settings Tab -->
     @if($activeTab == 'general')
     <div class="bg-card rounded-lg shadow-sm border border-border-color p-6">
-        <form action="{{ route('store.settings.update') }}" method="POST" class="space-y-8">
+        <form action="{{ route('admin.settings.update') }}" method="POST" class="space-y-8">
             @csrf
             @method('PUT')
             <input type="hidden" name="section" value="general_settings">
@@ -164,7 +164,7 @@
     <!-- Theme Settings Tab -->
     @if($activeTab == 'theme')
     <div class="bg-card rounded-lg shadow-sm border border-border-color p-6">
-        <form action="{{ route('store.settings.update') }}" method="POST" class="space-y-8">
+        <form action="{{ route('admin.settings.update') }}" method="POST" class="space-y-8">
             @csrf
             @method('PUT')
             <input type="hidden" name="section" value="theme_settings">
@@ -307,7 +307,7 @@
     <div class="bg-card rounded-lg shadow-sm border border-border-color">
         <div class="flex items-center justify-between p-6 border-b border-border-color">
             <h2 class="text-xl font-medium text-primary">Categories</h2>
-            <a href="{{ route('store.settings.categories.create') }}" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-accent hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition-colors">
+            <a href="{{ route('admin.settings.categories.create') }}" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-accent hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition-colors">
                 <i class="fas fa-plus mr-2"></i> Add Category
             </a>
         </div>
@@ -342,10 +342,10 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-2">
-                                            <a href="{{ route('store.settings.categories.edit', $category->id) }}" class="text-accent hover:text-accent/80">
+                                            <a href="{{ route('admin.settings.categories.edit', $category->id) }}" class="text-accent hover:text-accent/80">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="{{ route('store.settings.categories.destroy', $category->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                            <form action="{{ route('admin.settings.categories.destroy', $category->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-500 hover:text-red-700">
@@ -376,10 +376,10 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div class="flex space-x-2">
-                                                    <a href="{{ route('store.settings.categories.edit', $childCategory->id) }}" class="text-accent hover:text-accent/80">
+                                                    <a href="{{ route('admin.settings.categories.edit', $childCategory->id) }}" class="text-accent hover:text-accent/80">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <form action="{{ route('store.settings.categories.destroy', $childCategory->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                                    <form action="{{ route('admin.settings.categories.destroy', $childCategory->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="text-red-500 hover:text-red-700">
@@ -402,7 +402,7 @@
                     </div>
                     <h3 class="text-lg font-medium text-primary">No Categories Found</h3>
                     <p class="text-secondary mt-1">You haven't created any categories yet.</p>
-                    <a href="{{ route('store.settings.categories.create') }}" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-accent hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition-colors">
+                    <a href="{{ route('admin.settings.categories.create') }}" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-accent hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition-colors">
                         <i class="fas fa-plus mr-2"></i> Create First Category
                     </a>
                 </div>
@@ -425,7 +425,7 @@
         <div id="discountForm" class="mb-8 bg-body rounded-lg border border-border-color p-6" style="display: {{ request()->get('action') == 'create' ? 'block' : 'none' }};">
             <h3 class="text-lg font-medium text-primary mb-4">{{ isset($editDiscount) ? 'Edit Discount' : 'New Discount' }}</h3>
             
-            <form action="{{ isset($editDiscount) ? route('store.settings.discounts.update', $editDiscount->id) : route('store.settings.discounts.store') }}" method="POST" class="space-y-6">
+            <form action="{{ isset($editDiscount) ? route('admin.settings.discounts.update', $editDiscount->id) : route('admin.settings.discounts.store') }}" method="POST" class="space-y-6">
                 @csrf
                 @if(isset($editDiscount))
                     @method('PUT')
@@ -557,8 +557,8 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="{{ route('store.settings', ['tab' => 'discounts', 'action' => 'edit', 'id' => $discount->id]) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-3">Edit</a>
-                            <form method="POST" action="{{ route('store.settings.discounts.destroy', $discount->id) }}" class="inline-block">
+                            <a href="{{ route('admin.settings', ['tab' => 'discounts', 'action' => 'edit', 'id' => $discount->id]) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-3">Edit</a>
+                            <form method="POST" action="{{ route('admin.settings.discounts.destroy', $discount->id) }}" class="inline-block">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300" onclick="return confirm('Are you sure you want to delete this discount?')">Delete</button>

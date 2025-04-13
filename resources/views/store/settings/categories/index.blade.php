@@ -1,10 +1,10 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container px-4 mx-auto">
     <script>
         // Redirect to the settings page with the categories tab active
-        window.location.href = "{{ route('store.settings', ['tab' => 'categories']) }}";
+        window.location.href = "{{ route('admin.settings', ['tab' => 'categories']) }}";
     </script>
     
     <div class="text-center py-12">

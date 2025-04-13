@@ -1,4 +1,4 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container px-3 mx-auto">
@@ -9,11 +9,11 @@
         </div>
         
         <div class="flex space-x-3">
-            <a href="{{ route('store.orders', [], false) }}" class="btn-secondary">
+            <a href="{{ route('admin.orders', [], false) }}" class="btn-secondary">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Orders
             </a>
-            <a href="{{ route('store.orders.show', $order->id, false) }}" class="btn-info">
+            <a href="{{ route('admin.orders.show', $order->id, false) }}" class="btn-info">
                 <i class="fas fa-eye mr-2"></i>
                 View Order
             </a>
@@ -52,7 +52,7 @@
             </h3>
         </div>
         <div class="card-body">
-            <form action="{{ route('store.orders.update', $order->id, false) }}" method="POST">
+            <form action="{{ route('admin.orders.update', $order->id, false) }}" method="POST">
                 @csrf
                 @method('PUT')
                 
@@ -118,7 +118,7 @@
                 
                 <!-- Submit Buttons -->
                 <div class="flex justify-end gap-3">
-                    <a href="{{ route('store.orders.show', $order->id, false) }}" class="btn-secondary">Cancel</a>
+                    <a href="{{ route('admin.orders.show', $order->id, false) }}" class="btn-secondary">Cancel</a>
                     <button type="submit" class="btn-primary">
                         <i class="fas fa-save mr-2"></i>
                         Update Order
@@ -254,7 +254,7 @@
     
     <!-- Action Buttons -->
     <div class="flex justify-end gap-3 mt-6">
-        <a href="{{ route('store.orders.show', $order->id, false) }}" class="btn-secondary">
+        <a href="{{ route('admin.orders.show', $order->id, false) }}" class="btn-secondary">
             <i class="fas fa-times mr-2"></i>
             Cancel
         </a>

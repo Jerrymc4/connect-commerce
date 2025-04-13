@@ -445,7 +445,7 @@
             }"
         >
             <div class="logo-section">
-                <a href="{{ route('store.dashboard', [], false) }}" class="flex items-center">
+                <a href="{{ route('admin.dashboard', [], false) }}" class="flex items-center">
                     <img src="{{ asset('images/logo.svg') }}" alt="Logo" class="h-8 w-auto">
                     <span class="ml-2 text-xl font-bold text-white">{{ tenant()->name }}</span>
                 </a>
@@ -458,7 +458,7 @@
                     <div class="sidebar-section">
                         <h3 class="sidebar-section-title">Dashboard</h3>
                         <div class="mt-2 space-y-1">
-                            <a href="{{ route('store.dashboard', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('store.dashboard') ? 'active' : '' }}">
+                            <a href="{{ route('admin.dashboard', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                                 <i class="fas fa-home mr-3"></i>
                                 Dashboard
                             </a>
@@ -467,7 +467,7 @@
                     <div class="sidebar-section">
                         <h3 class="sidebar-section-title">Catalog</h3>
                         <div class="mt-2 space-y-1">
-                            <a href="{{ route('store.products', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('store.products*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.products', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('admin.products*') ? 'active' : '' }}">
                                 <i class="fas fa-box mr-3"></i>
                                 Products
                             </a>
@@ -476,11 +476,11 @@
                     <div class="sidebar-section">
                         <h3 class="sidebar-section-title">Sales</h3>
                         <div class="mt-2 space-y-1">
-                            <a href="{{ route('store.orders', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('store.orders*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.orders', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('admin.orders*') ? 'active' : '' }}">
                                 <i class="fas fa-shopping-cart mr-3"></i>
                                 Orders
                             </a>
-                            <a href="{{ route('store.customers', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('store.customers*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.customers', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('admin.customers*') ? 'active' : '' }}">
                                 <i class="fas fa-users mr-3"></i>
                                 Customers
                             </a>
@@ -489,11 +489,11 @@
                     <div class="sidebar-section">
                         <h3 class="sidebar-section-title">Configuration</h3>
                         <div class="mt-2 space-y-1">
-                            <a href="{{ route('store.settings', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('store.settings*') || request()->routeIs('store.themes*') || request()->routeIs('store.discounts*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.settings', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('admin.settings*') || request()->routeIs('admin.themes*') || request()->routeIs('admin.discounts*') ? 'active' : '' }}">
                                 <i class="fas fa-cog mr-3"></i>
                                 Settings
                             </a>
-                            <a href="{{ route('store.audit-logs.index', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('store.audit-logs*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.audit-logs.index', [], false) }}" class="sidebar-nav-item {{ request()->routeIs('admin.audit-logs*') ? 'active' : '' }}">
                                 <i class="fas fa-history mr-3"></i>
                                 Audit Logs
                             </a>

@@ -1,4 +1,4 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container px-4 mx-auto">
@@ -22,16 +22,16 @@
                 </div>
                 <div x-show="open" @click.away="open = false" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-card ring-1 ring-border-color ring-opacity-5 z-10" style="display: none;">
                     <div class="py-1">
-                        <a href="{{ route('store.products.create', [], false) }}" class="block px-4 py-2 text-sm text-primary hover:bg-body hover:text-accent transition-colors">
+                        <a href="{{ route('admin.products.create', [], false) }}" class="block px-4 py-2 text-sm text-primary hover:bg-body hover:text-accent transition-colors">
                             <i class="fas fa-plus text-blue-500 dark:text-blue-400 mr-2"></i> Add New Product
                         </a>
-                        <a href="{{ route('store.orders', [], false) }}" class="block px-4 py-2 text-sm text-primary hover:bg-body hover:text-accent transition-colors">
+                        <a href="{{ route('admin.orders', [], false) }}" class="block px-4 py-2 text-sm text-primary hover:bg-body hover:text-accent transition-colors">
                             <i class="fas fa-shipping-fast text-green-500 dark:text-green-400 mr-2"></i> Process Orders
                         </a>
-                        <a href="{{ route('store.discounts.create', [], false) }}" class="block px-4 py-2 text-sm text-primary hover:bg-body hover:text-accent transition-colors">
+                        <a href="{{ route('admin.discounts.create', [], false) }}" class="block px-4 py-2 text-sm text-primary hover:bg-body hover:text-accent transition-colors">
                             <i class="fas fa-tag text-orange-500 dark:text-orange-400 mr-2"></i> Create Discount
                         </a>
-                        <a href="{{ route('store.themes', [], false) }}" class="block px-4 py-2 text-sm text-primary hover:bg-body hover:text-accent transition-colors">
+                        <a href="{{ route('admin.themes', [], false) }}" class="block px-4 py-2 text-sm text-primary hover:bg-body hover:text-accent transition-colors">
                             <i class="fas fa-paint-brush text-purple-500 dark:text-purple-400 mr-2"></i> Customize Theme
                         </a>
                     </div>
@@ -78,7 +78,7 @@
                             <span class="ml-3 text-sm font-medium text-blue-800 dark:text-blue-300">{{ $setupProgress }}%</span>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                            <a href="{{ route('store.products.create', [], false) }}" class="flex items-center text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
+                            <a href="{{ route('admin.products.create', [], false) }}" class="flex items-center text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
                                 <span class="flex-shrink-0 h-5 w-5 {{ ($totalProducts ?? 0) > 0 ? 'text-green-500 dark:text-green-400' : 'text-blue-500 dark:text-blue-400' }}">
                                     @if(($totalProducts ?? 0) > 0)
                                         <i class="fas fa-check-circle"></i>
@@ -88,7 +88,7 @@
                                 </span>
                                 <span class="ml-1.5">{{ ($totalProducts ?? 0) > 0 ? 'Add more products' : 'Add your first product' }}</span>
                             </a>
-                            <a href="{{ route('store.themes', [], false) }}" class="flex items-center text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
+                            <a href="{{ route('admin.themes', [], false) }}" class="flex items-center text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
                                 <span class="flex-shrink-0 h-5 w-5 {{ isset(tenant()->data['theme']) ? 'text-green-500 dark:text-green-400' : 'text-blue-500 dark:text-blue-400' }}">
                                     @if(isset(tenant()->data['theme']))
                                         <i class="fas fa-check-circle"></i>
@@ -98,7 +98,7 @@
                                 </span>
                                 <span class="ml-1.5">Customize your store theme</span>
                             </a>
-                            <a href="{{ route('store.settings', [], false) }}" class="flex items-center text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
+                            <a href="{{ route('admin.settings', [], false) }}" class="flex items-center text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
                                 <span class="flex-shrink-0 h-5 w-5 {{ isset(tenant()->data['settings']) ? 'text-green-500 dark:text-green-400' : 'text-blue-500 dark:text-blue-400' }}">
                                     @if(isset(tenant()->data['settings']))
                                         <i class="fas fa-check-circle"></i>
@@ -347,7 +347,7 @@
                 </table>
             </div>
             <div class="p-4 border-t border-border-color bg-body">
-                <a href="{{ route('store.orders', [], false) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium">View all orders →</a>
+                <a href="{{ route('admin.orders', [], false) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium">View all orders →</a>
             </div>
         </div>
         
@@ -407,7 +407,7 @@
                 </table>
             </div>
             <div class="p-4 border-t border-border-color bg-body">
-                <a href="{{ route('store.products', [], false) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium">View all products →</a>
+                <a href="{{ route('admin.products', [], false) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium">View all products →</a>
             </div>
         </div>
     </div>

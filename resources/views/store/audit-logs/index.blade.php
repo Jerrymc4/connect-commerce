@@ -1,4 +1,4 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container px-3 mx-auto">
@@ -9,7 +9,7 @@
         </div>
         
         <div>
-            <a href="{{ route('store.audit-logs.export', [], false) }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors inline-flex items-center">
+            <a href="{{ route('admin.audit-logs.export', [], false) }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors inline-flex items-center">
                 <i class="fas fa-download mr-2"></i>
                 Export Logs
             </a>
@@ -52,7 +52,7 @@
     
     <!-- Filters -->
     <div class="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 border border-gray-200 dark:border-gray-700">
-        <form action="{{ route('store.audit-logs.index', [], false) }}" method="GET" class="space-y-4">
+        <form action="{{ route('admin.audit-logs.index', [], false) }}" method="GET" class="space-y-4">
             <div class="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Filter Logs</div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -97,7 +97,7 @@
             </div>
             
             <div class="flex justify-end">
-                <a href="{{ route('store.audit-logs.index', [], false) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 mr-2 transition-colors">
+                <a href="{{ route('admin.audit-logs.index', [], false) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 mr-2 transition-colors">
                     Reset
                 </a>
                 <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors">
@@ -164,7 +164,7 @@
                             {{ $log->auditable_id }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-right space-x-2">
-                            <a href="{{ route('store.audit-logs.show', $log->id, false) }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                            <a href="{{ route('admin.audit-logs.show', $log->id, false) }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
                                 <i class="fas fa-eye"></i> View
                             </a>
                         </td>

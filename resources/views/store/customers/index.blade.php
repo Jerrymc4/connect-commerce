@@ -1,11 +1,11 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container mx-auto py-6">
     
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Customers</h1>
-        <a href="{{ route('store.customers.create', [], false) }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors">
+        <a href="{{ route('admin.customers.create', [], false) }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-colors">
             <i class="fas fa-user-plus mr-2"></i>Add Customer
         </a>
     </div>
@@ -19,7 +19,7 @@
     <!-- Search and Filters -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
         <div class="p-6">
-            <form action="{{ route('store.customers', [], false) }}" method="GET" class="flex flex-col md:flex-row gap-4">
+            <form action="{{ route('admin.customers', [], false) }}" method="GET" class="flex flex-col md:flex-row gap-4">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
                     <div class="relative">
@@ -128,15 +128,15 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end space-x-2">
-                                    <a href="{{ route('store.customers.show', $customer->id) }}" 
+                                    <a href="{{ route('admin.customers.show', $customer->id) }}" 
                                         class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-200 p-1 rounded hover:bg-indigo-100 dark:hover:bg-indigo-900/20">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('store.customers.edit', $customer->id) }}" 
+                                    <a href="{{ route('admin.customers.edit', $customer->id) }}" 
                                         class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-200 p-1 rounded hover:bg-blue-100 dark:hover:bg-blue-900/20">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <form action="{{ route('store.customers.destroy', $customer->id) }}" method="POST" class="inline-block">
+                                    <form action="{{ route('admin.customers.destroy', $customer->id) }}" method="POST" class="inline-block">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-200 p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/20"

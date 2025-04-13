@@ -1,4 +1,4 @@
-@extends('layouts.store')
+@extends('layouts.admin.dashboard')
 
 @section('content')
 <div class="container px-3 mx-auto">
@@ -9,11 +9,11 @@
         </div>
         
         <div class="flex space-x-3">
-            <a href="{{ route('store.products', [], false) }}" class="btn-secondary">
+            <a href="{{ route('admin.products', [], false) }}" class="btn-secondary">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Products
             </a>
-            <a href="{{ route('store.products.edit', $product->id, false) }}" class="btn-primary">
+            <a href="{{ route('admin.products.edit', $product->id, false) }}" class="btn-primary">
                 <i class="fas fa-edit mr-2"></i>
                 Edit Product
             </a>
@@ -199,17 +199,17 @@
     <!-- Action Buttons -->
     <div class="flex justify-between mt-8">
         <div>
-            <a href="{{ route('store.products', [], false) }}" class="btn-secondary">
+            <a href="{{ route('admin.products', [], false) }}" class="btn-secondary">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Back to Products
             </a>
         </div>
         <div class="flex space-x-3">
-            <a href="{{ route('store.products.edit', $product->id, false) }}" class="btn-primary">
+            <a href="{{ route('admin.products.edit', $product->id, false) }}" class="btn-primary">
                 <i class="fas fa-edit mr-2"></i>
                 Edit Product
             </a>
-            <form action="{{ route('store.products.destroy', $product->id, false) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product? This action cannot be undone.');">
+            <form action="{{ route('admin.products.destroy', $product->id, false) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product? This action cannot be undone.');">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn-danger">
