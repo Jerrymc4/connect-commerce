@@ -43,6 +43,9 @@
             <a href="{{ route('store.settings', ['tab' => 'theme'], false) }}" class="inline-block py-4 px-4 text-center border-b-2 {{ $activeTab == 'theme' ? 'border-accent text-accent font-medium' : 'border-transparent hover:text-primary hover:border-border-color' }}">
                 <i class="fas fa-paint-brush mr-2"></i> Theme
             </a>
+            <a href="{{ route('store.settings', ['tab' => 'categories'], false) }}" class="inline-block py-4 px-4 text-center border-b-2 {{ $activeTab == 'categories' ? 'border-accent text-accent font-medium' : 'border-transparent hover:text-primary hover:border-border-color' }}">
+                <i class="fas fa-list mr-2"></i> Categories
+            </a>
             <a href="{{ route('store.settings', ['tab' => 'discounts'], false) }}" class="inline-block py-4 px-4 text-center border-b-2 {{ $activeTab == 'discounts' ? 'border-accent text-accent font-medium' : 'border-transparent hover:text-primary hover:border-border-color' }}">
                 <i class="fas fa-tag mr-2"></i> Discounts
             </a>
@@ -296,6 +299,115 @@
                 </button>
             </div>
         </form>
+    </div>
+    @endif
+    
+    <!-- Categories Tab -->
+    @if($activeTab == 'categories')
+    <div class="bg-card rounded-lg shadow-sm border border-border-color">
+        <div class="flex items-center justify-between p-6 border-b border-border-color">
+            <h2 class="text-xl font-medium text-primary">Categories</h2>
+            <a href="{{ route('store.settings.categories.create') }}" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-accent hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition-colors">
+                <i class="fas fa-plus mr-2"></i> Add Category
+            </a>
+        </div>
+        
+        <div class="p-6">
+            @if(count($categories ?? []) > 0)
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-border-color">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">Name</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">Slug</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">Parent</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">Products</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-secondary uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-card divide-y divide-border-color">
+                            @foreach($categories as $category)
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-primary">{{ $category->name }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-secondary">{{ $category->slug }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-secondary">{{ $category->parent ? $category->parent->name : 'None' }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-secondary">{{ $category->products->count() }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <div class="flex space-x-2">
+                                            <a href="{{ route('store.settings.categories.edit', $category->id) }}" class="text-accent hover:text-accent/80">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form action="{{ route('store.settings.categories.destroy', $category->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-red-500 hover:text-red-700">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                {{-- Show child categories with indentation --}}
+                                @if($category->children && $category->children->count() > 0)
+                                    @foreach($category->children as $childCategory)
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-primary flex items-center">
+                                                    <span class="ml-4">└─ {{ $childCategory->name }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-secondary">{{ $childCategory->slug }}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-secondary">{{ $category->name }}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-secondary">{{ $childCategory->products->count() }}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <div class="flex space-x-2">
+                                                    <a href="{{ route('store.settings.categories.edit', $childCategory->id) }}" class="text-accent hover:text-accent/80">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form action="{{ route('store.settings.categories.destroy', $childCategory->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-red-500 hover:text-red-700">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="text-center py-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
+                        <i class="fas fa-folder-open text-secondary text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-primary">No Categories Found</h3>
+                    <p class="text-secondary mt-1">You haven't created any categories yet.</p>
+                    <a href="{{ route('store.settings.categories.create') }}" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-accent hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition-colors">
+                        <i class="fas fa-plus mr-2"></i> Create First Category
+                    </a>
+                </div>
+            @endif
+        </div>
     </div>
     @endif
     

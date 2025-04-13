@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Discount;
 use App\Models\Product;
 use Illuminate\Support\Str;
+use App\Repositories\Interfaces\CategoryRepositoryInterface;
 
 class SettingController extends Controller
 {
@@ -116,9 +117,10 @@ class SettingController extends Controller
             'Poppins' => 'Poppins',
         ];
         
-        // Get discounts if that tab is active
+        // Get content based on active tab
         $discounts = $activeTab === 'discounts' ? Discount::orderBy('created_at', 'desc')->paginate(10) : null;
-        $products = $activeTab === 'discounts' ? Product::select('id', 'name')->get() : null;
+        $products = ($activeTab === 'discounts' || $activeTab === 'categories') ? Product::select('id', 'name')->get() : null;
+        $categories = $activeTab === 'categories' ? app(CategoryRepositoryInterface::class)->getCategoriesWithChildren() : null;
         
         // Get currency options
         $currencies = [
@@ -174,6 +176,7 @@ class SettingController extends Controller
             'availableFonts',
             'discounts',
             'products',
+            'categories',
             'activeTab',
             'currencies', 
             'weightUnits', 

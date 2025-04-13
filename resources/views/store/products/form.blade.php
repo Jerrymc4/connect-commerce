@@ -145,6 +145,34 @@
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+                    
+                    <!-- Category -->
+                    <div>
+                        <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                            <i class="fas fa-folder text-blue-500 mr-2"></i>
+                            Category
+                        </label>
+                        <select name="category_id" id="category_id" class="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2.5 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-200 @error('category_id') border-red-500 @enderror">
+                            <option value="">Select a Category</option>
+                            @if(isset($categories))
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ (isset($product) && $product->category_id == $category->id) || old('category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                    @if($category->children && $category->children->count() > 0)
+                                        @foreach($category->children as $childCategory)
+                                            <option value="{{ $childCategory->id }}" {{ (isset($product) && $product->category_id == $childCategory->id) || old('category_id') == $childCategory->id ? 'selected' : '' }}>
+                                                &nbsp;&nbsp;└─ {{ $childCategory->name }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('category_id')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
                 
                 <!-- Description -->

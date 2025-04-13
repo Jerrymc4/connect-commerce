@@ -4,34 +4,23 @@ namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Repositories\Interfaces\ProductRepositoryInterface;
+use App\Models\Product;
+use App\Models\Category;
 use App\Services\AuditLogService;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    /**
-     * @var AuditLogService
-     */
     protected AuditLogService $auditLogService;
-    
-    /**
-     * @var ProductRepositoryInterface
-     */
-    protected $productRepository;
     
     /**
      * Create a new controller instance.
      *
      * @param AuditLogService $auditLogService
-     * @param ProductRepositoryInterface $productRepository
      */
-    public function __construct(
-        AuditLogService $auditLogService,
-        ProductRepositoryInterface $productRepository
-    ) {
+    public function __construct(AuditLogService $auditLogService)
+    {
         $this->auditLogService = $auditLogService;
-        $this->productRepository = $productRepository;
     }
     
     /**
@@ -39,7 +28,7 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        $products = $this->productRepository->getPaginatedProducts([], 10);
+        $products = Product::latest()->paginate(10);
         return view('store.products.index', compact('products'));
     }
 
@@ -48,7 +37,8 @@ class ProductController extends Controller
      */
     public function create(): View
     {
-        return view('store.products.form');
+        $categories = Category::whereNull('parent_id')->with('children')->get();
+        return view('store.products.form', compact('categories'));
     }
 
     /**
@@ -77,7 +67,7 @@ class ProductController extends Controller
             $validated['image'] = $imagePath;
         }
         
-        $product = $this->productRepository->create($validated);
+        $product = Product::create($validated);
         
         // Log product creation to audit log
         $this->auditLogService->logCreated($product, ['module' => 'products']);
@@ -91,12 +81,7 @@ class ProductController extends Controller
      */
     public function show(string $id): View
     {
-        $product = $this->productRepository->getById($id);
-        
-        if (!$product) {
-            abort(404, 'Product not found');
-        }
-        
+        $product = Product::findOrFail($id);
         return view('store.products.show', compact('product'));
     }
 
@@ -105,13 +90,9 @@ class ProductController extends Controller
      */
     public function edit(string $id): View
     {
-        $product = $this->productRepository->getById($id);
-        
-        if (!$product) {
-            abort(404, 'Product not found');
-        }
-        
-        return view('store.products.form', compact('product'));
+        $product = Product::findOrFail($id);
+        $categories = Category::whereNull('parent_id')->with('children')->get();
+        return view('store.products.form', compact('product', 'categories'));
     }
 
     /**
@@ -119,11 +100,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $product = $this->productRepository->getById($id);
-        
-        if (!$product) {
-            abort(404, 'Product not found');
-        }
+        $product = Product::findOrFail($id);
         
         // Store original values for audit log
         $originalValues = $product->getAttributes();
@@ -149,7 +126,7 @@ class ProductController extends Controller
             $validated['image'] = $imagePath;
         }
         
-        $this->productRepository->update($product, $validated);
+        $product->update($validated);
         
         // Log product update to audit log
         $this->auditLogService->logUpdated($product, $originalValues, ['module' => 'products']);
@@ -163,16 +140,12 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product = $this->productRepository->getById($id);
-        
-        if (!$product) {
-            abort(404, 'Product not found');
-        }
+        $product = Product::findOrFail($id);
         
         // Log product deletion to audit log before deleting
         $this->auditLogService->logDeleted($product, ['module' => 'products']);
         
-        $this->productRepository->delete($product);
+        $product->delete();
         
         return redirect()->route('store.products')
             ->with('success', 'Product deleted successfully');

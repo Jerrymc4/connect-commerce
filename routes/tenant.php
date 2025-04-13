@@ -19,10 +19,11 @@ use App\Http\Controllers\Store\CustomerController;
 use App\Http\Controllers\Store\ThemeController;
 use App\Http\Controllers\Store\SettingController;
 use App\Http\Controllers\Store\DiscountController;
+use App\Http\Controllers\Store\CategoryController;
 use App\Http\Controllers\Store\AuditLogController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Storefront\ProductController as StorefrontProductController;
-use App\Http\Controllers\Storefront\CategoryController;
+use App\Http\Controllers\Storefront\CategoryController as StorefrontCategoryController;
 use App\Http\Controllers\Auth\CustomerAuthController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -227,6 +228,15 @@ Route::middleware([
         // Integrated Settings
         Route::get('/settings', [SettingController::class, 'index'])->name('store.settings');
         Route::put('/settings', [SettingController::class, 'update'])->name('store.settings.update');
+        
+        // Categories Management
+        Route::get('/settings/categories/create', [CategoryController::class, 'create'])->name('store.settings.categories.create');
+        Route::post('/settings/categories', [CategoryController::class, 'store'])->name('store.settings.categories.store');
+        Route::get('/settings/categories/{id}/edit', [CategoryController::class, 'edit'])->name('store.settings.categories.edit');
+        Route::put('/settings/categories/{id}', [CategoryController::class, 'update'])->name('store.settings.categories.update');
+        Route::delete('/settings/categories/{id}', [CategoryController::class, 'destroy'])->name('store.settings.categories.destroy');
+        
+        // Discounts Management
         Route::post('/settings/discounts', [SettingController::class, 'storeDiscount'])->name('store.settings.discounts.store');
         Route::put('/settings/discounts/{id}', [SettingController::class, 'updateDiscount'])->name('store.settings.discounts.update');
         Route::delete('/settings/discounts/{id}', [SettingController::class, 'destroyDiscount'])->name('store.settings.discounts.destroy');
