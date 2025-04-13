@@ -6,7 +6,7 @@
 <div class="bg-gray-50 py-8 min-h-screen">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
-        <nav class="flex mb-6" aria-label="Breadcrumb">
+        <nav class="flex mb-8" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-3 text-sm">
                 <li class="inline-flex items-center">
                     <a href="{{ route('storefront.home') }}" class="text-gray-600 hover:text-blue-600 transition-colors">
@@ -68,10 +68,10 @@
         </div>
 
         <!-- Main content area with filters and products -->
-        <div class="block md:flex md:flex-row md:gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
             <!-- Sidebar Filters - mobile (hidden by default) -->
-            <div id="filters-sidebar-mobile" class="w-full md:hidden hidden mb-6">
-                <div class="bg-white rounded-lg shadow-sm p-5 mb-4">
+            <div id="filters-sidebar-mobile" class="col-span-1 md:hidden hidden mb-6">
+                <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                     <h2 class="font-bold text-gray-800 text-lg mb-4">Categories</h2>
                     <div class="space-y-3">
                         <div class="flex items-center">
@@ -93,7 +93,7 @@
                 </div>
                 
                 <!-- Price Range Filter - Mobile -->
-                <div class="bg-white rounded-lg shadow-sm p-5">
+                <div class="bg-white rounded-lg shadow-sm p-6">
                     <h2 class="font-bold text-gray-800 text-lg mb-4">Price Range</h2>
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
@@ -117,8 +117,8 @@
             </div>
 
             <!-- Sidebar Filters - desktop -->
-            <div class="hidden md:block md:w-64 md:flex-shrink-0">
-                <div class="bg-white rounded-lg shadow-sm p-5 mb-6 sticky top-6">
+            <div class="hidden md:block md:col-span-3 lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-sm p-6 mb-6 sticky top-6">
                     <h2 class="font-bold text-gray-800 text-lg mb-4">Categories</h2>
                     <div class="space-y-3">
                         <div class="flex items-center">
@@ -140,7 +140,7 @@
                 </div>
                 
                 <!-- Price Range Filter - Desktop -->
-                <div class="bg-white rounded-lg shadow-sm p-5 mb-6 sticky top-56">
+                <div class="bg-white rounded-lg shadow-sm p-6 mb-6 sticky top-56">
                     <h2 class="font-bold text-gray-800 text-lg mb-4">Price Range</h2>
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
@@ -164,7 +164,7 @@
             </div>
 
             <!-- Products Grid -->
-            <div class="w-full md:flex-1">
+            <div class="md:col-span-9 lg:col-span-10">
                 @if(isset($error))
                     <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-sm">
                         <p>{{ $error }}</p>
@@ -172,7 +172,7 @@
                 @endif
                 
                 <!-- Results meta -->
-                <div class="bg-white px-5 py-3 rounded-lg shadow-sm mb-6 flex justify-between items-center text-sm">
+                <div class="bg-white px-6 py-4 rounded-lg shadow-sm mb-6 flex justify-between items-center text-sm">
                     <div>
                         <p class="text-gray-500">
                             Showing 
@@ -204,7 +204,7 @@
                         </a>
                     </div>
                 @else
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         @foreach($products as $product)
                             <div class="bg-white rounded-lg shadow-sm overflow-hidden group hover:shadow-md transition-shadow duration-300 border border-gray-100 h-full flex flex-col">
                                 <a href="{{ route('storefront.products.show', $product->slug) }}" class="block">
@@ -217,7 +217,7 @@
                                         >
                                     </div>
                                 </a>
-                                <div class="p-5 flex-grow flex flex-col">
+                                <div class="p-6 flex-grow flex flex-col">
                                     <div class="mb-2">
                                         @if($product->categories->isNotEmpty())
                                             <div class="text-xs text-gray-500 mb-1">
@@ -252,7 +252,8 @@
                         @endforeach
                     </div>
                     
-                    <div class="mt-10">
+                    <!-- Pagination -->
+                    <div class="mt-10 flex justify-center">
                         {{ $products->withQueryString()->links() }}
                     </div>
                 @endif
@@ -345,7 +346,8 @@
     .pagination {
         display: flex;
         justify-content: center;
-        gap: 0.25rem;
+        align-items: center;
+        gap: 0.5rem;
     }
     
     .pagination li {
@@ -357,8 +359,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        min-width: 2rem;
-        height: 2rem;
+        min-width: 2.5rem;
+        height: 2.5rem;
         padding: 0.5rem;
         border-radius: 0.375rem;
         font-size: 0.875rem;
@@ -366,21 +368,26 @@
         color: #4B5563;
         cursor: pointer;
         transition: all 0.15s ease-in-out;
+        border: 1px solid #E5E7EB;
     }
     
     .pagination li:not(.active) .page-link:hover {
         background-color: #F3F4F6;
         color: #1F2937;
+        border-color: #D1D5DB;
     }
     
     .pagination li.active .page-link {
         background-color: #2563EB;
         color: white;
+        border-color: #2563EB;
     }
     
     .pagination li.disabled .page-link {
         color: #9CA3AF;
         cursor: not-allowed;
+        border-color: #E5E7EB;
+        background-color: #F9FAFB;
     }
 </style>
 @endpush
