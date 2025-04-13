@@ -18,7 +18,7 @@
                         </div>
                         <h2 class="text-xl font-semibold text-gray-700 mb-2">Your cart is empty</h2>
                         <p class="text-gray-600 mb-6">Looks like you haven't added any products to your cart yet.</p>
-                        <a href="{{ route('storefront.products') }}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+                        <a href="{{ route('storefront.products.index') }}" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
                             Browse Products
                         </a>
                     </div>

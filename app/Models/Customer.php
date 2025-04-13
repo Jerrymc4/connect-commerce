@@ -234,4 +234,12 @@ class Customer extends Authenticatable implements JWTSubject
             'email_verified_at' => $this->freshTimestamp(),
         ])->save();
     }
+
+    /**
+     * Get the customer's wishlist items.
+     */
+    public function wishlistItems()
+    {
+        return $this->hasMany(WishlistItem::class);
+    }
 }

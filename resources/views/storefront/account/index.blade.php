@@ -59,7 +59,7 @@
                     <h2 class="text-lg font-semibold mb-3">Wishlist</h2>
                     <div class="bg-gray-50 rounded-lg p-4 text-center">
                         <p class="text-gray-600 mb-2">You don't have any saved items in your wishlist yet.</p>
-                        <a href="{{ route('storefront.products') }}" class="text-blue-600 hover:underline">Browse products</a>
+                        <a href="{{ route('storefront.products.index') }}" class="text-blue-600 hover:underline">Browse products</a>
                     </div>
                 </div>
             </div>

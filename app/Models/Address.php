@@ -16,16 +16,17 @@ class Address extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'address_line_1',
-        'address_line_2',
+        'customer_id',
+        'address_line1',
+        'address_line2',
         'city',
         'state',
-        'zipcode',
+        'zip',
         'country',
-        'is_default',
-        'type',
-        'addressable_id',
-        'addressable_type',
+        'phone',
+        'is_default_shipping',
+        'is_default_billing',
+        'name',
     ];
 
     /**
@@ -34,8 +35,36 @@ class Address extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'is_default' => 'boolean',
+        'is_default_shipping' => 'boolean',
+        'is_default_billing' => 'boolean',
     ];
+
+    /**
+     * Get the customer that owns the address.
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * Get the formatted address as a string.
+     *
+     * @return string
+     */
+    public function getFormattedAttribute()
+    {
+        $address = $this->address_line1;
+        
+        if ($this->address_line2) {
+            $address .= ', ' . $this->address_line2;
+        }
+        
+        $address .= ', ' . $this->city . ', ' . $this->state . ' ' . $this->zip;
+        $address .= ', ' . $this->country;
+        
+        return $address;
+    }
 
     /**
      * Get the parent addressable model.

@@ -3,81 +3,40 @@
 namespace App\Http\Controllers\Storefront;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     /**
-     * Display products from the specified category.
+     * Display the specified category with its products.
      *
-     * @param Request $request
-     * @param string $slug
-     * @return \Illuminate\Contracts\View\View
+     * @param  string  $slug
+     * @return \Illuminate\View\View
      */
-    public function show(Request $request, $slug)
+    public function show($slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
         
-        // Start building the query for products in this category
-        $query = Product::where('category_id', $category->id)
-            ->where('status', 'active');
+        // Get all child category IDs to include their products too
+        $categoryIds = [$category->id];
         
-        // Apply search filter
-        $search = $request->query('search');
-        if ($search) {
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%")
-                  ->orWhere('sku', 'like', "%{$search}%");
-            });
+        $childCategories = Category::where('parent_id', $category->id)->get();
+        foreach ($childCategories as $child) {
+            $categoryIds[] = $child->id;
         }
         
-        // Apply price range filters
-        $minPrice = $request->query('min_price');
-        $maxPrice = $request->query('max_price');
+        // Get products for this category and its children
+        $products = Product::whereHas('categories', function($query) use ($categoryIds) {
+                $query->whereIn('categories.id', $categoryIds);
+            })
+            ->where('status', 'published')
+            ->paginate(12);
+            
+        // Get all categories for the sidebar
+        $categories = Category::where('parent_id', null)->with('children')->get();
         
-        if ($minPrice) {
-            $query->where('price', '>=', $minPrice);
-        }
-        
-        if ($maxPrice) {
-            $query->where('price', '<=', $maxPrice);
-        }
-        
-        // Apply sorting
-        $sort = $request->query('sort', 'newest');
-        switch ($sort) {
-            case 'price_low':
-                $query->orderBy('price', 'asc');
-                break;
-            case 'price_high':
-                $query->orderBy('price', 'desc');
-                break;
-            case 'name':
-                $query->orderBy('name', 'asc');
-                break;
-            case 'newest':
-            default:
-                $query->orderBy('created_at', 'desc');
-                break;
-        }
-        
-        // Get paginated results
-        $products = $query->paginate(12)->withQueryString();
-        
-        // Get all categories for filter sidebar
-        $categories = Category::orderBy('name')->get();
-        
-        return view('storefront.categories.show', [
-            'category' => $category,
-            'products' => $products,
-            'categories' => $categories,
-            'currentSort' => $sort,
-            'search' => $search,
-            'minPrice' => $minPrice,
-            'maxPrice' => $maxPrice
-        ]);
+        return view('storefront.categories.show', compact('category', 'products', 'categories'));
     }
 } 

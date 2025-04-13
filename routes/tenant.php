@@ -49,10 +49,11 @@ Route::middleware([
     });
 
     // Storefront routes accessible without authentication
-    Route::get('/', fn () => view('storefront.home', ['tenant' => tenant('id'), 'storeName' => tenant()->name]))->name('storefront.home');
-    Route::get('/products', [StorefrontProductController::class, 'index'])->name('storefront.products');
-    Route::get('/products/{slug}', [StorefrontProductController::class, 'show'])->name('storefront.products.show');
-    Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('storefront.categories.show');
+    Route::get('/', [App\Http\Controllers\Storefront\HomeController::class, 'index'])->name('storefront.home');
+
+    // Product routes
+    Route::get('/products', [App\Http\Controllers\Storefront\ProductController::class, 'index'])->name('storefront.products.index');
+    Route::get('/products/{slug}', [App\Http\Controllers\Storefront\ProductController::class, 'show'])->name('storefront.products.show');
 
     // Shopping Cart Routes
     Route::get('/cart', function () {
@@ -132,25 +133,55 @@ Route::middleware([
 
     // Customer Account Routes (protected by customer auth)
     Route::middleware(['auth:customer'])->group(function() {
-        Route::get('/account', function() {
-            return view('storefront.account.index');
-        })->name('customer.account');
+        // Account Dashboard
+        Route::get('/account', [\App\Http\Controllers\Storefront\AccountController::class, 'index'])
+            ->name('customer.account');
         
-        Route::get('/account/orders', function() {
-            return view('storefront.account.orders');
-        })->name('customer.orders');
+        // Profile Management
+        Route::get('/account/profile', [\App\Http\Controllers\Storefront\AccountController::class, 'editProfile'])
+            ->name('customer.profile');
+        Route::put('/account/profile', [\App\Http\Controllers\Storefront\AccountController::class, 'updateProfile'])
+            ->name('customer.profile.update');
         
-        Route::get('/account/wishlist', function() {
-            return view('storefront.account.wishlist');
-        })->name('customer.wishlist');
+        // Password Management
+        Route::get('/account/password', [\App\Http\Controllers\Storefront\AccountController::class, 'editPassword'])
+            ->name('customer.password');
+        Route::put('/account/password', [\App\Http\Controllers\Storefront\AccountController::class, 'updatePassword'])
+            ->name('customer.password.update');
         
-        Route::get('/account/addresses', function() {
-            return view('storefront.account.addresses');
-        })->name('customer.addresses');
+        // Orders History
+        Route::get('/account/orders', [\App\Http\Controllers\Storefront\AccountController::class, 'orders'])
+            ->name('customer.orders');
+        Route::get('/account/orders/{id}', [\App\Http\Controllers\Storefront\AccountController::class, 'showOrder'])
+            ->name('customer.orders.show');
         
-        Route::get('/account/profile', function() {
-            return view('storefront.account.profile');
-        })->name('customer.profile');
+        // Address Management
+        Route::get('/account/addresses', [\App\Http\Controllers\Storefront\AccountController::class, 'addresses'])
+            ->name('customer.addresses');
+        Route::get('/account/addresses/add', [\App\Http\Controllers\Storefront\AccountController::class, 'addAddress'])
+            ->name('customer.addresses.create');
+        Route::post('/account/addresses', [\App\Http\Controllers\Storefront\AccountController::class, 'storeAddress'])
+            ->name('customer.addresses.store');
+        Route::get('/account/addresses/{id}/edit', [\App\Http\Controllers\Storefront\AccountController::class, 'editAddress'])
+            ->name('customer.addresses.edit');
+        Route::put('/account/addresses/{id}', [\App\Http\Controllers\Storefront\AccountController::class, 'updateAddress'])
+            ->name('customer.addresses.update');
+        Route::delete('/account/addresses/{id}', [\App\Http\Controllers\Storefront\AccountController::class, 'deleteAddress'])
+            ->name('customer.addresses.destroy');
+        
+        // Payment Methods
+        Route::get('/account/payment-methods', [\App\Http\Controllers\Storefront\AccountController::class, 'paymentMethods'])
+            ->name('customer.payment-methods');
+        Route::get('/account/payment-methods/add', [\App\Http\Controllers\Storefront\AccountController::class, 'addPaymentMethod'])
+            ->name('customer.payment-methods.create');
+        Route::post('/account/payment-methods', [\App\Http\Controllers\Storefront\AccountController::class, 'storePaymentMethod'])
+            ->name('customer.payment-methods.store');
+        Route::delete('/account/payment-methods/{id}', [\App\Http\Controllers\Storefront\AccountController::class, 'deletePaymentMethod'])
+            ->name('customer.payment-methods.destroy');
+        
+        // Wishlist
+        Route::get('/account/wishlist', [\App\Http\Controllers\Storefront\AccountController::class, 'wishlist'])
+            ->name('customer.wishlist');
     });
 
     // Store Admin Dashboard - All authenticated routes

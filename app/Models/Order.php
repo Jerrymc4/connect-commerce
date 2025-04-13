@@ -18,33 +18,31 @@ class Order extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id',
+        'customer_id',
         'order_number',
         'status',
         'payment_status',
         'payment_method',
-        'payment_id',
+        'shipping_method',
         'subtotal',
-        'tax',
-        'shipping',
-        'discount',
+        'tax_amount',
+        'shipping_amount',
+        'discount_amount',
         'total',
+        'notes',
         'customer_name',
         'customer_email',
         'customer_phone',
         'shipping_address',
         'shipping_city',
         'shipping_state',
-        'shipping_zipcode',
+        'shipping_zip',
         'shipping_country',
         'billing_address',
         'billing_city',
         'billing_state',
-        'billing_zipcode',
+        'billing_zip',
         'billing_country',
-        'notes',
-        'tracking_number',
-        'shipping_provider',
     ];
 
     /**
@@ -54,24 +52,16 @@ class Order extends Model
      */
     protected $casts = [
         'subtotal' => 'decimal:2',
-        'tax' => 'decimal:2',
-        'shipping' => 'decimal:2',
-        'discount' => 'decimal:2',
+        'tax_amount' => 'decimal:2',
+        'shipping_amount' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
         'total' => 'decimal:2',
     ];
 
     /**
-     * Get the user that placed the order.
+     * Get the customer that owns the order.
      */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the customer that placed the order.
-     */
-    public function customer(): BelongsTo
+    public function customer()
     {
         return $this->belongsTo(Customer::class);
     }
@@ -79,11 +69,41 @@ class Order extends Model
     /**
      * Get the items for the order.
      */
-    public function orderItems(): HasMany
+    public function items()
     {
         return $this->hasMany(OrderItem::class);
     }
-    
+
+    /**
+     * Get the history records for the order.
+     */
+    public function history()
+    {
+        return $this->hasMany(OrderHistory::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Generate a unique order number.
+     *
+     * @return string
+     */
+    public static function generateOrderNumber()
+    {
+        $prefix = date('Ymd');
+        $lastOrder = self::where('order_number', 'like', $prefix . '%')
+            ->orderBy('order_number', 'desc')
+            ->first();
+            
+        if ($lastOrder) {
+            $lastNumber = intval(substr($lastOrder->order_number, strlen($prefix)));
+            $newNumber = $lastNumber + 1;
+        } else {
+            $newNumber = 1;
+        }
+        
+        return $prefix . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+    }
+
     /**
      * Gets the status text with proper formatting
      * 

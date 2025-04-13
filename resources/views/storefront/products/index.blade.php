@@ -1,54 +1,114 @@
-                            @foreach($products as $product)
-                                <div class="bg-white rounded-lg shadow border border-gray-100 overflow-hidden hover:shadow-md transition duration-300 flex flex-col h-full">
-                                    <a href="{{ route('storefront.products.show', $product->slug) }}" class="block relative">
-                                        <div class="h-52 bg-gray-100 relative overflow-hidden">
-                                            @if($product->image)
-                                                <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-                                            @else
-                                                <div class="absolute inset-0 flex items-center justify-center">
-                                                    <span class="text-gray-400"><i class="fas fa-box text-4xl"></i></span>
-                                                </div>
-                                            @endif
-                                            
-                                            @if($product->isOnSale())
-                                                <span class="absolute top-2 left-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
-                                                    SALE
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </a>
-                                    
-                                    <div class="p-4 flex-1 flex flex-col">
-                                        <div class="flex-1">
-                                            <a href="{{ route('storefront.products.show', $product->slug) }}" class="block">
-                                                <h3 class="font-medium text-gray-900 hover:text-purple-600 text-lg">{{ $product->name }}</h3>
-                                            </a>
-                                            
-                                            <p class="text-gray-500 text-sm mt-1 line-clamp-2">
-                                                {{ $product->description ?? 'No description available' }}
-                                            </p>
-                                        </div>
-                                        
-                                        <div class="mt-4">
-                                            <div class="flex items-center mb-3">
-                                                @if($product->isOnSale())
-                                                    <span class="font-bold text-lg text-red-600">${{ number_format($product->sale_price, 2) }}</span>
-                                                    <span class="ml-2 text-gray-500 line-through">${{ number_format($product->price, 2) }}</span>
-                                                @else
-                                                    <span class="font-bold text-lg text-gray-900">${{ number_format($product->price, 2) }}</span>
-                                                @endif
-                                                
-                                                @if(!$product->isOutOfStock())
-                                                    <span class="ml-auto text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">In Stock</span>
-                                                @else
-                                                    <span class="ml-auto text-xs px-2 py-1 bg-red-100 text-red-800 rounded-full">Out of Stock</span>
-                                                @endif
-                                            </div>
-                                            
-                                            <button type="button" class="w-full bg-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-700 transition duration-200 flex items-center justify-center {{ $product->isOutOfStock() ? 'opacity-50 cursor-not-allowed' : '' }}" {{ $product->isOutOfStock() ? 'disabled' : '' }}>
-                                                <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
-                                            </button>
-                                        </div>
+@extends('layouts.storefront')
+
+@section('title', 'Products')
+
+@section('content')
+<div class="container py-5">
+    <h1 class="mb-4">All Products</h1>
+    
+    @if(isset($error))
+        <div class="alert alert-danger">
+            {{ $error }}
+        </div>
+    @endif
+    
+    <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Categories</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="{{ route('storefront.products.index') }}" class="{{ !request()->has('category') ? 'fw-bold' : '' }}">
+                                All Categories
+                            </a>
+                        </li>
+                        @foreach($categories as $category)
+                            <li class="mb-2">
+                                <a href="{{ route('storefront.products.index', ['category' => $category->id]) }}" 
+                                   class="{{ request('category') == $category->id ? 'fw-bold' : '' }}">
+                                    {{ $category->name }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Sort By</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a href="{{ route('storefront.products.index', array_merge(request()->except('sort'), ['sort' => 'newest'])) }}" 
+                               class="{{ request('sort') == 'newest' || !request('sort') ? 'fw-bold' : '' }}">
+                                Newest
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ route('storefront.products.index', array_merge(request()->except('sort'), ['sort' => 'price_asc'])) }}" 
+                               class="{{ request('sort') == 'price_asc' ? 'fw-bold' : '' }}">
+                                Price (Low to High)
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ route('storefront.products.index', array_merge(request()->except('sort'), ['sort' => 'price_desc'])) }}" 
+                               class="{{ request('sort') == 'price_desc' ? 'fw-bold' : '' }}">
+                                Price (High to Low)
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Products Grid -->
+        <div class="col-lg-9">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <p class="text-muted">
+                        Showing {{ $products->firstItem() ?? 0 }} - {{ $products->lastItem() ?? 0 }} of {{ $products->total() ?? 0 }} products
+                    </p>
+                </div>
+            </div>
+            
+            @if($products->isEmpty())
+                <div class="alert alert-info">
+                    No products found. Please try a different category or search term.
+                </div>
+            @else
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    @foreach($products as $product)
+                        <div class="col">
+                            <div class="card h-100 product-card">
+                                <img src="{{ $product->image_url ?? 'https://via.placeholder.com/300x300' }}" 
+                                     class="card-img-top" 
+                                     alt="{{ $product->name }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $product->name }}</h5>
+                                    <p class="text-muted mb-2">{{ Str::limit($product->description, 60) }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="h5 mb-0">${{ number_format($product->price, 2) }}</span>
+                                        <a href="{{ route('storefront.products.show', $product->slug) }}" class="btn btn-sm btn-primary">
+                                            View Details
+                                        </a>
                                     </div>
                                 </div>
-                            @endforeach 
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                
+                <div class="mt-4">
+                    {{ $products->withQueryString()->links() }}
+                </div>
+            @endif
+        </div>
+    </div>
+</div>
+@endsection 

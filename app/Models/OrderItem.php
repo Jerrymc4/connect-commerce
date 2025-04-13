@@ -18,11 +18,11 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id',
         'product_id',
-        'name',
+        'product_name',
+        'sku',
         'price',
         'quantity',
         'options',
-        'subtotal',
     ];
 
     /**
@@ -32,7 +32,6 @@ class OrderItem extends Model
      */
     protected $casts = [
         'price' => 'decimal:2',
-        'subtotal' => 'decimal:2',
         'quantity' => 'integer',
         'options' => 'array',
     ];
@@ -46,20 +45,20 @@ class OrderItem extends Model
     }
 
     /**
-     * Get the product that belongs to the item.
+     * Get the product associated with this item.
      */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
-    
+
     /**
-     * Calculate the subtotal for this item.
+     * Get the subtotal for this item (price * quantity).
      *
      * @return float
      */
-    public function calculateSubtotal(): float
+    public function getSubtotalAttribute()
     {
-        return (float)$this->price * $this->quantity;
+        return $this->price * $this->quantity;
     }
 } 

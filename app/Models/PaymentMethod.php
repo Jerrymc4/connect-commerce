@@ -17,15 +17,22 @@ class PaymentMethod extends Model
      */
     protected $fillable = [
         'customer_id',
-        'provider',
-        'payment_type',
-        'token_id',
         'card_type',
         'last_four',
+        'holder_name',
         'expiry_month',
         'expiry_year',
-        'cardholder_name',
         'is_default',
+        'token', // For payment processor tokens
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'token',
     ];
 
     /**
@@ -35,15 +42,8 @@ class PaymentMethod extends Model
      */
     protected $casts = [
         'is_default' => 'boolean',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'token_id',
+        'expiry_month' => 'integer',
+        'expiry_year' => 'integer',
     ];
 
     /**
@@ -52,6 +52,28 @@ class PaymentMethod extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * Get whether the payment method is expired.
+     *
+     * @return bool
+     */
+    public function getIsExpiredAttribute()
+    {
+        $now = now();
+        return ($this->expiry_year < $now->year) || 
+               ($this->expiry_year == $now->year && $this->expiry_month < $now->month);
+    }
+
+    /**
+     * Get the expiry date formatted as MM/YY.
+     *
+     * @return string
+     */
+    public function getExpiryFormattedAttribute()
+    {
+        return sprintf('%02d/%s', $this->expiry_month, substr($this->expiry_year, -2));
     }
 
     /**
@@ -67,23 +89,11 @@ class PaymentMethod extends Model
     }
 
     /**
-     * Get the expiry date in MM/YY format.
-     */
-    public function getExpiryDateAttribute(): string
-    {
-        if (!$this->expiry_month || !$this->expiry_year) {
-            return '';
-        }
-
-        return "{$this->expiry_month}/{$this->expiry_year}";
-    }
-
-    /**
      * Get the formatted payment method description.
      */
     public function getDescriptionAttribute(): string
     {
-        $type = ucfirst($this->card_type ?? $this->payment_type);
+        $type = ucfirst($this->card_type);
         return "{$type} ending in {$this->last_four}";
     }
 
@@ -100,6 +110,6 @@ class PaymentMethod extends Model
      */
     public function scopeCreditCards($query)
     {
-        return $query->where('payment_type', 'credit_card');
+        return $query->where('card_type', 'credit_card');
     }
 } 

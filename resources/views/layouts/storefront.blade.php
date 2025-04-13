@@ -45,7 +45,7 @@
                     <!-- Navigation -->
                     <nav class="hidden md:flex space-x-8">
                         <a href="{{ route('storefront.home') }}" class="text-gray-600 hover:text-gray-900">Home</a>
-                        <a href="{{ route('storefront.products') }}" class="text-gray-600 hover:text-gray-900">Products</a>
+                        <a href="{{ route('storefront.products.index') }}" class="text-gray-600 hover:text-gray-900">Products</a>
                         <a href="#" class="text-gray-600 hover:text-gray-900">Categories</a>
                         <a href="#" class="text-gray-600 hover:text-gray-900">About</a>
                         <a href="#" class="text-gray-600 hover:text-gray-900">Contact</a>
@@ -144,7 +144,7 @@
                     <div>
                         <h3 class="text-lg font-semibold mb-4">Shop</h3>
                         <ul class="space-y-2">
-                            <li><a href="{{ route('storefront.products') }}" class="text-gray-400 hover:text-white">All Products</a></li>
+                            <li><a href="{{ route('storefront.products.index') }}" class="text-gray-400 hover:text-white">All Products</a></li>
                             <li><a href="#" class="text-gray-400 hover:text-white">New Arrivals</a></li>
                             <li><a href="#" class="text-gray-400 hover:text-white">Featured</a></li>
                             <li><a href="#" class="text-gray-400 hover:text-white">Sale</a></li>
