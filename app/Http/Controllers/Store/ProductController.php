@@ -69,6 +69,11 @@ class ProductController extends Controller
         
         $product = Product::create($validated);
         
+        // Sync the product with the selected category
+        if (isset($validated['category_id'])) {
+            $product->categories()->attach($validated['category_id']);
+        }
+        
         // Log product creation to audit log
         $this->auditLogService->logCreated($product, ['module' => 'products']);
         
@@ -127,6 +132,13 @@ class ProductController extends Controller
         }
         
         $product->update($validated);
+        
+        // Sync the product with the selected category
+        if (isset($validated['category_id'])) {
+            $product->categories()->sync([$validated['category_id']]);
+        } else {
+            $product->categories()->detach();
+        }
         
         // Log product update to audit log
         $this->auditLogService->logUpdated($product, $originalValues, ['module' => 'products']);
