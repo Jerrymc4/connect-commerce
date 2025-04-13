@@ -21,6 +21,10 @@ use App\Http\Controllers\Store\SettingController;
 use App\Http\Controllers\Store\DiscountController;
 use App\Http\Controllers\Store\AuditLogController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Storefront\ProductController as StorefrontProductController;
+use App\Http\Controllers\Storefront\CategoryController;
+use App\Http\Controllers\Auth\CustomerAuthController;
+use Illuminate\Support\Facades\Hash;
 
 // Route to serve assets for tenants
 Route::get('build/{path}', [TenantAssetController::class, 'serveAsset'])
@@ -45,11 +49,19 @@ Route::middleware([
 
     // Storefront routes accessible without authentication
     Route::get('/', fn () => view('storefront.home', ['tenant' => tenant('id'), 'storeName' => tenant()->name]))->name('storefront.home');
+    Route::get('/products', [StorefrontProductController::class, 'index'])->name('storefront.products');
+    Route::get('/products/{slug}', [StorefrontProductController::class, 'show'])->name('storefront.products.show');
+    Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('storefront.categories.show');
     
     // Store Admin Dashboard - All authenticated routes
     Route::middleware(['auth'])->prefix('admin')->group(function () {
         // Dashboard
         Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('store.dashboard');
+        
+        // Preview Store - redirects to customer login page
+        Route::get('/preview-store', function() {
+            return redirect()->route('customer.login');
+        })->name('store.preview');
         
         // Products Management
         Route::get('/products', [ProductController::class, 'index'])->name('store.products');
@@ -116,4 +128,79 @@ Route::middleware([
         Route::put('password', [PasswordController::class, 'update'])->name('tenant.password.update');
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('tenant.logout');
     });
+
+    // Customer authentication routes
+    Route::get('/login', function() {
+        return view('storefront.auth.login');
+    })->name('customer.login');
+
+    Route::post('/login', function(Illuminate\Http\Request $request) {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::guard('customer')->attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
+            
+            // Clear any admin intended redirects that might be stored in the session
+            if ($request->session()->has('url.intended')) {
+                $intended = $request->session()->get('url.intended');
+                // If the intended URL is for the admin area, clear it
+                if (str_contains($intended, '/admin')) {
+                    $request->session()->forget('url.intended');
+                }
+            }
+            
+            // Explicitly set that we're using the customer guard
+            $request->session()->put('auth.guard_name', 'customer');
+            
+            // Redirect to the storefront home
+            return redirect()->route('storefront.home');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    })->name('customer.login.attempt');
+
+    // Placeholder routes for customer auth functionality
+    Route::get('/register', function() {
+        return view('storefront.auth.register');
+    })->name('customer.register');
+
+    Route::get('/forgot-password', function() {
+        return view('storefront.auth.forgot-password');
+    })->name('customer.password.request');
+
+    Route::post('/register', function(Illuminate\Http\Request $request) {
+        $validatedData = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:customers'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'terms' => ['required', 'accepted'],
+        ]);
+
+        $customer = \App\Models\Customer::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+            'phone' => $validatedData['phone'] ?? null,
+        ]);
+
+        Auth::guard('customer')->login($customer);
+        
+        return redirect()->route('storefront.home');
+    })->name('customer.register.store');
+
+    // Add customer logout route
+    Route::post('/customer/logout', function(Illuminate\Http\Request $request) {
+        Auth::guard('customer')->logout();
+        
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
+        return redirect()->route('storefront.home');
+    })->name('customer.logout');
 });

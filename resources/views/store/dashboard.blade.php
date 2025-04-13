@@ -40,6 +40,13 @@
         </div>
     </div>
     
+    <!-- Add this somewhere appropriate in the dashboard header/navigation area -->
+    <div class="mb-6">
+        <a href="{{ route('customer.login') }}" class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors" target="_blank">
+            <i class="fas fa-external-link-alt mr-2"></i> Preview Your Store
+        </a>
+    </div>
+    
     <!-- Store Setup Progress (for new stores) -->
     @if(($totalProducts ?? 0) < 5 || ($totalOrders ?? 0) < 1)
     <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-8">
@@ -101,7 +108,7 @@
                                 </span>
                                 <span class="ml-1.5">Configure store settings</span>
                             </a>
-                            <a href="/" target="_blank" class="flex items-center text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
+                            <a href="/login" target="_blank" class="flex items-center text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">
                                 <span class="flex-shrink-0 h-5 w-5 text-blue-500 dark:text-blue-400">
                                     <i class="far fa-circle"></i>
                                 </span>

@@ -21,6 +21,9 @@ class DashboardController extends Controller
      */
     public function index(): View
     {
+        // Get the store preview URL
+        $storePreviewUrl = route('storefront.home');
+        
         // Date ranges for comparisons
         $today = Carbon::today();
         $startOfMonth = $today->copy()->startOfMonth();
@@ -144,7 +147,8 @@ class DashboardController extends Controller
             'salesData',
             'totalVisitors',
             'conversionRate',
-            'notifications'
+            'notifications',
+            'storePreviewUrl'
         ));
     }
     

@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 
 class Authenticate extends Middleware
 {
@@ -13,21 +12,16 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        if ($request->expectsJson()) {
-            return null;
+        if (! $request->expectsJson()) {
+            // Determine which login route to use based on the requested path
+            if (str_starts_with($request->path(), 'admin')) {
+                return route('tenant.login');
+            }
+            
+            // For customer-facing pages, redirect to customer login
+            return route('customer.login');
         }
         
-        // Get current host and determine if it's a tenant domain
-        $currentHost = $request->getHost();
-        $centralDomain = Config::get('tenancy.central_domains.0', 'connectcommerce.test');
-        $isTenantDomain = $currentHost !== $centralDomain && str_contains($currentHost, '.connectcommerce.test');
-        
-        // For tenant domains, redirect to tenant login
-        if ($isTenantDomain) {
-            return 'admin/login';
-        }
-        
-        // For central domain, use standard login route
-        return 'login';
+        return null;
     }
 } 

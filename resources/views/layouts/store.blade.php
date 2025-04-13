@@ -552,6 +552,12 @@
                                 </form>
                             </div>
                         </div>
+                        <!-- Add this to the header navigation area, near user profile or other main navigation -->
+                        <div class="ml-3 relative">
+                            <a href="{{ route('store.preview') }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors" target="_blank">
+                                <i class="fas fa-external-link-alt mr-1"></i> Preview Store
+                            </a>
+                        </div>
                     </div>
                 </div>
             </header>

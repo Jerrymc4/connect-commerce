@@ -3,15 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\HasApiTokens;
 
-class Customer extends Model
+class Customer extends Authenticatable implements JWTSubject
 {
-    use HasFactory, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -19,11 +22,17 @@ class Customer extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'name',
         'email',
         'password',
         'phone',
+        'address',
+        'city',
+        'state',
+        'zip',
+        'country',
+        'first_name',
+        'last_name',
         'email_verified_at',
         'status',
         'accepts_marketing',
@@ -58,7 +67,30 @@ class Customer extends Model
         'is_guest' => 'boolean',
         'preferences' => 'array',
         'deleted_at' => 'datetime',
+        'password' => 'hashed',
     ];
+
+    /**
+     * Get the JWT identifier.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array of claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [
+            'tenant_id' => tenant()->getId(),
+        ];
+    }
 
     /**
      * Get the customer's full name.
