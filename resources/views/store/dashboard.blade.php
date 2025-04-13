@@ -42,7 +42,7 @@
     
     <!-- Add this somewhere appropriate in the dashboard header/navigation area -->
     <div class="mb-6">
-        <a href="{{ route('customer.login') }}" class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors" target="_blank">
+        <a href="{{ route('store.preview') }}" class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors" target="_blank">
             <i class="fas fa-external-link-alt mr-2"></i> Preview Your Store
         </a>
     </div>

@@ -1,6 +1,6 @@
 @extends('layouts.storefront')
 
-@section('title', 'Create Customer Account')
+@section('title', 'Create an Account')
 
 @section('content')
 <div class="container mx-auto px-4 py-12">
@@ -17,7 +17,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                         <label for="name" class="block text-gray-700 text-sm font-medium mb-2">Full Name</label>
-                        <input type="text" name="name" id="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" required autofocus>
+                        <input type="text" name="name" id="name" value="{{ old('name') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" required autofocus>
                         @error('name')
                             <span class="text-red-600 text-xs mt-1">{{ $message }}</span>
                         @enderror
@@ -25,7 +25,7 @@
                     
                     <div>
                         <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
-                        <input type="email" name="email" id="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" required>
+                        <input type="email" name="email" id="email" value="{{ old('email') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" required>
                         @error('email')
                             <span class="text-red-600 text-xs mt-1">{{ $message }}</span>
                         @enderror
@@ -49,7 +49,7 @@
                 
                 <div class="mb-6">
                     <label for="phone" class="block text-gray-700 text-sm font-medium mb-2">Phone Number (optional)</label>
-                    <input type="tel" name="phone" id="phone" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
                     @error('phone')
                         <span class="text-red-600 text-xs mt-1">{{ $message }}</span>
                     @enderror

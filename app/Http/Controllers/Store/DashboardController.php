@@ -21,7 +21,7 @@ class DashboardController extends Controller
      */
     public function index(): View
     {
-        // Get the store preview URL
+        // Get the store preview URL with /shop prefix
         $storePreviewUrl = route('storefront.home');
         
         // Date ranges for comparisons

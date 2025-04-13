@@ -42,7 +42,7 @@
                         <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
                     </div>
                     
-                    <a href="{{ route('customer.password.request') }}" class="text-sm text-blue-600 hover:underline">
+                    <a href="#" class="text-sm text-blue-600 hover:underline">
                         Forgot your password?
                     </a>
                 </div>
@@ -57,7 +57,7 @@
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600">
                     Don't have an account? 
-                    <a href="{{ route('customer.register') }}" class="text-blue-600 hover:underline">
+                    <a href="#" class="text-blue-600 hover:underline">
                         Register now
                     </a>
                 </p>

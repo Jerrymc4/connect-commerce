@@ -30,7 +30,8 @@
 </head>
 <body class="font-sans antialiased h-full bg-gray-50 text-gray-900">
     <div class="min-h-full flex flex-col">
-        <!-- Header -->
+        <!-- Header - Only show on non-login/register pages -->
+        @if(!Route::is('customer.login') && !Route::is('customer.register') && !Route::is('customer.password.request'))
         <header class="bg-white shadow-sm">
             <div class="container mx-auto px-4">
                 <div class="flex items-center justify-between h-16">
@@ -57,54 +58,48 @@
                             <i class="fas fa-search"></i>
                         </button>
                         
-                        <!-- Account -->
-                        <div x-data="{ open: false }" class="relative">
-                            <button @click="open = !open" type="button" class="flex items-center text-gray-500 hover:text-gray-700">
-                                <i class="fas fa-user mr-1"></i>
-                                <span class="text-sm hidden sm:inline">
-                                    @auth
-                                        {{ Auth::user()->name }}
-                                    @else
-                                        Account
-                                    @endauth
-                                </span>
-                                <i class="fas fa-chevron-down text-xs ml-1"></i>
-                            </button>
-                            
-                            <div x-show="open" 
-                                @click.away="open = false" 
-                                x-cloak 
-                                class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                                @auth
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-user-circle mr-2"></i> My Profile
-                                    </a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-shopping-bag mr-2"></i> My Orders
-                                    </a>
-                                    <hr class="my-1">
-                                    <form method="POST" action="{{ route('logout') }}">
+                        <!-- Cart icon (always visible) -->
+                        <a href="{{ route('storefront.cart') }}" class="text-gray-700 hover:text-gray-900 relative">
+                            <i class="fas fa-shopping-cart text-xl"></i>
+                            <span class="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center cart-count">0</span>
+                        </a>
+                        
+                        <!-- Profile section - conditional display -->
+                        @auth('customer')
+                            <!-- User is logged in - show profile dropdown -->
+                            <div class="relative" x-data="{ open: false }">
+                                <button @click="open = !open" class="flex items-center text-gray-700 hover:text-gray-900 focus:outline-none">
+                                    <span class="mr-1">{{ Auth::guard('customer')->user()->name }}</span>
+                                    <i class="fas fa-user-circle text-xl"></i>
+                                    <i class="fas fa-chevron-down text-xs ml-1"></i>
+                                </button>
+                                
+                                <!-- Dropdown menu -->
+                                <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                                    <a href="{{ route('customer.account') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Account</a>
+                                    <a href="{{ route('customer.orders') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</a>
+                                    <a href="{{ route('customer.wishlist') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Wishlist</a>
+                                    <div class="border-t border-gray-100"></div>
+                                    <form method="POST" action="/customer/logout">
                                         @csrf
                                         <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                            <i class="fas fa-sign-out-alt mr-2"></i> Sign out
+                                            Sign Out
                                         </button>
                                     </form>
-                                @else
-                                    <a href="{{ route('login') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-sign-in-alt mr-2"></i> Sign in
-                                    </a>
-                                    <a href="{{ route('register') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-user-plus mr-2"></i> Create account
-                                    </a>
-                                @endauth
+                                </div>
                             </div>
-                        </div>
-                        
-                        <!-- Cart -->
-                        <a href="#" class="text-gray-500 hover:text-gray-700 relative">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="absolute -top-2 -right-2 bg-purple-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">0</span>
-                        </a>
+                        @else
+                            <!-- User is not logged in - show login/register links -->
+                            <div class="flex items-center space-x-3">
+                                <a href="{{ route('customer.login') }}" class="text-gray-700 hover:text-gray-900">
+                                    <span>Sign In</span>
+                                </a>
+                                <span class="text-gray-400">|</span>
+                                <a href="{{ route('customer.register') }}" class="text-gray-700 hover:text-gray-900">
+                                    <span>Register</span>
+                                </a>
+                            </div>
+                        @endauth
                         
                         <!-- Mobile menu button -->
                         <button type="button" class="md:hidden text-gray-500 hover:text-gray-700">
@@ -114,6 +109,16 @@
                 </div>
             </div>
         </header>
+        @else
+        <!-- Minimal header for login/register pages -->
+        <div class="py-6 bg-white shadow-sm">
+            <div class="container mx-auto px-4">
+                <a href="{{ route('storefront.home') }}" class="font-bold text-xl text-purple-600">
+                    {{ $storeName ?? tenant()->name ?? config('app.name') }}
+                </a>
+            </div>
+        </div>
+        @endif
         
         <!-- Main content -->
         <main class="flex-grow">
@@ -121,6 +126,7 @@
         </main>
         
         <!-- Footer -->
+        @if(!Route::is('customer.login') && !Route::is('customer.register') && !Route::is('customer.password.request'))
         <footer class="bg-gray-800 text-white py-12">
             <div class="container mx-auto px-4">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -181,6 +187,16 @@
                 </div>
             </div>
         </footer>
+        @else
+        <!-- Minimal footer for login/register pages -->
+        <footer class="py-4 bg-white border-t">
+            <div class="container mx-auto px-4 text-center">
+                <p class="text-gray-500 text-sm">
+                    &copy; {{ date('Y') }} {{ $storeName ?? tenant()->name ?? config('app.name') }}. All rights reserved.
+                </p>
+            </div>
+        </footer>
+        @endif
     </div>
     
     @stack('scripts')
