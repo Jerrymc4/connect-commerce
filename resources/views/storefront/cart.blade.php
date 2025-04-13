@@ -38,7 +38,7 @@
                     
                     <!-- Cart actions (hidden in empty state) -->
                     <div class="mt-6 flex flex-col sm:flex-row justify-between items-center hidden" id="cart-actions">
-                        <a href="{{ route('storefront.products') }}" class="text-blue-600 hover:underline mb-4 sm:mb-0 flex items-center">
+                        <a href="{{ route('storefront.products.index') }}" class="text-blue-600 hover:underline mb-4 sm:mb-0 flex items-center">
                             <i class="fas fa-arrow-left mr-2"></i> Continue Shopping
                         </a>
                         <button id="update-cart" class="bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300">
