@@ -32,7 +32,7 @@
                             <i class="fas fa-tag text-orange-500 dark:text-orange-400 mr-2"></i> Create Discount
                         </a>
                         <a href="{{ route('admin.themes', [], false) }}" class="block px-4 py-2 text-sm text-primary hover:bg-body hover:text-accent transition-colors">
-                            <i class="fas fa-paint-brush text-purple-500 dark:text-purple-400 mr-2"></i> Customize Theme
+                            <i class="fas fa-paint-brush text-blue-500 dark:text-blue-400 mr-2"></i> Customize Theme
                         </a>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
     
     <!-- Add this somewhere appropriate in the dashboard header/navigation area -->
     <div class="mb-6">
-        <a href="{{ route('store.preview') }}" class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors" target="_blank">
+        <a href="{{ route('store.preview') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors" target="_blank">
             <i class="fas fa-external-link-alt mr-2"></i> Preview Your Store
         </a>
     </div>
@@ -235,10 +235,10 @@
         </div>
         
         <div class="bg-card rounded-lg p-6 shadow-sm border border-border-color hover:shadow-md transition-shadow duration-300 overflow-hidden relative">
-            <div class="absolute top-0 right-0 w-32 h-32 -mt-8 -mr-8 bg-purple-500 opacity-10 rounded-full"></div>
+            <div class="absolute top-0 right-0 w-32 h-32 -mt-8 -mr-8 bg-blue-500 opacity-10 rounded-full"></div>
             <div class="flex items-center relative z-10">
-                <div class="bg-purple-100 dark:bg-purple-900 rounded-full p-3 mr-4">
-                    <i class="fas fa-users text-purple-600 dark:text-purple-300 text-xl"></i>
+                <div class="bg-blue-100 dark:bg-blue-900 rounded-full p-3 mr-4">
+                    <i class="fas fa-users text-blue-600 dark:text-blue-300 text-xl"></i>
                 </div>
                 <div>
                     <p class="text-sm text-secondary font-medium">Customers</p>
@@ -276,7 +276,7 @@
         
         <!-- Traffic & Conversion -->
         <div class="bg-card rounded-lg shadow-sm border border-border-color hover:shadow-md transition-shadow duration-300">
-            <div class="p-6 border-b border-border-color bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20">
+            <div class="p-6 border-b border-border-color bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-primary">Traffic & Conversion</h3>
                     <div class="flex items-center">
@@ -510,8 +510,8 @@
             datasets: [{
                 label: 'Visitors',
                 data: [120, 190, 170, 250, 300, 280, 220],
-                backgroundColor: colors.purple.secondary,
-                borderColor: colors.purple.primary,
+                backgroundColor: colors.blue.secondary,
+                borderColor: colors.blue.primary,
                 borderWidth: 2,
                 tension: 0.4,
                 fill: true
@@ -580,8 +580,8 @@
                         salesChart.update();
                         
                         // Update traffic chart
-                        trafficChart.data.datasets[0].backgroundColor = colors.purple.secondary;
-                        trafficChart.data.datasets[0].borderColor = colors.purple.primary;
+                        trafficChart.data.datasets[0].backgroundColor = colors.blue.secondary;
+                        trafficChart.data.datasets[0].borderColor = colors.blue.primary;
                         trafficChart.data.datasets[1].backgroundColor = colors.green.secondary;
                         trafficChart.data.datasets[1].borderColor = colors.green.primary;
                         trafficChart.options.scales.y.ticks.color = colors.text;

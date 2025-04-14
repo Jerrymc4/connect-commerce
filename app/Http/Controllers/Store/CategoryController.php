@@ -81,7 +81,7 @@ class CategoryController extends Controller
         // Log category creation to audit log
         $this->auditLogService->logCreated($category, ['module' => 'categories']);
         
-        return redirect()->route('store.settings', ['tab' => 'categories'])
+        return redirect()->route('admin.settings', ['tab' => 'categories'])
             ->with('success', 'Category created successfully');
     }
 

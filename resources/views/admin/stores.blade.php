@@ -51,9 +51,9 @@
             <p class="text-sm font-medium text-blue-600">New This Month</p>
             <p class="text-xl font-bold text-blue-800 mt-1">{{ $newStores ?? 0 }}</p>
         </div>
-        <div class="bg-purple-50 rounded-lg p-4 border border-purple-200 text-center">
-            <p class="text-sm font-medium text-purple-600">Total Products</p>
-            <p class="text-xl font-bold text-purple-800 mt-1">{{ $totalProducts ?? 0 }}</p>
+        <div class="bg-blue-100 rounded-lg p-4 border border-blue-200 text-center shadow-md">
+            <p class="text-sm font-medium text-blue-600">Total Products</p>
+            <p class="text-xl font-bold text-blue-800 mt-1">{{ $totalProducts ?? 0 }}</p>
         </div>
     </div>
     

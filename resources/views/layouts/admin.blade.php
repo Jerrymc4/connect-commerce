@@ -17,10 +17,10 @@
             font-size: 1.05rem;
         }
         .sidebar-link {
-            @apply flex items-center py-2 px-4 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-all;
+            @apply flex items-center py-2 px-4 text-gray-200 rounded-lg hover:bg-blue-700 hover:text-white transition-all;
         }
         .sidebar-link.active {
-            @apply bg-blue-50 text-blue-700 font-medium;
+            @apply bg-blue-700 text-white font-medium;
         }
         .sidebar-icon {
             @apply w-5 h-5 mr-3;
@@ -28,18 +28,18 @@
     </style>
     @stack('styles')
 </head>
-<body class="antialiased text-gray-800 bg-gray-50 min-h-screen flex flex-col">
+<body class="antialiased text-gray-200 bg-gray-100 min-h-screen flex flex-col">
     <!-- Navbar -->
-    <nav class="bg-white shadow-sm py-4 z-10">
+    <nav class="bg-black shadow-md py-4 z-10">
         <div class="container mx-auto px-4 flex justify-between items-center">
-            <a href="/" class="text-4xl font-bold"><span class="text-blue-600">Connect</span><span class="text-blue-300">Commerce</span></a>
+            <a href="/" class="text-4xl font-bold"><span class="text-blue-500">Connect</span><span class="text-blue-300">Commerce</span></a>
             <div class="flex items-center space-x-6">
-                <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-blue-600 transition">
+                <a href="{{ route('profile.edit') }}" class="text-gray-300 hover:text-blue-400 transition">
                     <i class="fas fa-user-circle mr-1"></i> Profile
                 </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="text-gray-700 hover:text-blue-600 transition">
+                    <button type="submit" class="text-gray-300 hover:text-blue-400 transition">
                         <i class="fas fa-sign-out-alt mr-1"></i> Logout
                     </button>
                 </form>
@@ -51,9 +51,9 @@
     <div class="flex flex-1 container mx-auto px-4 py-6">
         <!-- Sidebar -->
         <div class="w-64 mr-8">
-            <div class="bg-white rounded-lg shadow-sm p-4">
+            <div class="bg-gray-800 rounded-lg shadow-lg p-4">
                 <div class="mb-6">
-                    <div class="font-medium text-sm uppercase text-gray-500 tracking-wider mb-3">Main</div>
+                    <div class="font-medium text-sm uppercase text-gray-400 tracking-wider mb-3">Main</div>
                     <a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                         <i class="fas fa-tachometer-alt sidebar-icon"></i> Dashboard
                     </a>
@@ -63,7 +63,7 @@
                 </div>
                 
                 <div class="mb-6">
-                    <div class="font-medium text-sm uppercase text-gray-500 tracking-wider mb-3">Store Management</div>
+                    <div class="font-medium text-sm uppercase text-gray-400 tracking-wider mb-3">Store Management</div>
                     <a href="{{ route('admin.products') }}" class="sidebar-link {{ request()->routeIs('admin.products*') ? 'active' : '' }}">
                         <i class="fas fa-box sidebar-icon"></i> Products
                     </a>
@@ -76,7 +76,7 @@
                 </div>
                 
                 <div>
-                    <div class="font-medium text-sm uppercase text-gray-500 tracking-wider mb-3">Settings</div>
+                    <div class="font-medium text-sm uppercase text-gray-400 tracking-wider mb-3">Settings</div>
                     <a href="{{ route('admin.settings') }}" class="sidebar-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
                         <i class="fas fa-cog sidebar-icon"></i> Store Settings
                     </a>

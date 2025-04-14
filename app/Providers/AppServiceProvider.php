@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\URL;
+use App\Repositories\Interfaces\ThemeRepositoryInterface;
+use App\Repositories\Eloquent\ThemeRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,9 @@ class AppServiceProvider extends ServiceProvider
                 $app->make(AuditLogRepositoryInterface::class)
             );
         });
+        
+        // Bind Theme Repository
+        $this->app->bind(ThemeRepositoryInterface::class, ThemeRepository::class);
     }
 
     /**

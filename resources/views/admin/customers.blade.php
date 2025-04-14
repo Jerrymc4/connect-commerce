@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="bg-white rounded-lg shadow-sm p-6">
+<div class="bg-white rounded-lg shadow-lg p-6">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Customers</h1>
         <div class="flex space-x-2">
-            <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition flex items-center">
+            <button class="bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition flex items-center">
                 <i class="fas fa-file-export mr-2"></i> Export
             </button>
             <a href="{{ route('admin.customers.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition flex items-center">
@@ -51,36 +51,36 @@
     
     <!-- Customer Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-            <p class="text-sm font-medium text-gray-500">Total Customers</p>
+        <div class="bg-gray-100 rounded-lg p-4 border border-gray-200 text-center shadow-md">
+            <p class="text-sm font-medium text-gray-600">Total Customers</p>
             <p class="text-xl font-bold text-gray-900 mt-1">{{ $totalCustomers ?? 0 }}</p>
         </div>
-        <div class="bg-green-50 rounded-lg p-4 border border-green-200 text-center">
-            <p class="text-sm font-medium text-green-600">Active Customers</p>
-            <p class="text-xl font-bold text-green-800 mt-1">{{ $activeCustomers ?? 0 }}</p>
+        <div class="bg-blue-100 rounded-lg p-4 border border-blue-200 text-center shadow-md">
+            <p class="text-sm font-medium text-blue-600">Active Customers</p>
+            <p class="text-xl font-bold text-blue-800 mt-1">{{ $activeCustomers ?? 0 }}</p>
         </div>
-        <div class="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
+        <div class="bg-blue-100 rounded-lg p-4 border border-blue-200 text-center shadow-md">
             <p class="text-sm font-medium text-blue-600">New This Month</p>
             <p class="text-xl font-bold text-blue-800 mt-1">{{ $newCustomers ?? 0 }}</p>
         </div>
-        <div class="bg-purple-50 rounded-lg p-4 border border-purple-200 text-center">
-            <p class="text-sm font-medium text-purple-600">Repeat Customers</p>
-            <p class="text-xl font-bold text-purple-800 mt-1">{{ $repeatCustomers ?? 0 }}</p>
+        <div class="bg-gray-100 rounded-lg p-4 border border-gray-200 text-center shadow-md">
+            <p class="text-sm font-medium text-gray-600">Repeat Customers</p>
+            <p class="text-xl font-bold text-gray-900 mt-1">{{ $repeatCustomers ?? 0 }}</p>
         </div>
     </div>
     
     <!-- Customers Table -->
-    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md">
         <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+            <thead class="bg-gray-800">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registered</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orders</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Spent</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Customer</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Contact</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Registered</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Orders</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Total Spent</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -89,11 +89,11 @@
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
-                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
                                     @if($customer->avatar)
                                         <img src="{{ $customer->avatar }}" alt="{{ $customer->name }}" class="h-10 w-10 rounded-full object-cover">
                                     @else
-                                        <span class="text-gray-500 font-medium text-sm">{{ substr($customer->name, 0, 2) }}</span>
+                                        <span class="text-blue-600 font-medium text-sm">{{ substr($customer->name, 0, 2) }}</span>
                                     @endif
                                 </div>
                                 <div class="ml-4">
@@ -110,7 +110,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $customer->orders_count ?? 0 }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ number_format($customer->total_spent ?? 0, 2) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $customer->active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $customer->active ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
                                 {{ $customer->active ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
@@ -125,7 +125,7 @@
                                 <form method="POST" action="{{ route('admin.customers.delete', $customer->id) }}" class="inline" onsubmit="return confirm('Are you sure you want to delete this customer?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900">
+                                    <button type="submit" class="text-gray-600 hover:text-gray-900">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -161,7 +161,7 @@
                             <span class="sr-only">Previous</span>
                             <i class="fas fa-chevron-left"></i>
                         </a>
-                        <a href="#" aria-current="page" class="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</a>
+                        <a href="#" aria-current="page" class="z-10 bg-blue-600 border-blue-600 text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</a>
                         <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">2</a>
                         <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">3</a>
                         <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>

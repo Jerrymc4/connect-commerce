@@ -10,9 +10,18 @@ use App\Models\Discount;
 use App\Models\Product;
 use Illuminate\Support\Str;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use App\Services\ThemeService;
+use Illuminate\Support\Facades\Log;
 
 class SettingController extends Controller
 {
+    protected $themeService;
+
+    public function __construct(ThemeService $themeService)
+    {
+        $this->themeService = $themeService;
+    }
+
     /**
      * Display the store settings form.
      */
@@ -82,40 +91,10 @@ class SettingController extends Controller
         ];
         
         // Get theme settings
-        $themeSettings = $store->data['theme'] ?? [
-            'colors' => [
-                'primary' => '#3B82F6',
-                'secondary' => '#10B981',
-                'accent' => '#8B5CF6',
-                'background' => '#FFFFFF',
-                'text' => '#111827',
-            ],
-            'typography' => [
-                'heading_font' => 'Inter',
-                'body_font' => 'Inter',
-                'base_size' => '16px',
-            ],
-            'layout' => [
-                'header_style' => 'default',
-                'footer_style' => 'default',
-                'sidebar_position' => 'left',
-            ],
-            'components' => [
-                'button_style' => 'rounded',
-                'card_style' => 'shadow',
-            ],
-            'custom_css' => '',
-        ];
+        $themeSettings = $this->themeService->getThemeSettings();
         
         // Get available fonts
-        $availableFonts = [
-            'Inter' => 'Inter',
-            'Roboto' => 'Roboto',
-            'Open Sans' => 'Open Sans',
-            'Lato' => 'Lato',
-            'Montserrat' => 'Montserrat',
-            'Poppins' => 'Poppins',
-        ];
+        $availableFonts = $this->themeService->getAvailableFonts();
         
         // Get content based on active tab
         $discounts = $activeTab === 'discounts' ? Discount::orderBy('created_at', 'desc')->paginate(10) : null;
@@ -193,10 +172,18 @@ class SettingController extends Controller
     {
         // Get the current tenant/store
         $store = tenant();
+        
+        // Get existing store data
         $storeData = $store->data ?? [];
         
         // Determine which section is being updated
         $section = $request->section ?? 'general_settings';
+        
+        // Debug: Log the section being updated
+        Log::info('Settings update requested', [
+            'section' => $section,
+            'request_has_section' => $request->has('section')
+        ]);
         
         if ($section === 'general_settings') {
             // Build validation rules based on the form structure
@@ -258,39 +245,38 @@ class SettingController extends Controller
             $store->data = $storeData;
             $store->save();
             
-            return redirect()->route('store.settings', ['tab' => 'general'])
+            return redirect()->route('admin.settings', ['tab' => 'general'])
                 ->with('success', 'Store settings saved successfully');
         }
         elseif ($section === 'theme_settings') {
-            // Validate theme settings
-            $validated = $request->validate([
-                'colors.primary' => 'required|string|max:25',
-                'colors.secondary' => 'required|string|max:25',
-                'colors.accent' => 'required|string|max:25',
-                'colors.background' => 'required|string|max:25',
-                'colors.text' => 'required|string|max:25',
-                'typography.heading_font' => 'required|string|max:50',
-                'typography.body_font' => 'required|string|max:50',
-                'typography.base_size' => 'required|string|max:10',
-                'layout.header_style' => 'required|string|max:50',
-                'layout.footer_style' => 'required|string|max:50',
-                'layout.sidebar_position' => 'required|string|max:50',
-                'components.button_style' => 'required|string|max:50',
-                'components.card_style' => 'required|string|max:50',
-                'custom_css' => 'nullable|string',
+            // Debug: Log the theme settings update request
+            Log::info('Theme settings update requested', [
+                'form_data' => $request->except(['_token', '_method']),
+                'files' => ($request->hasFile('logo') ? 'has_logo' : 'no_logo') . ', ' . ($request->hasFile('banner') ? 'has_banner' : 'no_banner'),
             ]);
             
-            // Update theme settings
-            $storeData['theme'] = $validated;
-            $store->data = $storeData;
-            $store->save();
+            // Get the settings from the request
+            $settings = $request->except(['_token', '_method', 'logo', 'banner']);
             
-            return redirect()->route('store.settings', ['tab' => 'theme'])
-                ->with('success', 'Theme settings updated successfully');
+            // Prepare file uploads
+            $files = [];
+            if ($request->hasFile('logo')) {
+                $files['logo'] = $request->file('logo');
+            }
+            
+            if ($request->hasFile('banner')) {
+                $files['banner'] = $request->file('banner');
+            }
+            
+            // Use the theme service to update settings
+            $this->themeService->updateThemeSettings($settings, $files);
+            
+            return redirect()->route('admin.settings', ['tab' => 'theme'])
+                ->with('success', 'Theme settings updated successfully!');
         }
         
         // If we made it here, something went wrong
-        return redirect()->route('store.settings')
+        return redirect()->route('admin.settings')
             ->with('error', 'Invalid settings section');
     }
     
@@ -329,7 +315,7 @@ class SettingController extends Controller
             $discount->products()->attach($validated['products']);
         }
         
-        return redirect()->route('store.settings', ['tab' => 'discounts'])
+        return redirect()->route('admin.settings', ['tab' => 'discounts'])
             ->with('success', 'Discount created successfully');
     }
     
@@ -368,7 +354,7 @@ class SettingController extends Controller
             $discount->products()->detach();
         }
         
-        return redirect()->route('store.settings', ['tab' => 'discounts'])
+        return redirect()->route('admin.settings', ['tab' => 'discounts'])
             ->with('success', 'Discount updated successfully');
     }
     
@@ -380,7 +366,7 @@ class SettingController extends Controller
         $discount = Discount::findOrFail($id);
         $discount->delete();
         
-        return redirect()->route('store.settings', ['tab' => 'discounts'])
+        return redirect()->route('admin.settings', ['tab' => 'discounts'])
             ->with('success', 'Discount deleted successfully');
     }
 } 

@@ -1,0 +1,46 @@
+:root {
+  --color-primary: #3B82F6;
+  --color-button-bg: #3B82F6;
+  --color-button-text: #FFFFFF;
+  --color-footer-bg: #1F2937;
+  --color-navbar-text: #111827;
+  --color-cart-badge: #EF4444;
+  --color-body-bg: #F9FAFB;
+  --color-link: #2563EB;
+  --color-card-bg: #FFFFFF;
+  --font-family: Inter, sans-serif;
+  --border-radius: 0.375rem;
+}
+
+html, body {
+  background-color: var(--color-body-bg);
+  font-family: var(--font-family);
+}
+
+.btn-primary {
+  background-color: var(--color-button-bg);
+  color: var(--color-button-text);
+}
+
+a {
+  color: var(--color-link);
+}
+
+.card {
+  background-color: var(--color-card-bg);
+  border-radius: var(--border-radius);
+}
+
+header .navbar {
+  color: var(--color-navbar-text);
+}
+
+footer {
+  background-color: var(--color-footer-bg);
+}
+
+.cart-count {
+  background-color: var(--color-cart-badge);
+}
+
+/* Custom CSS - Add your custom styles below */

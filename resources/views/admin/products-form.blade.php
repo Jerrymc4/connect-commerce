@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="bg-white rounded-lg shadow-sm p-6">
+<div class="bg-white rounded-lg shadow-lg p-6">
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900">{{ isset($product) ? 'Edit Product' : 'Add New Product' }}</h1>
         <p class="text-gray-600 mt-1">{{ isset($product) ? 'Update product information' : 'Create a new product in your store' }}</p>
@@ -14,7 +14,7 @@
         @endif
         
         <!-- Basic Information -->
-        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <div class="bg-gray-100 p-6 rounded-lg border border-gray-200 shadow-md">
             <h2 class="text-lg font-medium text-gray-900 mb-4">Basic Information</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -71,7 +71,7 @@
         </div>
         
         <!-- Pricing & Inventory -->
-        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <div class="bg-gray-100 p-6 rounded-lg border border-gray-200 shadow-md">
             <h2 class="text-lg font-medium text-gray-900 mb-4">Pricing & Inventory</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -142,22 +142,22 @@
         </div>
         
         <!-- Images -->
-        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+        <div class="bg-gray-100 p-6 rounded-lg border border-gray-200 shadow-md">
             <h2 class="text-lg font-medium text-gray-900 mb-4">Product Images</h2>
             
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Main Image</label>
                 <div class="mt-1 flex items-center">
-                    <div class="h-32 w-32 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 bg-gray-100 flex items-center justify-center">
+                    <div class="h-32 w-32 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 bg-blue-100 flex items-center justify-center">
                         @if(isset($product) && $product->image)
                             <img src="{{ $product->image }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
                         @else
-                            <i class="fas fa-image text-gray-400 text-3xl"></i>
+                            <i class="fas fa-image text-blue-600 text-3xl"></i>
                         @endif
                     </div>
                     <div class="ml-4">
-                        <div class="bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm">
-                            <label for="image" class="text-sm font-medium text-gray-700 cursor-pointer">
+                        <div class="bg-gray-800 py-2 px-3 border border-gray-700 rounded-md shadow-sm">
+                            <label for="image" class="text-sm font-medium text-white cursor-pointer">
                                 <span>Upload image</span>
                                 <input type="file" name="image" id="image" accept="image/*" class="sr-only">
                             </label>
@@ -198,7 +198,7 @@
         
         <!-- Form Actions -->
         <div class="flex justify-end space-x-3">
-            <a href="{{ route('admin.products') }}" class="px-5 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <a href="{{ route('admin.products') }}" class="px-5 py-2 border border-gray-700 rounded-md text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 Cancel
             </a>
             <button type="submit" class="px-5 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">

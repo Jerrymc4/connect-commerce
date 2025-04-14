@@ -21,6 +21,57 @@
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
+    <!-- Theme CSS File -->
+    <link rel="stylesheet" href="{{ asset('storage/tenant-' . tenant()->id . '/theme/theme.css') }}">
+    
+    <!-- Theme CSS Variables -->
+    <style>
+        :root {
+            --primary-color: {{ $themeSettings['primary_color'] ?? '#3B82F6' }};
+            --button-bg-color: {{ $themeSettings['button_bg_color'] ?? '#3B82F6' }};
+            --button-text-color: {{ $themeSettings['button_text_color'] ?? '#FFFFFF' }};
+            --footer-bg-color: {{ $themeSettings['footer_bg_color'] ?? '#1F2937' }};
+            --navbar-text-color: {{ $themeSettings['navbar_text_color'] ?? '#111827' }};
+            --cart-badge-bg-color: {{ $themeSettings['cart_badge_bg_color'] ?? '#EF4444' }};
+            --body-bg-color: {{ $themeSettings['body_bg_color'] ?? '#F9FAFB' }};
+            --font-family: {{ $themeSettings['font_family'] ?? 'Inter, sans-serif' }};
+            --link-color: {{ $themeSettings['link_color'] ?? '#2563EB' }};
+            --card-bg-color: {{ $themeSettings['card_bg_color'] ?? '#FFFFFF' }};
+            --border-radius: {{ $themeSettings['border_radius'] ?? '0.375rem' }};
+        }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--body-bg-color);
+        }
+        
+        .btn-primary {
+            background-color: var(--button-bg-color);
+            color: var(--button-text-color);
+        }
+        
+        a:not(.btn):not(.nav-link) {
+            color: var(--link-color);
+        }
+        
+        .card {
+            background-color: var(--card-bg-color);
+            border-radius: var(--border-radius);
+        }
+        
+        header nav a {
+            color: var(--navbar-text-color);
+        }
+        
+        footer.bg-gray-800 {
+            background-color: var(--footer-bg-color);
+        }
+        
+        .cart-count {
+            background-color: var(--cart-badge-bg-color, var(--primary-color));
+        }
+    </style>
+    
     <!-- Custom styles -->
     <style>
         [x-cloak] { display: none !important; }
@@ -38,7 +89,11 @@
                     <!-- Logo -->
                     <div class="flex-shrink-0">
                         <a href="{{ route('storefront.home') }}" class="font-bold text-xl text-purple-600">
-                            {{ $storeName ?? tenant()->name ?? config('app.name') }}
+                            @if(!empty($themeSettings['logo_url']))
+                                <img src="{{ Storage::url($themeSettings['logo_url']) }}" alt="{{ $storeName ?? tenant()->name ?? config('app.name') }}" class="h-10 w-auto">
+                            @else
+                                {{ $storeName ?? tenant()->name ?? config('app.name') }}
+                            @endif
                         </a>
                     </div>
                     
@@ -114,10 +169,40 @@
         <div class="py-6 bg-white shadow-sm">
             <div class="container mx-auto px-4">
                 <a href="{{ route('storefront.home') }}" class="font-bold text-xl text-purple-600">
-                    {{ $storeName ?? tenant()->name ?? config('app.name') }}
+                    @if(!empty($themeSettings['logo_url']))
+                        <img src="{{ Storage::url($themeSettings['logo_url']) }}" alt="{{ $storeName ?? tenant()->name ?? config('app.name') }}" class="h-10 w-auto">
+                    @else
+                        {{ $storeName ?? tenant()->name ?? config('app.name') }}
+                    @endif
                 </a>
             </div>
         </div>
+        @endif
+        
+        <!-- Banner (only show on non-login/register pages) -->
+        @if(!Route::is('customer.login') && !Route::is('customer.register') && !Route::is('customer.password.request'))
+            @if(!empty($themeSettings['banner_image']) || !empty($themeSettings['banner_text']))
+            <div class="bg-gradient-to-r from-blue-800 to-indigo-900 text-white py-12">
+                <div class="container mx-auto px-4">
+                    <div class="flex flex-col md:flex-row items-center justify-between">
+                        <div class="mb-6 md:mb-0 md:w-1/2">
+                            @if(!empty($themeSettings['banner_text']))
+                            <h2 class="text-3xl font-bold mb-4">{{ $themeSettings['banner_text'] }}</h2>
+                            @endif
+                            <p class="text-blue-100 mb-6">Discover amazing products at great prices</p>
+                            <a href="{{ route('storefront.products.index') }}" class="inline-block bg-white text-blue-900 px-6 py-3 rounded-lg font-semibold hover:bg-blue-100 transition-colors">
+                                Shop Now
+                            </a>
+                        </div>
+                        @if(!empty($themeSettings['banner_image']))
+                        <div class="md:w-1/2">
+                            <img src="{{ Storage::url($themeSettings['banner_image']) }}" alt="Banner" class="rounded-lg shadow-lg w-full">
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @endif
         @endif
         
         <!-- Main content -->

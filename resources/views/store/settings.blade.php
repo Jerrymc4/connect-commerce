@@ -164,67 +164,152 @@
     <!-- Theme Settings Tab -->
     @if($activeTab == 'theme')
     <div class="bg-card rounded-lg shadow-sm border border-border-color p-6">
-        <form action="{{ route('admin.settings.update') }}" method="POST" class="space-y-8">
+        <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8" id="theme-settings-form">
             @csrf
             @method('PUT')
             <input type="hidden" name="section" value="theme_settings">
             
             <!-- Colors -->
             <div>
-                <h2 class="text-xl font-medium text-primary mb-4">Colors</h2>
+                <h2 class="text-xl font-medium text-primary mb-4">Brand Colors</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="colors[primary]" class="block text-sm font-medium text-primary mb-1">Primary Color</label>
+                        <label for="primary_color" class="block text-sm font-medium text-primary mb-1">Primary Color</label>
                         <div class="flex">
                             <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="colors[primary]" id="colors[primary]" value="{{ $themeSettings['colors']['primary'] ?? '#3B82F6' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                <input type="color" name="primary_color" id="primary_color_picker" value="{{ $themeSettings['primary_color'] ?? '#3B82F6' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
                             </span>
-                            <input type="text" name="colors[primary]" value="{{ $themeSettings['colors']['primary'] ?? '#3B82F6' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                            <input type="text" name="primary_color" id="primary_color" value="{{ $themeSettings['primary_color'] ?? '#3B82F6' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
                         </div>
-                        <p class="mt-1 text-xs text-secondary">Used for buttons, links, and accents</p>
-                        @error('colors.primary')
+                        <p class="mt-1 text-xs text-secondary">Used for primary elements and accents</p>
+                        @error('primary_color')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
                     
                     <div>
-                        <label for="colors[secondary]" class="block text-sm font-medium text-primary mb-1">Secondary Color</label>
+                        <label for="link_color" class="block text-sm font-medium text-primary mb-1">Link Color</label>
                         <div class="flex">
                             <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="colors[secondary]" id="colors[secondary]" value="{{ $themeSettings['colors']['secondary'] ?? '#10B981' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                <input type="color" name="link_color" id="link_color_picker" value="{{ $themeSettings['link_color'] ?? '#2563EB' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
                             </span>
-                            <input type="text" name="colors[secondary]" value="{{ $themeSettings['colors']['secondary'] ?? '#10B981' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                            <input type="text" name="link_color" id="link_color" value="{{ $themeSettings['link_color'] ?? '#2563EB' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
                         </div>
-                        <p class="mt-1 text-xs text-secondary">Used for secondary elements</p>
-                        @error('colors.secondary')
+                        <p class="mt-1 text-xs text-secondary">Used for links</p>
+                        @error('link_color')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
                     
                     <div>
-                        <label for="colors[accent]" class="block text-sm font-medium text-primary mb-1">Accent Color</label>
+                        <label for="button_bg_color" class="block text-sm font-medium text-primary mb-1">Button Background Color</label>
                         <div class="flex">
                             <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="colors[accent]" id="colors[accent]" value="{{ $themeSettings['colors']['accent'] ?? '#8B5CF6' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                <input type="color" name="button_bg_color" id="button_bg_color_picker" value="{{ $themeSettings['button_bg_color'] ?? '#3B82F6' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
                             </span>
-                            <input type="text" name="colors[accent]" value="{{ $themeSettings['colors']['accent'] ?? '#8B5CF6' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                            <input type="text" name="button_bg_color" id="button_bg_color" value="{{ $themeSettings['button_bg_color'] ?? '#3B82F6' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
                         </div>
-                        <p class="mt-1 text-xs text-secondary">Used for highlights and accents</p>
-                        @error('colors.accent')
+                        <p class="mt-1 text-xs text-secondary">Used for button backgrounds</p>
+                        @error('button_bg_color')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
                     
                     <div>
-                        <label for="colors[background]" class="block text-sm font-medium text-primary mb-1">Background Color</label>
+                        <label for="button_text_color" class="block text-sm font-medium text-primary mb-1">Button Text Color</label>
                         <div class="flex">
                             <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="colors[background]" id="colors[background]" value="{{ $themeSettings['colors']['background'] ?? '#FFFFFF' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                <input type="color" name="button_text_color" id="button_text_color_picker" value="{{ $themeSettings['button_text_color'] ?? '#FFFFFF' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
                             </span>
-                            <input type="text" name="colors[background]" value="{{ $themeSettings['colors']['background'] ?? '#FFFFFF' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                            <input type="text" name="button_text_color" id="button_text_color" value="{{ $themeSettings['button_text_color'] ?? '#FFFFFF' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
                         </div>
-                        <p class="mt-1 text-xs text-secondary">Used for page backgrounds</p>
-                        @error('colors.background')
+                        <p class="mt-1 text-xs text-secondary">Used for button text</p>
+                        @error('button_text_color')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Layout Colors -->
+            <div class="pt-6 border-t border-border-color">
+                <h2 class="text-xl font-medium text-primary mb-4">Layout Colors</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="body_bg_color" class="block text-sm font-medium text-primary mb-1">Page Background Color</label>
+                        <div class="flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                <input type="color" name="body_bg_color" id="body_bg_color_picker" value="{{ $themeSettings['body_bg_color'] ?? '#F9FAFB' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                            </span>
+                            <input type="text" name="body_bg_color" id="body_bg_color" value="{{ $themeSettings['body_bg_color'] ?? '#F9FAFB' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                        </div>
+                        <p class="mt-1 text-xs text-secondary">Used for page background</p>
+                        @error('body_bg_color')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <div>
+                        <label for="card_bg_color" class="block text-sm font-medium text-primary mb-1">Card Background Color</label>
+                        <div class="flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                <input type="color" name="card_bg_color" id="card_bg_color_picker" value="{{ $themeSettings['card_bg_color'] ?? '#FFFFFF' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                            </span>
+                            <input type="text" name="card_bg_color" id="card_bg_color" value="{{ $themeSettings['card_bg_color'] ?? '#FFFFFF' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                        </div>
+                        <p class="mt-1 text-xs text-secondary">Used for card backgrounds</p>
+                        @error('card_bg_color')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <div>
+                        <label for="navbar_text_color" class="block text-sm font-medium text-primary mb-1">Navigation Text Color</label>
+                        <div class="flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                <input type="color" name="navbar_text_color" id="navbar_text_color_picker" value="{{ $themeSettings['navbar_text_color'] ?? '#111827' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                            </span>
+                            <input type="text" name="navbar_text_color" id="navbar_text_color" value="{{ $themeSettings['navbar_text_color'] ?? '#111827' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                        </div>
+                        <p class="mt-1 text-xs text-secondary">Used for navigation links</p>
+                        @error('navbar_text_color')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <div>
+                        <label for="footer_bg_color" class="block text-sm font-medium text-primary mb-1">Footer Background Color</label>
+                        <div class="flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                <input type="color" name="footer_bg_color" id="footer_bg_color_picker" value="{{ $themeSettings['footer_bg_color'] ?? '#1F2937' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                            </span>
+                            <input type="text" name="footer_bg_color" id="footer_bg_color" value="{{ $themeSettings['footer_bg_color'] ?? '#1F2937' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                        </div>
+                        <p class="mt-1 text-xs text-secondary">Used for footer background</p>
+                        @error('footer_bg_color')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <div>
+                        <label for="cart_badge_bg_color" class="block text-sm font-medium text-primary mb-1">Cart Badge Color</label>
+                        <div class="flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                <input type="color" name="cart_badge_bg_color" id="cart_badge_bg_color_picker" value="{{ $themeSettings['cart_badge_bg_color'] ?? '#EF4444' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                            </span>
+                            <input type="text" name="cart_badge_bg_color" id="cart_badge_bg_color" value="{{ $themeSettings['cart_badge_bg_color'] ?? '#EF4444' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                        </div>
+                        <p class="mt-1 text-xs text-secondary">Used for cart count badge (defaults to primary color if empty)</p>
+                        @error('cart_badge_bg_color')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <div>
+                        <label for="border_radius" class="block text-sm font-medium text-primary mb-1">Border Radius</label>
+                        <input type="text" name="border_radius" id="border_radius" value="{{ $themeSettings['border_radius'] ?? '0.375rem' }}" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                        <p class="mt-1 text-xs text-secondary">Used for rounded corners (e.g., 0.375rem, 8px)</p>
+                        @error('border_radius')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
@@ -236,27 +321,61 @@
                 <h2 class="text-xl font-medium text-primary mb-4">Typography</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="typography[heading_font]" class="block text-sm font-medium text-primary mb-1">Heading Font</label>
-                        <select name="typography[heading_font]" id="typography[heading_font]" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
-                            @foreach($availableFonts as $fontName => $fontDisplay)
-                            <option value="{{ $fontName }}" {{ ($themeSettings['typography']['heading_font'] ?? '') == $fontName ? 'selected' : '' }}>{{ $fontDisplay }}</option>
+                        <label for="font_family" class="block text-sm font-medium text-primary mb-1">Font Family</label>
+                        <select name="font_family" id="font_family" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                            @foreach($availableFonts as $fontValue => $fontDisplay)
+                            <option value="{{ $fontValue }}" {{ ($themeSettings['font_family'] ?? 'Inter, sans-serif') == $fontValue ? 'selected' : '' }}>{{ $fontDisplay }}</option>
                             @endforeach
                         </select>
-                        <p class="mt-1 text-xs text-secondary">Used for headings and titles</p>
-                        @error('typography.heading_font')
+                        <p class="mt-1 text-xs text-secondary">Used for all text on the site</p>
+                        @error('font_family')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+            </div>
+            
+            <!-- Banner & Logo -->
+            <div class="pt-6 border-t border-border-color">
+                <h2 class="text-xl font-medium text-primary mb-4">Banner & Logo</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="logo" class="block text-sm font-medium text-primary mb-1">Store Logo</label>
+                        <input type="file" name="logo" id="logo" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                        <p class="mt-1 text-xs text-secondary">Recommended size: 250x80px, max 2MB</p>
+                        @error('logo')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                        
+                        @if(!empty($themeSettings['logo_url']))
+                        <div class="mt-2">
+                            <p class="text-xs text-secondary mb-1">Current logo:</p>
+                            <img src="{{ Storage::url($themeSettings['logo_url']) }}" alt="Current logo" class="h-12 object-contain">
+                        </div>
+                        @endif
+                    </div>
                     
                     <div>
-                        <label for="typography[body_font]" class="block text-sm font-medium text-primary mb-1">Body Font</label>
-                        <select name="typography[body_font]" id="typography[body_font]" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
-                            @foreach($availableFonts as $fontName => $fontDisplay)
-                            <option value="{{ $fontName }}" {{ ($themeSettings['typography']['body_font'] ?? '') == $fontName ? 'selected' : '' }}>{{ $fontDisplay }}</option>
-                            @endforeach
-                        </select>
-                        <p class="mt-1 text-xs text-secondary">Used for regular text</p>
-                        @error('typography.body_font')
+                        <label for="banner" class="block text-sm font-medium text-primary mb-1">Banner Image</label>
+                        <input type="file" name="banner" id="banner" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                        <p class="mt-1 text-xs text-secondary">Recommended size: 1200x400px, max 2MB</p>
+                        @error('banner')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                        
+                        @if(!empty($themeSettings['banner_image']))
+                        <div class="mt-2">
+                            <p class="text-xs text-secondary mb-1">Current banner:</p>
+                            <img src="{{ Storage::url($themeSettings['banner_image']) }}" alt="Current banner" class="h-20 object-cover w-full rounded">
+                        </div>
+                        @endif
+                    </div>
+                    
+                    <div>
+                        <label for="banner_text" class="block text-sm font-medium text-primary mb-1">Banner Text</label>
+                        <input type="text" name="banner_text" id="banner_text" value="{{ $themeSettings['banner_text'] ?? '' }}" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                        <p class="mt-1 text-xs text-secondary">Text to display on the banner (optional)</p>
+                        @error('banner_text')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
@@ -291,8 +410,11 @@
             
             <!-- Form Actions -->
             <div class="pt-6 border-t border-border-color flex justify-end space-x-3">
+                <a href="{{ route('admin.settings.theme.reset') }}" class="px-4 py-2 border border-border-color rounded-md text-sm font-medium text-red-600 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    Reset to Defaults
+                </a>
                 <button type="reset" class="px-4 py-2 border border-border-color rounded-md text-sm font-medium text-primary bg-body hover:bg-card focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent">
-                    Reset
+                    Cancel Changes
                 </button>
                 <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-accent hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent">
                     Save Theme
@@ -583,7 +705,74 @@
     @endif
 </div>
 
-@if($activeTab == 'discounts')
+<!-- Script for synchronizing color pickers and text inputs -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Color picker script loaded');
+    
+    // Get all color picker inputs
+    const colorPickers = [
+        { picker: document.getElementById('primary_color_picker'), text: document.getElementById('primary_color') },
+        { picker: document.getElementById('link_color_picker'), text: document.getElementById('link_color') },
+        { picker: document.getElementById('button_bg_color_picker'), text: document.getElementById('button_bg_color') },
+        { picker: document.getElementById('button_text_color_picker'), text: document.getElementById('button_text_color') },
+        { picker: document.getElementById('body_bg_color_picker'), text: document.getElementById('body_bg_color') },
+        { picker: document.getElementById('card_bg_color_picker'), text: document.getElementById('card_bg_color') },
+        { picker: document.getElementById('navbar_text_color_picker'), text: document.getElementById('navbar_text_color') },
+        { picker: document.getElementById('footer_bg_color_picker'), text: document.getElementById('footer_bg_color') },
+        { picker: document.getElementById('cart_badge_bg_color_picker'), text: document.getElementById('cart_badge_bg_color') }
+    ].filter(item => item.picker && item.text); // Filter out any that don't exist
+    
+    console.log('Found color pickers:', colorPickers.length);
+    
+    // Set up event listeners for each color picker
+    colorPickers.forEach(function(item) {
+        console.log('Setting up listeners for:', item.text.name);
+        
+        // When the color picker changes, update the text input
+        item.picker.addEventListener('input', function(e) {
+            console.log(`Color picker ${item.text.name} changed to ${this.value}`);
+            item.text.value = this.value.toUpperCase();
+        });
+        
+        // When the text input changes, update the color picker
+        item.text.addEventListener('input', function(e) {
+            console.log(`Text input ${this.name} changed to ${this.value}`);
+            item.picker.value = this.value;
+        });
+        
+        // Initially ensure the text input has the value of the color picker
+        if (item.picker.value) {
+            item.text.value = item.picker.value.toUpperCase();
+            console.log(`Initialized ${item.text.name} to ${item.text.value}`);
+        }
+    });
+    
+    // Handle form submission
+    const themeForm = document.querySelector('form[action*="settings.update"]');
+    if (themeForm) {
+        console.log('Theme form found');
+        themeForm.addEventListener('submit', function(e) {
+            // Ensure all color inputs have values
+            colorPickers.forEach(function(item) {
+                if (item.text.value === '') {
+                    console.log(`Empty value detected for ${item.text.name}, using color picker value`);
+                    item.text.value = item.picker.value.toUpperCase();
+                }
+                console.log(`Final ${item.text.name}: ${item.text.value}`);
+            });
+            
+            console.log('Form submitted with color values:');
+            colorPickers.forEach(function(item) {
+                console.log(`${item.text.name}: ${item.text.value}`);
+            });
+        });
+    } else {
+        console.error('Theme form not found');
+    }
+});
+</script>
+
 <script>
     function toggleDiscountForm() {
         const form = document.getElementById('discountForm');
@@ -616,5 +805,5 @@
         typeSelect.addEventListener('change', updateSymbol);
     });
 </script>
-@endif
+
 @endsection 

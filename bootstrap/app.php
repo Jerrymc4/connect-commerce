@@ -26,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+            'theme.settings' => \App\Http\Middleware\InjectThemeSettings::class,
         ]);
         
         $middleware->web(append: [

@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="bg-white rounded-lg shadow-sm p-6">
+<div class="bg-white rounded-lg shadow-lg p-6">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Orders</h1>
         <div class="flex space-x-2">
-            <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition flex items-center">
+            <button class="bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition flex items-center">
                 <i class="fas fa-file-export mr-2"></i> Export
             </button>
-            <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition flex items-center">
+            <button class="bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition flex items-center">
                 <i class="fas fa-print mr-2"></i> Print
             </button>
         </div>
@@ -51,40 +51,40 @@
     
     <!-- Order Stats -->
     <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-            <p class="text-sm font-medium text-gray-500">All Orders</p>
+        <div class="bg-gray-100 rounded-lg p-4 border border-gray-200 text-center shadow-md">
+            <p class="text-sm font-medium text-gray-600">All Orders</p>
             <p class="text-xl font-bold text-gray-900 mt-1">{{ $totalOrders ?? 0 }}</p>
         </div>
-        <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200 text-center">
-            <p class="text-sm font-medium text-yellow-600">Pending</p>
-            <p class="text-xl font-bold text-yellow-800 mt-1">{{ $pendingOrders ?? 0 }}</p>
+        <div class="bg-gray-100 rounded-lg p-4 border border-gray-200 text-center shadow-md">
+            <p class="text-sm font-medium text-gray-600">Pending</p>
+            <p class="text-xl font-bold text-gray-900 mt-1">{{ $pendingOrders ?? 0 }}</p>
         </div>
-        <div class="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
+        <div class="bg-blue-100 rounded-lg p-4 border border-blue-200 text-center shadow-md">
             <p class="text-sm font-medium text-blue-600">Processing</p>
             <p class="text-xl font-bold text-blue-800 mt-1">{{ $processingOrders ?? 0 }}</p>
         </div>
-        <div class="bg-green-50 rounded-lg p-4 border border-green-200 text-center">
-            <p class="text-sm font-medium text-green-600">Completed</p>
-            <p class="text-xl font-bold text-green-800 mt-1">{{ $completedOrders ?? 0 }}</p>
+        <div class="bg-blue-100 rounded-lg p-4 border border-blue-200 text-center shadow-md">
+            <p class="text-sm font-medium text-blue-600">Completed</p>
+            <p class="text-xl font-bold text-blue-800 mt-1">{{ $completedOrders ?? 0 }}</p>
         </div>
-        <div class="bg-red-50 rounded-lg p-4 border border-red-200 text-center">
-            <p class="text-sm font-medium text-red-600">Cancelled</p>
-            <p class="text-xl font-bold text-red-800 mt-1">{{ $cancelledOrders ?? 0 }}</p>
+        <div class="bg-gray-100 rounded-lg p-4 border border-gray-200 text-center shadow-md">
+            <p class="text-sm font-medium text-gray-600">Cancelled</p>
+            <p class="text-xl font-bold text-gray-900 mt-1">{{ $cancelledOrders ?? 0 }}</p>
         </div>
     </div>
     
     <!-- Orders Table -->
-    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md">
         <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+            <thead class="bg-gray-800">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Order ID</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Customer</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Date</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Payment</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Total</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -94,8 +94,8 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#{{ $order->id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
-                                <div class="flex-shrink-0 h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-user text-gray-500"></i>
+                                <div class="flex-shrink-0 h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-blue-600"></i>
                                 </div>
                                 <div class="ml-3">
                                     <div class="text-sm font-medium text-gray-900">{{ $order->customer_name }}</div>
@@ -106,10 +106,10 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $order->created_at->format('M d, Y') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ 
-                                $order->status == 'completed' ? 'bg-green-100 text-green-800' : 
+                                $order->status == 'completed' ? 'bg-blue-100 text-blue-800' : 
                                 ($order->status == 'processing' ? 'bg-blue-100 text-blue-800' : 
-                                ($order->status == 'cancelled' ? 'bg-red-100 text-red-800' : 
-                                'bg-yellow-100 text-yellow-800')) 
+                                ($order->status == 'cancelled' ? 'bg-gray-100 text-gray-800' : 
+                                'bg-gray-100 text-gray-800')) 
                             }}">
                                 {{ ucfirst($order->status) }}
                             </span>
@@ -124,7 +124,7 @@
                                 <a href="{{ route('admin.orders.edit', $order->id) }}" class="text-gray-600 hover:text-gray-900">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="{{ route('admin.orders.invoice', $order->id) }}" class="text-green-600 hover:text-green-900">
+                                <a href="{{ route('admin.orders.invoice', $order->id) }}" class="text-blue-600 hover:text-blue-900">
                                     <i class="fas fa-file-invoice"></i>
                                 </a>
                             </div>
@@ -159,7 +159,7 @@
                             <span class="sr-only">Previous</span>
                             <i class="fas fa-chevron-left"></i>
                         </a>
-                        <a href="#" aria-current="page" class="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</a>
+                        <a href="#" aria-current="page" class="z-10 bg-blue-600 border-blue-600 text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</a>
                         <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">2</a>
                         <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">3</a>
                         <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
