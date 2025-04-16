@@ -169,245 +169,438 @@
             @method('PUT')
             <input type="hidden" name="section" value="theme_settings">
             
-            <!-- Colors -->
-            <div>
-                <h2 class="text-xl font-medium text-primary mb-4">Brand Colors</h2>
+            <!-- Theme Settings Tabs -->
+            <div class="mb-6 border-b border-border-color">
+                <div class="flex flex-wrap -mb-px">
+                    <button type="button" data-tab="colors" class="inline-block py-4 px-4 text-center border-b-2 font-medium theme-tab active border-accent text-accent bg-accent/5">
+                        <i class="fas fa-palette mr-2"></i> Colors
+                    </button>
+                    <button type="button" data-tab="typography" class="inline-block py-4 px-4 text-center border-b-2 font-medium theme-tab border-transparent text-primary hover:text-accent hover:border-border-color">
+                        <i class="fas fa-font mr-2"></i> Typography
+                    </button>
+                    <button type="button" data-tab="products" class="inline-block py-4 px-4 text-center border-b-2 font-medium theme-tab border-transparent text-primary hover:text-accent hover:border-border-color">
+                        <i class="fas fa-box mr-2"></i> Products
+                    </button>
+                    <button type="button" data-tab="navigation" class="inline-block py-4 px-4 text-center border-b-2 font-medium theme-tab border-transparent text-primary hover:text-accent hover:border-border-color">
+                        <i class="fas fa-bars mr-2"></i> Navigation
+                    </button>
+                    <button type="button" data-tab="social" class="inline-block py-4 px-4 text-center border-b-2 font-medium theme-tab border-transparent text-primary hover:text-accent hover:border-border-color">
+                        <i class="fas fa-share-alt mr-2"></i> Social
+                    </button>
+                </div>
+            </div>
+
+            <!-- Colors Tab Content -->
+            <div class="theme-tab-content active" id="colors-tab">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="primary_color" class="block text-sm font-medium text-primary mb-1">Primary Color</label>
-                        <div class="flex">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="primary_color" id="primary_color_picker" value="{{ $themeSettings['primary_color'] ?? '#3B82F6' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
-                            </span>
-                            <input type="text" name="primary_color" id="primary_color" value="{{ $themeSettings['primary_color'] ?? '#3B82F6' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                    <!-- Brand Colors -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Brand Colors</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="primary_color" class="block text-sm font-medium text-primary mb-1">Primary Color</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                        <input type="color" name="primary_color" id="primary_color_picker" value="{{ $themeSettings['primary_color'] ?? '#3B82F6' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                    </span>
+                                    <input type="text" name="primary_color" id="primary_color" value="{{ $themeSettings['primary_color'] ?? '#3B82F6' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                </div>
+                                <p class="mt-1 text-xs text-secondary">Main brand color used throughout the store</p>
+                            </div>
+                            
+                            <div>
+                                <label for="secondary_color" class="block text-sm font-medium text-primary mb-1">Secondary Color</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                        <input type="color" name="secondary_color" id="secondary_color_picker" value="{{ $themeSettings['secondary_color'] ?? '#10B981' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                    </span>
+                                    <input type="text" name="secondary_color" id="secondary_color" value="{{ $themeSettings['secondary_color'] ?? '#10B981' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                </div>
+                                <p class="mt-1 text-xs text-secondary">Accent color for secondary elements</p>
+                            </div>
                         </div>
-                        <p class="mt-1 text-xs text-secondary">Used for primary elements and accents</p>
-                        @error('primary_color')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
                     </div>
-                    
-                    <div>
-                        <label for="link_color" class="block text-sm font-medium text-primary mb-1">Link Color</label>
-                        <div class="flex">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="link_color" id="link_color_picker" value="{{ $themeSettings['link_color'] ?? '#2563EB' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
-                            </span>
-                            <input type="text" name="link_color" id="link_color" value="{{ $themeSettings['link_color'] ?? '#2563EB' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+
+                    <!-- Background Colors -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Background Colors</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="body_bg_color" class="block text-sm font-medium text-primary mb-1">Body Background</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                        <input type="color" name="body_bg_color" id="body_bg_color_picker" value="{{ $themeSettings['body_bg_color'] ?? '#F9FAFB' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                    </span>
+                                    <input type="text" name="body_bg_color" id="body_bg_color" value="{{ $themeSettings['body_bg_color'] ?? '#F9FAFB' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                </div>
+                                <p class="mt-1 text-xs text-secondary">Main background color of the store</p>
+                            </div>
+                            
+                            <div>
+                                <label for="card_bg_color" class="block text-sm font-medium text-primary mb-1">Card Background</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                        <input type="color" name="card_bg_color" id="card_bg_color_picker" value="{{ $themeSettings['card_bg_color'] ?? '#FFFFFF' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                    </span>
+                                    <input type="text" name="card_bg_color" id="card_bg_color" value="{{ $themeSettings['card_bg_color'] ?? '#FFFFFF' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                </div>
+                                <p class="mt-1 text-xs text-secondary">Background color for cards and containers</p>
+                            </div>
                         </div>
-                        <p class="mt-1 text-xs text-secondary">Used for links</p>
-                        @error('link_color')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
                     </div>
-                    
-                    <div>
-                        <label for="button_bg_color" class="block text-sm font-medium text-primary mb-1">Button Background Color</label>
-                        <div class="flex">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="button_bg_color" id="button_bg_color_picker" value="{{ $themeSettings['button_bg_color'] ?? '#3B82F6' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
-                            </span>
-                            <input type="text" name="button_bg_color" id="button_bg_color" value="{{ $themeSettings['button_bg_color'] ?? '#3B82F6' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+
+                    <!-- Text Colors -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Text Colors</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="text_color" class="block text-sm font-medium text-primary mb-1">Body Text</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                        <input type="color" name="text_color" id="text_color_picker" value="{{ $themeSettings['text_color'] ?? '#111827' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                    </span>
+                                    <input type="text" name="text_color" id="text_color" value="{{ $themeSettings['text_color'] ?? '#111827' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                </div>
+                                <p class="mt-1 text-xs text-secondary">Color for regular text content</p>
+                            </div>
+                            
+                            <div>
+                                <label for="link_color" class="block text-sm font-medium text-primary mb-1">Default Link Color</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                        <input type="color" name="link_color" id="link_color_picker" value="{{ $themeSettings['link_color'] ?? '#2563EB' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                    </span>
+                                    <input type="text" name="link_color" id="link_color" value="{{ $themeSettings['link_color'] ?? '#2563EB' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                </div>
+                                <p class="mt-1 text-xs text-secondary">Default color for links</p>
+                            </div>
+
+                            <div>
+                                <label for="card_link_color" class="block text-sm font-medium text-primary mb-1">Card Link Color</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                        <input type="color" name="card_link_color" id="card_link_color_picker" value="{{ $themeSettings['card_link_color'] ?? '#2563EB' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                    </span>
+                                    <input type="text" name="card_link_color" id="card_link_color" value="{{ $themeSettings['card_link_color'] ?? '#2563EB' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                </div>
+                                <p class="mt-1 text-xs text-secondary">Color for links within cards</p>
+                            </div>
+
+                            <div>
+                                <label for="category_link_color" class="block text-sm font-medium text-primary mb-1">Category Link Color</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                        <input type="color" name="category_link_color" id="category_link_color_picker" value="{{ $themeSettings['category_link_color'] ?? '#2563EB' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                    </span>
+                                    <input type="text" name="category_link_color" id="category_link_color" value="{{ $themeSettings['category_link_color'] ?? '#2563EB' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                </div>
+                                <p class="mt-1 text-xs text-secondary">Color for category links</p>
+                            </div>
+
+                            <div>
+                                <label for="product_link_color" class="block text-sm font-medium text-primary mb-1">Product Link Color</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                        <input type="color" name="product_link_color" id="product_link_color_picker" value="{{ $themeSettings['product_link_color'] ?? '#2563EB' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                    </span>
+                                    <input type="text" name="product_link_color" id="product_link_color" value="{{ $themeSettings['product_link_color'] ?? '#2563EB' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                </div>
+                                <p class="mt-1 text-xs text-secondary">Color for product links</p>
+                            </div>
+
+                            <div>
+                                <label for="cart_badge_bg_color" class="block text-sm font-medium text-primary mb-1">Cart Badge Color</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                        <input type="color" name="cart_badge_bg_color" id="cart_badge_bg_color_picker" value="{{ $themeSettings['cart_badge_bg_color'] ?? '#EF4444' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                    </span>
+                                    <input type="text" name="cart_badge_bg_color" id="cart_badge_bg_color" value="{{ $themeSettings['cart_badge_bg_color'] ?? '#EF4444' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                </div>
+                                <p class="mt-1 text-xs text-secondary">Background color for cart badge</p>
+                            </div>
                         </div>
-                        <p class="mt-1 text-xs text-secondary">Used for button backgrounds</p>
-                        @error('button_bg_color')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    
-                    <div>
-                        <label for="button_text_color" class="block text-sm font-medium text-primary mb-1">Button Text Color</label>
-                        <div class="flex">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="button_text_color" id="button_text_color_picker" value="{{ $themeSettings['button_text_color'] ?? '#FFFFFF' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
-                            </span>
-                            <input type="text" name="button_text_color" id="button_text_color" value="{{ $themeSettings['button_text_color'] ?? '#FFFFFF' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
-                        </div>
-                        <p class="mt-1 text-xs text-secondary">Used for button text</p>
-                        @error('button_text_color')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
                     </div>
                 </div>
             </div>
-            
-            <!-- Layout Colors -->
-            <div class="pt-6 border-t border-border-color">
-                <h2 class="text-xl font-medium text-primary mb-4">Layout Colors</h2>
+
+            <!-- Typography Tab Content -->
+            <div class="theme-tab-content hidden" id="typography-tab">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="body_bg_color" class="block text-sm font-medium text-primary mb-1">Page Background Color</label>
-                        <div class="flex">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="body_bg_color" id="body_bg_color_picker" value="{{ $themeSettings['body_bg_color'] ?? '#F9FAFB' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
-                            </span>
-                            <input type="text" name="body_bg_color" id="body_bg_color" value="{{ $themeSettings['body_bg_color'] ?? '#F9FAFB' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                    <!-- Font Selection -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Font Selection</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="font_family" class="block text-sm font-medium text-primary mb-1">Font Family</label>
+                                <select name="font_family" id="font_family" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                    @foreach($availableFonts as $value => $label)
+                                        <option value="{{ $value }}" {{ ($themeSettings['font_family'] ?? '') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                                <p class="mt-1 text-xs text-secondary">Main font used throughout the store</p>
+                            </div>
                         </div>
-                        <p class="mt-1 text-xs text-secondary">Used for page background</p>
-                        @error('body_bg_color')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
                     </div>
-                    
-                    <div>
-                        <label for="card_bg_color" class="block text-sm font-medium text-primary mb-1">Card Background Color</label>
-                        <div class="flex">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="card_bg_color" id="card_bg_color_picker" value="{{ $themeSettings['card_bg_color'] ?? '#FFFFFF' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
-                            </span>
-                            <input type="text" name="card_bg_color" id="card_bg_color" value="{{ $themeSettings['card_bg_color'] ?? '#FFFFFF' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+
+                    <!-- Heading Sizes -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Heading Sizes</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label for="heading_size" class="block text-sm font-medium text-primary mb-1">Heading Size</label>
+                                <select name="heading_size" id="heading_size" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                    <option value="small" {{ ($themeSettings['heading_size'] ?? '') == 'small' ? 'selected' : '' }}>Small</option>
+                                    <option value="medium" {{ ($themeSettings['heading_size'] ?? '') == 'medium' ? 'selected' : '' }}>Medium</option>
+                                    <option value="large" {{ ($themeSettings['heading_size'] ?? '') == 'large' ? 'selected' : '' }}>Large</option>
+                                </select>
+                                <p class="mt-1 text-xs text-secondary">Size for all headings</p>
+                            </div>
                         </div>
-                        <p class="mt-1 text-xs text-secondary">Used for card backgrounds</p>
-                        @error('card_bg_color')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
                     </div>
-                    
-                    <div>
-                        <label for="navbar_text_color" class="block text-sm font-medium text-primary mb-1">Navigation Text Color</label>
-                        <div class="flex">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="navbar_text_color" id="navbar_text_color_picker" value="{{ $themeSettings['navbar_text_color'] ?? '#111827' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
-                            </span>
-                            <input type="text" name="navbar_text_color" id="navbar_text_color" value="{{ $themeSettings['navbar_text_color'] ?? '#111827' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+
+                    <!-- Text Sizes -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Text Sizes</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label for="text_size" class="block text-sm font-medium text-primary mb-1">Body Text Size</label>
+                                <select name="text_size" id="text_size" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                    <option value="small" {{ ($themeSettings['text_size'] ?? '') == 'small' ? 'selected' : '' }}>Small</option>
+                                    <option value="medium" {{ ($themeSettings['text_size'] ?? '') == 'medium' ? 'selected' : '' }}>Medium</option>
+                                    <option value="large" {{ ($themeSettings['text_size'] ?? '') == 'large' ? 'selected' : '' }}>Large</option>
+                                </select>
+                                <p class="mt-1 text-xs text-secondary">Size for regular text content</p>
+                            </div>
                         </div>
-                        <p class="mt-1 text-xs text-secondary">Used for navigation links</p>
-                        @error('navbar_text_color')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    
-                    <div>
-                        <label for="footer_bg_color" class="block text-sm font-medium text-primary mb-1">Footer Background Color</label>
-                        <div class="flex">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="footer_bg_color" id="footer_bg_color_picker" value="{{ $themeSettings['footer_bg_color'] ?? '#1F2937' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
-                            </span>
-                            <input type="text" name="footer_bg_color" id="footer_bg_color" value="{{ $themeSettings['footer_bg_color'] ?? '#1F2937' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
-                        </div>
-                        <p class="mt-1 text-xs text-secondary">Used for footer background</p>
-                        @error('footer_bg_color')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    
-                    <div>
-                        <label for="cart_badge_bg_color" class="block text-sm font-medium text-primary mb-1">Cart Badge Color</label>
-                        <div class="flex">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
-                                <input type="color" name="cart_badge_bg_color" id="cart_badge_bg_color_picker" value="{{ $themeSettings['cart_badge_bg_color'] ?? '#EF4444' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
-                            </span>
-                            <input type="text" name="cart_badge_bg_color" id="cart_badge_bg_color" value="{{ $themeSettings['cart_badge_bg_color'] ?? '#EF4444' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
-                        </div>
-                        <p class="mt-1 text-xs text-secondary">Used for cart count badge (defaults to primary color if empty)</p>
-                        @error('cart_badge_bg_color')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    
-                    <div>
-                        <label for="border_radius" class="block text-sm font-medium text-primary mb-1">Border Radius</label>
-                        <input type="text" name="border_radius" id="border_radius" value="{{ $themeSettings['border_radius'] ?? '0.375rem' }}" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
-                        <p class="mt-1 text-xs text-secondary">Used for rounded corners (e.g., 0.375rem, 8px)</p>
-                        @error('border_radius')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
                     </div>
                 </div>
             </div>
-            
-            <!-- Typography -->
-            <div class="pt-6 border-t border-border-color">
-                <h2 class="text-xl font-medium text-primary mb-4">Typography</h2>
+
+            <!-- Products Tab Content -->
+            <div class="theme-tab-content hidden" id="products-tab">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="font_family" class="block text-sm font-medium text-primary mb-1">Font Family</label>
-                        <select name="font_family" id="font_family" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
-                            @foreach($availableFonts as $fontValue => $fontDisplay)
-                            <option value="{{ $fontValue }}" {{ ($themeSettings['font_family'] ?? 'Inter, sans-serif') == $fontValue ? 'selected' : '' }}>{{ $fontDisplay }}</option>
-                            @endforeach
-                        </select>
-                        <p class="mt-1 text-xs text-secondary">Used for all text on the site</p>
-                        @error('font_family')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
+                    <!-- Card Style -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Product Card Style</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="product_card_style" class="block text-sm font-medium text-primary mb-1">Card Style</label>
+                                <select name="product_card_style" id="product_card_style" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                    <option value="minimal" {{ ($themeSettings['product_card_style'] ?? '') == 'minimal' ? 'selected' : '' }}>Minimal</option>
+                                    <option value="detailed" {{ ($themeSettings['product_card_style'] ?? '') == 'detailed' ? 'selected' : '' }}>Detailed</option>
+                                    <option value="compact" {{ ($themeSettings['product_card_style'] ?? '') == 'compact' ? 'selected' : '' }}>Compact</option>
+                                </select>
+                                <p class="mt-1 text-xs text-secondary">Style of product cards in listings</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Image Options -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Image Options</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="product_image_size" class="block text-sm font-medium text-primary mb-1">Image Size</label>
+                                <select name="product_image_size" id="product_image_size" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                    <option value="small" {{ ($themeSettings['product_image_size'] ?? '') == 'small' ? 'selected' : '' }}>Small</option>
+                                    <option value="medium" {{ ($themeSettings['product_image_size'] ?? '') == 'medium' ? 'selected' : '' }}>Medium</option>
+                                    <option value="large" {{ ($themeSettings['product_image_size'] ?? '') == 'large' ? 'selected' : '' }}>Large</option>
+                                </select>
+                                <p class="mt-1 text-xs text-secondary">Size of product images in listings</p>
+                            </div>
+                            
+                            <div>
+                                <label for="product_image_hover" class="block text-sm font-medium text-primary mb-1">Hover Effect</label>
+                                <select name="product_image_hover" id="product_image_hover" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                    <option value="none" {{ ($themeSettings['product_image_hover'] ?? '') == 'none' ? 'selected' : '' }}>None</option>
+                                    <option value="zoom" {{ ($themeSettings['product_image_hover'] ?? '') == 'zoom' ? 'selected' : '' }}>Zoom</option>
+                                    <option value="slide" {{ ($themeSettings['product_image_hover'] ?? '') == 'slide' ? 'selected' : '' }}>Slide</option>
+                                </select>
+                                <p class="mt-1 text-xs text-secondary">Effect when hovering over product images</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Information Display -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Information Display</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="show_product_price" id="show_product_price" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['show_product_price'] ?? true) ? 'checked' : '' }}>
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="show_product_price" class="font-medium text-primary">Show Price</label>
+                                    <p class="text-secondary">Display product prices on cards</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="show_product_rating" id="show_product_rating" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['show_product_rating'] ?? true) ? 'checked' : '' }}>
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="show_product_rating" class="font-medium text-primary">Show Rating</label>
+                                    <p class="text-secondary">Display product ratings on cards</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="show_product_description" id="show_product_description" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['show_product_description'] ?? false) ? 'checked' : '' }}>
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="show_product_description" class="font-medium text-primary">Show Description</label>
+                                    <p class="text-secondary">Display product descriptions on cards</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Banner & Logo -->
-            <div class="pt-6 border-t border-border-color">
-                <h2 class="text-xl font-medium text-primary mb-4">Banner & Logo</h2>
+
+            <!-- Navigation Tab Content -->
+            <div class="theme-tab-content hidden" id="navigation-tab">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="logo" class="block text-sm font-medium text-primary mb-1">Store Logo</label>
-                        <input type="file" name="logo" id="logo" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
-                        <p class="mt-1 text-xs text-secondary">Recommended size: 250x80px, max 2MB</p>
-                        @error('logo')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                        
-                        @if(!empty($themeSettings['logo_url']))
-                        <div class="mt-2">
-                            <p class="text-xs text-secondary mb-1">Current logo:</p>
-                            <img src="{{ Storage::url($themeSettings['logo_url']) }}" alt="Current logo" class="h-12 object-contain">
+                    <!-- Menu Style -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Menu Style</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="menu_style" class="block text-sm font-medium text-primary mb-1">Menu Style</label>
+                                <select name="menu_style" id="menu_style" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                    <option value="dropdown" {{ ($themeSettings['menu_style'] ?? '') == 'dropdown' ? 'selected' : '' }}>Dropdown</option>
+                                    <option value="mega" {{ ($themeSettings['menu_style'] ?? '') == 'mega' ? 'selected' : '' }}>Mega Menu</option>
+                                </select>
+                                <p class="mt-1 text-xs text-secondary">Style of the main navigation menu</p>
+                            </div>
+                            
+                            <div>
+                                <label for="menu_item_spacing" class="block text-sm font-medium text-primary mb-1">Item Spacing</label>
+                                <select name="menu_item_spacing" id="menu_item_spacing" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                    <option value="compact" {{ ($themeSettings['menu_item_spacing'] ?? '') == 'compact' ? 'selected' : '' }}>Compact</option>
+                                    <option value="comfortable" {{ ($themeSettings['menu_item_spacing'] ?? '') == 'comfortable' ? 'selected' : '' }}>Comfortable</option>
+                                    <option value="spacious" {{ ($themeSettings['menu_item_spacing'] ?? '') == 'spacious' ? 'selected' : '' }}>Spacious</option>
+                                </select>
+                                <p class="mt-1 text-xs text-secondary">Spacing between menu items</p>
+                            </div>
                         </div>
-                        @endif
                     </div>
-                    
-                    <div>
-                        <label for="banner" class="block text-sm font-medium text-primary mb-1">Banner Image</label>
-                        <input type="file" name="banner" id="banner" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
-                        <p class="mt-1 text-xs text-secondary">Recommended size: 1200x400px, max 2MB</p>
-                        @error('banner')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                        
-                        @if(!empty($themeSettings['banner_image']))
-                        <div class="mt-2">
-                            <p class="text-xs text-secondary mb-1">Current banner:</p>
-                            <img src="{{ Storage::url($themeSettings['banner_image']) }}" alt="Current banner" class="h-20 object-cover w-full rounded">
+
+                    <!-- Mobile Menu -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Mobile Menu</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="mobile_menu_style" class="block text-sm font-medium text-primary mb-1">Mobile Menu Style</label>
+                                <select name="mobile_menu_style" id="mobile_menu_style" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                    <option value="slide" {{ ($themeSettings['mobile_menu_style'] ?? '') == 'slide' ? 'selected' : '' }}>Slide-in</option>
+                                    <option value="full" {{ ($themeSettings['mobile_menu_style'] ?? '') == 'full' ? 'selected' : '' }}>Full-screen</option>
+                                </select>
+                                <p class="mt-1 text-xs text-secondary">Style of the mobile navigation menu</p>
+                            </div>
                         </div>
-                        @endif
-                    </div>
-                    
-                    <div>
-                        <label for="banner_text" class="block text-sm font-medium text-primary mb-1">Banner Text</label>
-                        <input type="text" name="banner_text" id="banner_text" value="{{ $themeSettings['banner_text'] ?? '' }}" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
-                        <p class="mt-1 text-xs text-secondary">Text to display on the banner (optional)</p>
-                        @error('banner_text')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    
-                    <div>
-                        <label for="typography[base_size]" class="block text-sm font-medium text-primary mb-1">Base Font Size</label>
-                        <select name="typography[base_size]" id="typography[base_size]" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
-                            <option value="14px" {{ ($themeSettings['typography']['base_size'] ?? '') == '14px' ? 'selected' : '' }}>Small (14px)</option>
-                            <option value="16px" {{ ($themeSettings['typography']['base_size'] ?? '') == '16px' ? 'selected' : '' }}>Medium (16px)</option>
-                            <option value="18px" {{ ($themeSettings['typography']['base_size'] ?? '') == '18px' ? 'selected' : '' }}>Large (18px)</option>
-                        </select>
-                        <p class="mt-1 text-xs text-secondary">Base size for text</p>
-                        @error('typography.base_size')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
                     </div>
                 </div>
             </div>
-            
-            <!-- Custom CSS -->
-            <div class="pt-6 border-t border-border-color">
-                <h2 class="text-xl font-medium text-primary mb-4">Custom CSS</h2>
-                <div>
-                    <label for="custom_css" class="block text-sm font-medium text-primary mb-1">Custom CSS</label>
-                    <textarea name="custom_css" id="custom_css" rows="6" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent font-mono">{{ $themeSettings['custom_css'] ?? '' }}</textarea>
-                    <p class="mt-1 text-xs text-secondary">Add custom CSS to further customize your store's appearance</p>
-                    @error('custom_css')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
+
+            <!-- Social Tab Content -->
+            <div class="theme-tab-content hidden" id="social-tab">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Icon Style -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Icon Style</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="social_icon_style" class="block text-sm font-medium text-primary mb-1">Icon Style</label>
+                                <select name="social_icon_style" id="social_icon_style" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                    <option value="minimal" {{ ($themeSettings['social_icon_style'] ?? '') == 'minimal' ? 'selected' : '' }}>Minimal</option>
+                                    <option value="rounded" {{ ($themeSettings['social_icon_style'] ?? '') == 'rounded' ? 'selected' : '' }}>Rounded</option>
+                                    <option value="square" {{ ($themeSettings['social_icon_style'] ?? '') == 'square' ? 'selected' : '' }}>Square</option>
+                                </select>
+                                <p class="mt-1 text-xs text-secondary">Style of social media icons</p>
+                            </div>
+                            
+                            <div>
+                                <label for="social_icon_size" class="block text-sm font-medium text-primary mb-1">Icon Size</label>
+                                <select name="social_icon_size" id="social_icon_size" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                    <option value="small" {{ ($themeSettings['social_icon_size'] ?? '') == 'small' ? 'selected' : '' }}>Small</option>
+                                    <option value="medium" {{ ($themeSettings['social_icon_size'] ?? '') == 'medium' ? 'selected' : '' }}>Medium</option>
+                                    <option value="large" {{ ($themeSettings['social_icon_size'] ?? '') == 'large' ? 'selected' : '' }}>Large</option>
+                                </select>
+                                <p class="mt-1 text-xs text-secondary">Size of social media icons</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Platform Selection -->
+                    <div class="col-span-2">
+                        <h3 class="text-lg font-medium text-primary mb-4">Platform Selection</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="show_facebook" id="show_facebook" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['show_facebook'] ?? true) ? 'checked' : '' }}>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="show_facebook" class="block text-sm font-medium text-primary">Facebook</label>
+                                    <input type="url" name="facebook_url" id="facebook_url" value="{{ $themeSettings['facebook_url'] ?? '' }}" placeholder="https://facebook.com/yourpage" class="mt-1 block w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent text-sm">
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="show_twitter" id="show_twitter" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['show_twitter'] ?? true) ? 'checked' : '' }}>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="show_twitter" class="block text-sm font-medium text-primary">Twitter</label>
+                                    <input type="url" name="twitter_url" id="twitter_url" value="{{ $themeSettings['twitter_url'] ?? '' }}" placeholder="https://twitter.com/yourhandle" class="mt-1 block w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent text-sm">
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="show_instagram" id="show_instagram" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['show_instagram'] ?? true) ? 'checked' : '' }}>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="show_instagram" class="block text-sm font-medium text-primary">Instagram</label>
+                                    <input type="url" name="instagram_url" id="instagram_url" value="{{ $themeSettings['instagram_url'] ?? '' }}" placeholder="https://instagram.com/yourhandle" class="mt-1 block w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent text-sm">
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="show_pinterest" id="show_pinterest" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['show_pinterest'] ?? true) ? 'checked' : '' }}>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="show_pinterest" class="block text-sm font-medium text-primary">Pinterest</label>
+                                    <input type="url" name="pinterest_url" id="pinterest_url" value="{{ $themeSettings['pinterest_url'] ?? '' }}" placeholder="https://pinterest.com/yourhandle" class="mt-1 block w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent text-sm">
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="show_youtube" id="show_youtube" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['show_youtube'] ?? true) ? 'checked' : '' }}>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="show_youtube" class="block text-sm font-medium text-primary">YouTube</label>
+                                    <input type="url" name="youtube_url" id="youtube_url" value="{{ $themeSettings['youtube_url'] ?? '' }}" placeholder="https://youtube.com/yourchannel" class="mt-1 block w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent text-sm">
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="show_linkedin" id="show_linkedin" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['show_linkedin'] ?? true) ? 'checked' : '' }}>
+                                </div>
+                                <div class="flex-1">
+                                    <label for="show_linkedin" class="block text-sm font-medium text-primary">LinkedIn</label>
+                                    <input type="url" name="linkedin_url" id="linkedin_url" value="{{ $themeSettings['linkedin_url'] ?? '' }}" placeholder="https://linkedin.com/company/yourcompany" class="mt-1 block w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent text-sm">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
+
             <!-- Form Actions -->
             <div class="pt-6 border-t border-border-color flex justify-end space-x-3">
                 <a href="{{ route('admin.settings.theme.reset') }}" class="px-4 py-2 border border-border-color rounded-md text-sm font-medium text-red-600 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
@@ -713,13 +906,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get all color picker inputs
     const colorPickers = [
         { picker: document.getElementById('primary_color_picker'), text: document.getElementById('primary_color') },
+        { picker: document.getElementById('secondary_color_picker'), text: document.getElementById('secondary_color') },
         { picker: document.getElementById('link_color_picker'), text: document.getElementById('link_color') },
-        { picker: document.getElementById('button_bg_color_picker'), text: document.getElementById('button_bg_color') },
-        { picker: document.getElementById('button_text_color_picker'), text: document.getElementById('button_text_color') },
+        { picker: document.getElementById('card_link_color_picker'), text: document.getElementById('card_link_color') },
+        { picker: document.getElementById('category_link_color_picker'), text: document.getElementById('category_link_color') },
+        { picker: document.getElementById('product_link_color_picker'), text: document.getElementById('product_link_color') },
         { picker: document.getElementById('body_bg_color_picker'), text: document.getElementById('body_bg_color') },
         { picker: document.getElementById('card_bg_color_picker'), text: document.getElementById('card_bg_color') },
-        { picker: document.getElementById('navbar_text_color_picker'), text: document.getElementById('navbar_text_color') },
-        { picker: document.getElementById('footer_bg_color_picker'), text: document.getElementById('footer_bg_color') },
+        { picker: document.getElementById('text_color_picker'), text: document.getElementById('text_color') },
         { picker: document.getElementById('cart_badge_bg_color_picker'), text: document.getElementById('cart_badge_bg_color') }
     ].filter(item => item.picker && item.text); // Filter out any that don't exist
     
@@ -805,5 +999,48 @@ document.addEventListener('DOMContentLoaded', function() {
         typeSelect.addEventListener('change', updateSymbol);
     });
 </script>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab switching functionality
+    const tabs = document.querySelectorAll('.theme-tab');
+    const tabContents = document.querySelectorAll('.theme-tab-content');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active class from all tabs and contents
+            tabs.forEach(t => {
+                t.classList.remove('active', 'border-accent', 'text-accent', 'bg-accent/5');
+                t.classList.add('border-transparent', 'text-primary');
+            });
+            tabContents.forEach(c => c.classList.add('hidden'));
+
+            // Add active class to clicked tab
+            tab.classList.add('active', 'border-accent', 'text-accent', 'bg-accent/5');
+            tab.classList.remove('border-transparent', 'text-primary');
+            
+            // Show corresponding content
+            const tabId = tab.getAttribute('data-tab');
+            document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+        });
+    });
+
+    // Color picker synchronization
+    const colorPickers = document.querySelectorAll('input[type="color"]');
+    colorPickers.forEach(picker => {
+        const textInput = document.getElementById(picker.id.replace('_picker', ''));
+        
+        picker.addEventListener('input', () => {
+            textInput.value = picker.value;
+        });
+
+        textInput.addEventListener('input', () => {
+            picker.value = textInput.value;
+        });
+    });
+});
+</script>
+@endpush
 
 @endsection 

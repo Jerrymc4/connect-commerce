@@ -9,62 +9,34 @@ use Illuminate\Support\Facades\Log;
 
 class ThemeService
 {
-    protected $themeRepository;
-    
+    protected ThemeRepositoryInterface $themeRepository;
+
     public function __construct(ThemeRepositoryInterface $themeRepository)
     {
         $this->themeRepository = $themeRepository;
     }
-    
-    /**
-     * Get all theme settings.
-     *
-     * @return array
-     */
-    public function getThemeSettings()
+
+    public function getThemeSettings(): array
     {
         return $this->themeRepository->getThemeSettings();
     }
-    
-    /**
-     * Get a specific theme setting with fallback.
-     *
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     */
-    public function getThemeSetting(string $key, $default = null)
+
+    public function getThemeSetting(string $key, $default = null): mixed
     {
-        // Special case for cart badge color - fall back to primary color if not set
         if ($key === 'cart_badge_bg_color') {
             $value = $this->themeRepository->getThemeSetting($key);
-            if (empty($value)) {
-                return $this->themeRepository->getThemeSetting('primary_color', $default);
-            }
+            return $value ?: $this->themeRepository->getThemeSetting('primary_color', $default);
         }
-        
+
         return $this->themeRepository->getThemeSetting($key, $default);
     }
-    
-    /**
-     * Update theme settings.
-     *
-     * @param array $settings
-     * @param array $files
-     * @return bool
-     */
-    public function updateThemeSettings(array $settings, array $files = [])
+
+    public function updateThemeSettings(array $settings, array $files = []): bool
     {
-        // Fix for custom CSS - ensure it's directly in the settings array
-        if (isset($settings['custom_css'])) {
-            // No additional processing needed, just make sure it gets passed through
-        }
-        
-        // Flatten any nested arrays in the settings
         $flattenedSettings = [];
+
         foreach ($settings as $key => $value) {
             if (is_array($value)) {
-                // For array values like typography[base_size], flatten to typography_base_size
                 foreach ($value as $subKey => $subValue) {
                     $flattenedSettings["{$key}_{$subKey}"] = $subValue;
                 }
@@ -72,137 +44,116 @@ class ThemeService
                 $flattenedSettings[$key] = $value;
             }
         }
-        
-        // Handle file uploads first
+
         foreach ($files as $type => $file) {
             if ($file) {
                 $tenantId = tenant()->id;
-                
-                // Store files directly in the public storage path
+                $filename = "{$type}." . $file->getClientOriginalExtension();
+                $path = $file->storeAs("tenant-{$tenantId}/theme/{$type}", $filename, 'public');
+
                 if ($type === 'logo') {
-                    $filename = 'logo.' . $file->getClientOriginalExtension();
-                    $path = $file->storeAs("tenant-{$tenantId}/theme/logo", $filename, 'public');
                     $flattenedSettings['logo_url'] = $path;
                 } elseif ($type === 'banner') {
-                    $filename = 'banner.' . $file->getClientOriginalExtension();
-                    $path = $file->storeAs("tenant-{$tenantId}/theme/banner", $filename, 'public');
                     $flattenedSettings['banner_image'] = $path;
                 }
             }
         }
-        
-        // Update settings
+
         $result = $this->themeRepository->updateThemeSettings($flattenedSettings);
-        
-        // Generate CSS variables
         $this->generateThemeCSS();
-        
+
         return $result;
     }
-    
-    /**
-     * Generate a CSS file with theme variables.
-     *
-     * @return void
-     */
-    public function generateThemeCSS()
+
+    public function generateThemeCSS(): void
     {
         $settings = $this->getThemeSettings();
+        $tenantId = tenant()->id;
         
-        // Debug: Log the settings being used for CSS generation
-        Log::info('Generating theme CSS with settings', ['settings' => $settings]);
-        
+        // Generate CSS content with a complete set of styles
         $css = ":root {\n";
-        
-        // Add CSS variables with direct values to ensure they're applied
-        $css .= "  --color-primary: " . ($settings['primary_color'] ?? '#3B82F6') . ";\n";
-        $css .= "  --color-button-bg: " . ($settings['button_bg_color'] ?? '#3B82F6') . ";\n";
-        $css .= "  --color-button-text: " . ($settings['button_text_color'] ?? '#FFFFFF') . ";\n";
-        $css .= "  --color-footer-bg: " . ($settings['footer_bg_color'] ?? '#1F2937') . ";\n";
-        $css .= "  --color-navbar-text: " . ($settings['navbar_text_color'] ?? '#111827') . ";\n";
-        $css .= "  --color-cart-badge: " . ($settings['cart_badge_bg_color'] ?? '#EF4444') . ";\n";
-        $css .= "  --color-body-bg: " . ($settings['body_bg_color'] ?? '#F9FAFB') . ";\n";
-        $css .= "  --color-link: " . ($settings['link_color'] ?? '#2563EB') . ";\n";
-        $css .= "  --color-card-bg: " . ($settings['card_bg_color'] ?? '#FFFFFF') . ";\n";
-        
-        // Add font-family with quotes
-        $fontFamily = $settings['font_family'] ?? 'Inter, sans-serif';
-        if (strpos($fontFamily, ',') === false) {
-            $fontFamily .= ', sans-serif';
-        }
-        $css .= "  --font-family: " . $fontFamily . ";\n";
-        
-        // Add border radius (ensure it has units)
-        $borderRadius = $settings['border_radius'] ?? '0.375rem';
-        if (is_numeric($borderRadius)) {
-            $borderRadius .= 'px';
-        }
-        $css .= "  --border-radius: " . $borderRadius . ";\n";
-        
-        // Add font size if available
-        if (isset($settings['typography_base_size'])) {
-            $css .= "  --font-size-base: " . $settings['typography_base_size'] . ";\n";
-        }
-        
+        $css .= "  --primary: {$settings['primary_color']};\n";
+        $css .= "  --secondary: {$settings['button_bg_color']};\n";
+        $css .= "  --background: {$settings['body_bg_color']};\n";
+        $css .= "  --text-primary: {$settings['navbar_text_color']};\n";
+        $css .= "  --text-secondary: {$settings['navbar_text_color']};\n";
+        $css .= "  --header-bg: {$settings['body_bg_color']};\n";
+        $css .= "  --footer-bg: {$settings['footer_bg_color']};\n";
+        $css .= "  --heading-font: {$settings['font_family']};\n";
+        $css .= "  --body-font: {$settings['font_family']};\n";
+        $css .= "  --base-font-size: 16px;\n";
+        $css .= "  --heading-weight: 600;\n";
         $css .= "}\n\n";
         
-        // Add more specific CSS rules
-        $css .= "html, body {\n";
-        $css .= "  background-color: var(--color-body-bg);\n";
-        $css .= "  font-family: var(--font-family);\n";
-        if (isset($settings['typography_base_size'])) {
-            $css .= "  font-size: var(--font-size-base);\n";
-        }
+        // Add base styles
+        $css .= "body {\n";
+        $css .= "  font-family: var(--body-font);\n";
+        $css .= "  font-size: var(--base-font-size);\n";
+        $css .= "  color: var(--text-primary);\n";
+        $css .= "  background-color: var(--background);\n";
+        $css .= "}\n\n";
+        
+        $css .= "h1, h2, h3, h4, h5, h6 {\n";
+        $css .= "  font-family: var(--heading-font);\n";
+        $css .= "  font-weight: var(--heading-weight);\n";
         $css .= "}\n\n";
         
         $css .= ".btn-primary {\n";
-        $css .= "  background-color: var(--color-button-bg);\n";
-        $css .= "  color: var(--color-button-text);\n";
+        $css .= "  background-color: var(--primary);\n";
+        $css .= "  border-color: var(--primary);\n";
+        $css .= "  color: {$settings['button_text_color']};\n";
         $css .= "}\n\n";
         
-        $css .= "a {\n";
-        $css .= "  color: var(--color-link);\n";
+        $css .= ".btn-secondary {\n";
+        $css .= "  background-color: var(--secondary);\n";
+        $css .= "  border-color: var(--secondary);\n";
+        $css .= "  color: {$settings['button_text_color']};\n";
         $css .= "}\n\n";
         
-        $css .= ".card {\n";
-        $css .= "  background-color: var(--color-card-bg);\n";
-        $css .= "  border-radius: var(--border-radius);\n";
+        // Header styles
+        $css .= "header {\n";
+        $css .= "  background-color: var(--header-bg);\n";
         $css .= "}\n\n";
         
-        $css .= "header .navbar {\n";
-        $css .= "  color: var(--color-navbar-text);\n";
-        $css .= "}\n\n";
-        
+        // Footer styles
         $css .= "footer {\n";
-        $css .= "  background-color: var(--color-footer-bg);\n";
+        $css .= "  background-color: var(--footer-bg);\n";
         $css .= "}\n\n";
         
-        $css .= ".cart-count {\n";
-        $css .= "  background-color: var(--color-cart-badge);\n";
-        $css .= "}\n";
-        
-        // Add custom CSS if available
-        if (isset($settings['custom_css']) && !empty($settings['custom_css'])) {
-            $css .= "\n/* Custom CSS */\n";
-            $css .= $settings['custom_css'] . "\n";
+        try {
+            // Clean approach to ensure we're not creating loops
+            // Directly write to the public path that the app is using
+            $cssPath = public_path("storage/tenant-{$tenantId}/theme");
+            if (!is_dir($cssPath)) {
+                mkdir($cssPath, 0755, true);
+            }
+            
+            file_put_contents("{$cssPath}/theme.css", $css);
+            
+            // Update the theme settings in the database
+            $this->themeRepository->updateThemeSettings(['css_generated_at' => now()->toDateTimeString()]);
+            
+            Log::info("Theme CSS generated successfully for tenant {$tenantId}");
+        } catch (\Exception $e) {
+            Log::error('Failed to generate theme CSS', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
         }
-        
-        // Write directly to the filesystem using PHP's file functions
-        // This bypasses Laravel's storage abstraction which might be causing issues
-        $tenantId = tenant()->id;
-        $cssDir = public_path("storage/tenant-{$tenantId}/theme");
-        $cssFile = "{$cssDir}/theme.css";
-        
-        // Ensure the directory exists
-        if (!is_dir($cssDir)) {
-            mkdir($cssDir, 0755, true);
-        }
-        
-        // Write the file
-        file_put_contents($cssFile, $css);
     }
 
-    public function getAvailableFonts()
+    private function adjustColor(string $hex, int $amount): string
+    {
+        $hex = str_replace('#', '', $hex);
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        $r = max(0, min(255, $r + $amount));
+        $g = max(0, min(255, $g + $amount));
+        $b = max(0, min(255, $b + $amount));
+
+        return sprintf('#%02x%02x%02x', $r, $g, $b);
+    }
+
+    public function getAvailableFonts(): array
     {
         return [
             'Inter' => 'Inter',
@@ -213,4 +164,9 @@ class ThemeService
             'Poppins' => 'Poppins',
         ];
     }
-} 
+
+    public function clearCache(): void
+    {
+        $this->themeRepository->clearCache();
+    }
+}

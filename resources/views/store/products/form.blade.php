@@ -279,6 +279,25 @@
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 ml-7">When enabled, stock will be reduced with each sale</p>
                 </div>
                 
+                <!-- Product Highlights -->
+                <div class="space-y-6">
+                    <div>
+                        <label for="highlights" class="block text-sm font-medium text-gray-700">Product Highlights</label>
+                        <div class="mt-1">
+                            <textarea 
+                                id="highlights" 
+                                name="highlights" 
+                                rows="3" 
+                                class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md"
+                                placeholder="Enter product highlights, one per line"
+                            >{{ old('highlights', $product->highlights ? implode("\n", $product->highlights) : '') }}</textarea>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500">
+                            Enter each highlight on a new line. These will be displayed as bullet points on the product page.
+                        </p>
+                    </div>
+                </div>
+                
                 <!-- Submit Buttons -->
                 <div class="flex justify-end gap-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                     <a href="{{ route('admin.products', [], false) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">

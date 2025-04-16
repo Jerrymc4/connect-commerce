@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Services\ThemeService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+use App\Models\Store;
 
 class GenerateThemeCSS extends Command
 {
@@ -13,14 +13,14 @@ class GenerateThemeCSS extends Command
      *
      * @var string
      */
-    protected $signature = 'theme:generate-css {tenant_id? : The ID of the tenant to generate CSS for}';
+    protected $signature = 'theme:generate-css {tenant_id?}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Generate the theme CSS for a tenant';
+    protected $description = 'Generate the CSS file for the theme settings';
 
     /**
      * Execute the console command.
@@ -30,30 +30,30 @@ class GenerateThemeCSS extends Command
         $tenantId = $this->argument('tenant_id');
         
         if ($tenantId) {
-            $this->info("Generating theme CSS for tenant {$tenantId}");
-            
-            try {
-                // Set the tenant context
-                tenancy()->initialize($tenantId);
-                
-                // Generate the CSS
-                $themeService->generateThemeCSS();
-                
-                $this->info("Theme CSS generated successfully for tenant {$tenantId}");
-            } catch (\Exception $e) {
-                $this->error("Failed to generate theme CSS: " . $e->getMessage());
-                Log::error("Failed to generate theme CSS", [
-                    'tenant_id' => $tenantId,
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
-                ]);
-            }
-        } else {
-            $this->info("No tenant ID provided, generating CSS for all tenants");
-            
-            // This would need to be implemented based on your tenant structure
-            $this->error("Generating for all tenants is not implemented yet");
+            // Set the current tenant
+            tenancy()->initialize($tenantId);
+            $themeService->generateThemeCSS();
+            $this->info("Theme CSS generated for tenant {$tenantId}");
+            return 0;
         }
+        
+        $this->info("No tenant ID provided, generating CSS for all tenants");
+        
+        // Generate for all tenants
+        $stores = Store::all();
+        
+        if ($stores->isEmpty()) {
+            $this->info("No tenants found");
+            return 0;
+        }
+        
+        foreach ($stores as $store) {
+            $this->info("Generating CSS for tenant {$store->id}");
+            tenancy()->initialize($store->id);
+            $themeService->generateThemeCSS();
+        }
+        
+        $this->info("All theme CSS files generated successfully");
         
         return 0;
     }

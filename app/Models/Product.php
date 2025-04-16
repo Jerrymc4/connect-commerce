@@ -32,6 +32,7 @@ class Product extends Model
         'image',
         'store_id',
         'track_inventory',
+        'highlights',
     ];
 
     /**
@@ -42,10 +43,23 @@ class Product extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'sale_price' => 'decimal:2',
-        'weight' => 'decimal:2',
         'stock' => 'integer',
+        'weight' => 'decimal:2',
         'track_inventory' => 'boolean',
+        'highlights' => 'array',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted()
+    {
+        static::retrieved(function ($product) {
+            if ($product->highlights === null) {
+                $product->highlights = [];
+            }
+        });
+    }
 
     /**
      * Get the store that owns the product.
@@ -139,5 +153,13 @@ class Product extends Model
     public function isOutOfStock(): bool
     {
         return $this->track_inventory && $this->stock <= 0;
+    }
+
+    /**
+     * Get the images for the product.
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class);
     }
 } 

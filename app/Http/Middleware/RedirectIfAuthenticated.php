@@ -27,7 +27,7 @@ class RedirectIfAuthenticated
                     return redirect()->route('storefront.home');
                 } else {
                     // Admin users should go to the admin dashboard
-                    return redirect()->route('store.dashboard');
+                    return redirect()->route('admin.dashboard');
                 }
             }
         }

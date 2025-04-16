@@ -39,6 +39,23 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
+    // Route to serve tenant storage files
+    Route::get('storage/{path}', function ($path) {
+
+        $tenantId = tenant()->id;
+        $filePath = storage_path("app/public/$path");
+
+        
+        // if (!file_exists($filePath)) {
+        //     abort(404);
+        // }
+        
+        $contentType = mime_content_type($filePath);
+        
+        return response(file_get_contents($filePath), 200)
+            ->header('Content-Type', $contentType);
+    })->where('path', '.*')
+      ->name('tenant.storage');
 
     Route::middleware('guest')->group(function () {
         Route::get('admin/login', [AuthenticatedSessionController::class, 'create'])->name('tenant.login');

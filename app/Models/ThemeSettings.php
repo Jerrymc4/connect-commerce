@@ -22,10 +22,10 @@ class ThemeSettings extends Model
     /**
      * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
-        'value' => 'string',
+        'value' => 'string'
     ];
 
     /**
@@ -48,16 +48,16 @@ class ThemeSettings extends Model
     {
         $css = ":root {\n";
         $css .= "  --color-primary: {$this->primary_color};\n";
-        $css .= "  --color-button-bg: {$this->button_bg_color};\n";
-        $css .= "  --color-button-text: {$this->button_text_color};\n";
-        $css .= "  --color-footer-bg: {$this->footer_bg_color};\n";
-        $css .= "  --color-navbar-text: {$this->navbar_text_color};\n";
-        $css .= "  --color-cart-badge: {$this->cart_badge_bg_color};\n";
+        $css .= "  --color-secondary: {$this->secondary_color};\n";
         $css .= "  --color-body-bg: {$this->body_bg_color};\n";
-        $css .= "  --font-family: '{$this->font_family}', sans-serif;\n";
-        $css .= "  --color-link: {$this->link_color};\n";
         $css .= "  --color-card-bg: {$this->card_bg_color};\n";
-        $css .= "  --border-radius: {$this->border_radius}px;\n";
+        $css .= "  --color-text: {$this->text_color};\n";
+        $css .= "  --color-link: {$this->link_color};\n";
+        $css .= "  --color-card-link: {$this->card_link_color};\n";
+        $css .= "  --color-category-link: {$this->category_link_color};\n";
+        $css .= "  --color-product-link: {$this->product_link_color};\n";
+        $css .= "  --color-cart-badge: {$this->cart_badge_bg_color};\n";
+        $css .= "  --font-family: '{$this->font_family}', sans-serif;\n";
         $css .= "}\n";
 
         return $css;

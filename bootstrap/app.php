@@ -27,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth' => \App\Http\Middleware\Authenticate::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'theme.settings' => \App\Http\Middleware\InjectThemeSettings::class,
+            'cors' => \App\Http\Middleware\Cors::class,
         ]);
         
         $middleware->web(append: [
@@ -34,8 +35,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
 
-        //
+        $middleware->append([
+            \App\Http\Middleware\Cors::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->create();

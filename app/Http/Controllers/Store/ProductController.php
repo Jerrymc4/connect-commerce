@@ -60,11 +60,19 @@ class ProductController extends Controller
             'dimensions' => 'nullable|string|max:100',
             'image' => 'nullable|image|max:2048',
             'track_inventory' => 'boolean',
+            'highlights' => 'nullable|string',
         ]);
         
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('products', 'public');
             $validated['image'] = $imagePath;
+        }
+
+        // Convert highlights from newline-separated string to array
+        if (isset($validated['highlights'])) {
+            $validated['highlights'] = array_filter(
+                array_map('trim', explode("\n", $validated['highlights']))
+            );
         }
         
         $product = Product::create($validated);
@@ -124,11 +132,19 @@ class ProductController extends Controller
             'dimensions' => 'nullable|string|max:100',
             'image' => 'nullable|image|max:2048',
             'track_inventory' => 'boolean',
+            'highlights' => 'nullable|string',
         ]);
         
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('products', 'public');
             $validated['image'] = $imagePath;
+        }
+
+        // Convert highlights from newline-separated string to array
+        if (isset($validated['highlights'])) {
+            $validated['highlights'] = array_filter(
+                array_map('trim', explode("\n", $validated['highlights']))
+            );
         }
         
         $product->update($validated);

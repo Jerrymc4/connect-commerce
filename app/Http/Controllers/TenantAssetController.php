@@ -18,9 +18,9 @@ class TenantAssetController extends Controller
     /**
      * Serve assets for tenants with proper CORS headers
      */
-    public function serveAsset(Request $request, $path)
+    public function serveAsset($path)
     {
-        // Get the asset from the build directory
+        // Get the asset from the public build directory
         $assetPath = public_path("build/{$path}");
         
         if (!file_exists($assetPath)) {

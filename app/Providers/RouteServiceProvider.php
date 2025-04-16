@@ -7,6 +7,8 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -44,8 +46,12 @@ class RouteServiceProvider extends ServiceProvider
                 
             // Load tenant routes if the file exists
             if (file_exists(base_path('routes/tenant.php'))) {
-                Route::middleware('web')
-                    ->group(base_path('routes/tenant.php'));
+                Route::middleware([
+                    'web',
+                    InitializeTenancyByDomain::class,
+                    PreventAccessFromCentralDomains::class,
+                    \App\Http\Middleware\Cors::class,
+                ])->group(base_path('routes/tenant.php'));
             }
         });
     }

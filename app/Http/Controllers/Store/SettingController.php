@@ -249,6 +249,7 @@ class SettingController extends Controller
                 ->with('success', 'Store settings saved successfully');
         }
         elseif ($section === 'theme_settings') {
+
             // Debug: Log the theme settings update request
             Log::info('Theme settings update requested', [
                 'form_data' => $request->except(['_token', '_method']),
