@@ -87,12 +87,12 @@
     <div class="min-h-full flex flex-col">
         <!-- Header - Only show on non-login/register pages -->
         @if(!Route::is('customer.login') && !Route::is('customer.register') && !Route::is('customer.password.request'))
-        <header class="bg-card shadow-color">
+        <header class="bg-[var(--background)] shadow-sm">
             <div class="container mx-auto px-4">
                 <div class="flex items-center justify-between h-16">
                     <!-- Logo -->
                     <div class="flex-shrink-0">
-                        <a href="{{ route('storefront.home') }}" class="font-bold text-xl text-primary">
+                        <a href="{{ route('storefront.home') }}" class="font-bold text-xl text-[var(--text-primary)]">
                             @if(!empty($themeSettings['logo_url']))
                                 <img src="{{ Storage::url($themeSettings['logo_url']) }}" alt="{{ $storeName ?? tenant()->name ?? config('app.name') }}" class="h-10 w-auto">
                             @else
@@ -101,67 +101,61 @@
                         </a>
                     </div>
                     
-                    <!-- Navigation -->
-                    <nav class="hidden md:flex space-x-8">
-                        <a href="{{ route('storefront.home') }}" class="text-secondary hover:text-primary">Home</a>
-                        <a href="{{ route('storefront.products.index') }}" class="text-secondary hover:text-primary">Products</a>
-                        <a href="#" class="text-secondary hover:text-primary">Categories</a>
-                        <a href="#" class="text-secondary hover:text-primary">About</a>
-                        <a href="#" class="text-secondary hover:text-primary">Contact</a>
-                    </nav>
+                    <!-- Main Navigation -->
+                    <div class="hidden md:flex items-center space-x-8">
+                        <a href="{{ route('storefront.home') }}" class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Home</a>
+                        <a href="{{ route('storefront.products.index') }}" class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Products</a>
+                        {{-- <a href="{{ route('storefront.categories.index') }}" class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Categories</a> --}}
+                        <a href="#" class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">About</a>
+                        <a href="#" class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Contact</a>
+                    </div>
                     
                     <!-- Right side icons -->
                     <div class="flex items-center space-x-4">
                         <!-- Search -->
-                        <button type="button" class="text-secondary hover:text-primary">
+                        <button type="button" class="text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
                             <i class="fas fa-search"></i>
                         </button>
                         
-                        <!-- Cart icon (always visible) -->
-                        <a href="{{ route('storefront.cart') }}" class="text-primary hover:text-primary-dark relative">
+                        <!-- Cart icon -->
+                        <a href="{{ route('storefront.cart') }}" class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] relative">
                             <i class="fas fa-shopping-cart text-xl"></i>
-                            <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                            @if(class_exists('Cart') && Cart::instance('default')->count() > 0)
+                            <span class="absolute -top-2 -right-2 bg-[var(--primary)] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                {{ Cart::instance('default')->count() }}
+                            </span>
+                            @endif
                         </a>
                         
-                        <!-- Profile section - conditional display -->
-                        @auth('customer')
-                            <!-- User is logged in - show profile dropdown -->
-                            <div class="relative" x-data="{ open: false }">
-                                <button @click="open = !open" class="flex items-center text-primary hover:text-primary-dark focus:outline-none">
-                                    <span class="mr-1">{{ Auth::guard('customer')->user()->name }}</span>
-                                    <i class="fas fa-user-circle text-xl"></i>
-                                    <i class="fas fa-chevron-down text-xs ml-1"></i>
-                                </button>
-                                
-                                <!-- Dropdown menu -->
-                                <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-card rounded-md shadow-color py-1 z-50">
-                                    <a href="{{ route('customer.account') }}" class="block px-4 py-2 text-sm text-primary hover:bg-body">My Account</a>
-                                    <a href="{{ route('customer.orders') }}" class="block px-4 py-2 text-sm text-primary hover:bg-body">My Orders</a>
-                                    <a href="{{ route('customer.wishlist') }}" class="block px-4 py-2 text-sm text-primary hover:bg-body">Wishlist</a>
-                                    <div class="border-t border-border-color"></div>
-                                    <form method="POST" action="/customer/logout">
-                                        @csrf
-                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-primary hover:bg-body">
-                                            Sign Out
-                                        </button>
-                                    </form>
-                                </div>
+                        <!-- User Authentication -->
+                        @auth
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] focus:outline-none">
+                                <i class="fas fa-user-circle text-xl mr-1"></i>
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            
+                            <!-- Dropdown menu -->
+                            <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-[var(--background)] rounded-md shadow-md py-1 z-50">
+                                <a href="{{ route('customer.account') }}" class="block px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-gray-100">My Account</a>
+                                <a href="{{ route('customer.orders') }}" class="block px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-gray-100">My Orders</a>
+                                <div class="border-t border-gray-200 my-1"></div>
+                                <form action="{{ route('customer.logout') }}" method="POST" class="block w-full">
+                                    @csrf
+                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-gray-100">
+                                        Logout
+                                    </button>
+                                </form>
                             </div>
+                        </div>
                         @else
-                            <!-- User is not logged in - show login/register links -->
-                            <div class="flex items-center space-x-3">
-                                <a href="{{ route('customer.login') }}" class="text-primary hover:text-primary-dark">
-                                    <span>Sign In</span>
-                                </a>
-                                <span class="text-muted">|</span>
-                                <a href="{{ route('customer.register') }}" class="text-primary hover:text-primary-dark">
-                                    <span>Register</span>
-                                </a>
-                            </div>
+                        <a href="{{ route('customer.login') }}" class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm">Login</a>
+                        <span class="text-[var(--text-secondary)]">|</span>
+                        <a href="{{ route('customer.register') }}" class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm">Register</a>
                         @endauth
                         
                         <!-- Mobile menu button -->
-                        <button type="button" class="md:hidden text-secondary hover:text-primary">
+                        <button type="button" class="md:hidden text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
                             <i class="fas fa-bars"></i>
                         </button>
                     </div>
@@ -170,9 +164,9 @@
         </header>
         @else
         <!-- Minimal header for login/register pages -->
-        <div class="py-6 bg-card shadow-color">
+        <div class="py-6 bg-[var(--background)] shadow-sm">
             <div class="container mx-auto px-4">
-                <a href="{{ route('storefront.home') }}" class="font-bold text-xl text-primary">
+                <a href="{{ route('storefront.home') }}" class="font-bold text-xl text-[var(--text-primary)]">
                     @if(!empty($themeSettings['logo_url']))
                         <img src="{{ Storage::url($themeSettings['logo_url']) }}" alt="{{ $storeName ?? tenant()->name ?? config('app.name') }}" class="h-10 w-auto">
                     @else
@@ -181,77 +175,6 @@
                 </a>
             </div>
         </div>
-        @endif
-        
-        <!-- Banner (only show on non-login/register pages) -->
-        @if(!Route::is('customer.login') && !Route::is('customer.register') && !Route::is('customer.password.request'))
-            @if(!empty($themeSettings['banner_image']) || !empty($themeSettings['banner_title']) || !empty($themeSettings['banner_subtitle']))
-            <div class="bg-gradient-to-r from-primary to-secondary text-{{ $themeSettings['banner_text_color'] ?? 'white' }} 
-                {{ $themeSettings['banner_height'] ?? 'medium' === 'small' ? 'py-8' : ($themeSettings['banner_height'] ?? 'medium' === 'medium' ? 'py-12' : ($themeSettings['banner_height'] ?? 'medium' === 'large' ? 'py-16' : 'min-h-screen py-24')) }}
-                {{ $themeSettings['banner_layout'] ?? 'left-aligned' === 'overlay' ? 'relative' : '' }}">
-                
-                @if($themeSettings['banner_layout'] ?? 'left-aligned' === 'overlay' && !empty($themeSettings['banner_image']))
-                <div class="absolute inset-0 w-full h-full overflow-hidden">
-                    <img src="{{ Storage::url($themeSettings['banner_image']) }}" alt="Banner" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-                </div>
-                @endif
-                
-                <div class="container mx-auto px-4 relative">
-                    @if($themeSettings['banner_layout'] ?? 'left-aligned' === 'center')
-                    <div class="text-center max-w-4xl mx-auto">
-                        @if(!empty($themeSettings['banner_title']))
-                        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">{{ $themeSettings['banner_title'] }}</h1>
-                        @endif
-                        
-                        @if(!empty($themeSettings['banner_subtitle']))
-                        <p class="text-lg md:text-xl mb-6 opacity-90">{{ $themeSettings['banner_subtitle'] }}</p>
-                        @endif
-                        
-                        @if(!empty($themeSettings['banner_cta_text']))
-                        <a href="{{ $themeSettings['banner_cta_url'] ?? route('storefront.products.index') }}" 
-                           class="inline-block px-6 py-3 rounded-lg font-semibold transition-colors"
-                           style="background-color: {{ $themeSettings['banner_cta_bg_color'] ?? '#FFFFFF' }}; color: {{ $themeSettings['banner_cta_text_color'] ?? '#4F46E5' }};">
-                            {{ $themeSettings['banner_cta_text'] }}
-                        </a>
-                        @endif
-                        
-                        @if(!empty($themeSettings['banner_image']) && $themeSettings['banner_layout'] ?? 'left-aligned' === 'center')
-                        <div class="mt-8">
-                            <img src="{{ Storage::url($themeSettings['banner_image']) }}" alt="Banner" class="rounded-lg shadow-color w-full max-w-2xl mx-auto">
-                        </div>
-                        @endif
-                    </div>
-                    @else
-                    <div class="flex flex-col {{ $themeSettings['banner_layout'] ?? 'left-aligned' === 'right-aligned' ? 'md:flex-row-reverse' : 'md:flex-row' }} items-center justify-between">
-                        <div class="mb-6 md:mb-0 md:w-1/2">
-                            @if(!empty($themeSettings['banner_title']))
-                            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">{{ $themeSettings['banner_title'] }}</h1>
-                            @endif
-                            
-                            @if(!empty($themeSettings['banner_subtitle']))
-                            <p class="text-lg md:text-xl mb-6 opacity-90">{{ $themeSettings['banner_subtitle'] }}</p>
-                            @endif
-                            
-                            @if(!empty($themeSettings['banner_cta_text']))
-                            <a href="{{ $themeSettings['banner_cta_url'] ?? route('storefront.products.index') }}" 
-                               class="inline-block px-6 py-3 rounded-lg font-semibold transition-colors"
-                               style="background-color: {{ $themeSettings['banner_cta_bg_color'] ?? '#FFFFFF' }}; color: {{ $themeSettings['banner_cta_text_color'] ?? '#4F46E5' }};">
-                                {{ $themeSettings['banner_cta_text'] }}
-                            </a>
-                            @endif
-                        </div>
-                        
-                        @if(!empty($themeSettings['banner_image']) && $themeSettings['banner_layout'] ?? 'left-aligned' !== 'overlay')
-                        <div class="md:w-1/2">
-                            <img src="{{ Storage::url($themeSettings['banner_image']) }}" alt="Banner" class="rounded-lg shadow-color w-full">
-                        </div>
-                        @endif
-                    </div>
-                    @endif
-                </div>
-            </div>
-            @endif
         @endif
         
         <!-- Main content -->

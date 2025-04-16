@@ -13,7 +13,8 @@
         "laravel/telescope": "^5.7",
         "laravel/tinker": "^2.10.1",
         "stancl/tenancy": "^3.9",
-        "tightenco/ziggy": "^2.0"
+        "tightenco/ziggy": "^2.0",
+        "tymon/jwt-auth": "^2.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
