@@ -185,25 +185,70 @@
         
         <!-- Banner (only show on non-login/register pages) -->
         @if(!Route::is('customer.login') && !Route::is('customer.register') && !Route::is('customer.password.request'))
-            @if(!empty($themeSettings['banner_image']) || !empty($themeSettings['banner_text']))
-            <div class="bg-gradient-to-r from-primary to-secondary text-white py-12">
-                <div class="container mx-auto px-4">
-                    <div class="flex flex-col md:flex-row items-center justify-between">
-                        <div class="mb-6 md:mb-0 md:w-1/2">
-                            @if(!empty($themeSettings['banner_text']))
-                            <h2 class="text-3xl font-bold mb-4">{{ $themeSettings['banner_text'] }}</h2>
-                            @endif
-                            <p class="text-white/80 mb-6">Discover amazing products at great prices</p>
-                            <a href="{{ route('storefront.products.index') }}" class="inline-block bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-white/90 transition-colors">
-                                Shop Now
-                            </a>
+            @if(!empty($themeSettings['banner_image']) || !empty($themeSettings['banner_title']) || !empty($themeSettings['banner_subtitle']))
+            <div class="bg-gradient-to-r from-primary to-secondary text-{{ $themeSettings['banner_text_color'] ?? 'white' }} 
+                {{ $themeSettings['banner_height'] ?? 'medium' === 'small' ? 'py-8' : ($themeSettings['banner_height'] ?? 'medium' === 'medium' ? 'py-12' : ($themeSettings['banner_height'] ?? 'medium' === 'large' ? 'py-16' : 'min-h-screen py-24')) }}
+                {{ $themeSettings['banner_layout'] ?? 'left-aligned' === 'overlay' ? 'relative' : '' }}">
+                
+                @if($themeSettings['banner_layout'] ?? 'left-aligned' === 'overlay' && !empty($themeSettings['banner_image']))
+                <div class="absolute inset-0 w-full h-full overflow-hidden">
+                    <img src="{{ Storage::url($themeSettings['banner_image']) }}" alt="Banner" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+                </div>
+                @endif
+                
+                <div class="container mx-auto px-4 relative">
+                    @if($themeSettings['banner_layout'] ?? 'left-aligned' === 'center')
+                    <div class="text-center max-w-4xl mx-auto">
+                        @if(!empty($themeSettings['banner_title']))
+                        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">{{ $themeSettings['banner_title'] }}</h1>
+                        @endif
+                        
+                        @if(!empty($themeSettings['banner_subtitle']))
+                        <p class="text-lg md:text-xl mb-6 opacity-90">{{ $themeSettings['banner_subtitle'] }}</p>
+                        @endif
+                        
+                        @if(!empty($themeSettings['banner_cta_text']))
+                        <a href="{{ $themeSettings['banner_cta_url'] ?? route('storefront.products.index') }}" 
+                           class="inline-block px-6 py-3 rounded-lg font-semibold transition-colors"
+                           style="background-color: {{ $themeSettings['banner_cta_bg_color'] ?? '#FFFFFF' }}; color: {{ $themeSettings['banner_cta_text_color'] ?? '#4F46E5' }};">
+                            {{ $themeSettings['banner_cta_text'] }}
+                        </a>
+                        @endif
+                        
+                        @if(!empty($themeSettings['banner_image']) && $themeSettings['banner_layout'] ?? 'left-aligned' === 'center')
+                        <div class="mt-8">
+                            <img src="{{ Storage::url($themeSettings['banner_image']) }}" alt="Banner" class="rounded-lg shadow-color w-full max-w-2xl mx-auto">
                         </div>
-                        @if(!empty($themeSettings['banner_image']))
+                        @endif
+                    </div>
+                    @else
+                    <div class="flex flex-col {{ $themeSettings['banner_layout'] ?? 'left-aligned' === 'right-aligned' ? 'md:flex-row-reverse' : 'md:flex-row' }} items-center justify-between">
+                        <div class="mb-6 md:mb-0 md:w-1/2">
+                            @if(!empty($themeSettings['banner_title']))
+                            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">{{ $themeSettings['banner_title'] }}</h1>
+                            @endif
+                            
+                            @if(!empty($themeSettings['banner_subtitle']))
+                            <p class="text-lg md:text-xl mb-6 opacity-90">{{ $themeSettings['banner_subtitle'] }}</p>
+                            @endif
+                            
+                            @if(!empty($themeSettings['banner_cta_text']))
+                            <a href="{{ $themeSettings['banner_cta_url'] ?? route('storefront.products.index') }}" 
+                               class="inline-block px-6 py-3 rounded-lg font-semibold transition-colors"
+                               style="background-color: {{ $themeSettings['banner_cta_bg_color'] ?? '#FFFFFF' }}; color: {{ $themeSettings['banner_cta_text_color'] ?? '#4F46E5' }};">
+                                {{ $themeSettings['banner_cta_text'] }}
+                            </a>
+                            @endif
+                        </div>
+                        
+                        @if(!empty($themeSettings['banner_image']) && $themeSettings['banner_layout'] ?? 'left-aligned' !== 'overlay')
                         <div class="md:w-1/2">
                             <img src="{{ Storage::url($themeSettings['banner_image']) }}" alt="Banner" class="rounded-lg shadow-color w-full">
                         </div>
                         @endif
                     </div>
+                    @endif
                 </div>
             </div>
             @endif

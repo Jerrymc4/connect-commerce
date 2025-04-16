@@ -192,9 +192,114 @@
 
             <!-- Colors Tab Content -->
             <div class="theme-tab-content active" id="colors-tab">
+                <div class="col-span-2 mt-6 pt-6 border-t border-border-color">
+                    <h3 class="text-lg font-medium text-primary mb-4">Banner Settings</h3>
+                    
+                    <!-- Banner Content -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label for="banner_title" class="block text-sm font-medium text-primary mb-1">Banner Title</label>
+                            <input type="text" name="banner_title" id="banner_title" value="{{ $themeSettings['banner_title'] ?? '' }}" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary focus:ring-accent focus:border-accent">
+                        </div>
+
+                        <div>
+                            <label for="banner_subtitle" class="block text-sm font-medium text-primary mb-1">Banner Subtitle</label>
+                            <input type="text" name="banner_subtitle" id="banner_subtitle" value="{{ $themeSettings['banner_subtitle'] ?? '' }}" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary focus:ring-accent focus:border-accent">
+                        </div>
+                        
+                        <div>
+                            <label for="banner_cta_text" class="block text-sm font-medium text-primary mb-1">Button Text</label>
+                            <input type="text" name="banner_cta_text" id="banner_cta_text" value="{{ $themeSettings['banner_cta_text'] ?? 'Shop Now' }}" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary focus:ring-accent focus:border-accent">
+                        </div>
+                    </div>
+                    
+                    <!-- Banner Layout & Media -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label for="banner_layout" class="block text-sm font-medium text-primary mb-1">Banner Layout</label>
+                            <select name="banner_layout" id="banner_layout" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary focus:ring-accent focus:border-accent">
+                                <option value="left-aligned" {{ ($themeSettings['banner_layout'] ?? '') == 'left-aligned' ? 'selected' : '' }}>Text Left</option>
+                                <option value="right-aligned" {{ ($themeSettings['banner_layout'] ?? '') == 'right-aligned' ? 'selected' : '' }}>Text Right</option>
+                                <option value="center" {{ ($themeSettings['banner_layout'] ?? '') == 'center' ? 'selected' : '' }}>Text Centered</option>
+                                <option value="overlay" {{ ($themeSettings['banner_layout'] ?? '') == 'overlay' ? 'selected' : '' }}>Text Over Image</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="banner_height" class="block text-sm font-medium text-primary mb-1">Banner Height</label>
+                            <select name="banner_height" id="banner_height" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary focus:ring-accent focus:border-accent">
+                                <option value="small" {{ ($themeSettings['banner_height'] ?? '') == 'small' ? 'selected' : '' }}>Small</option>
+                                <option value="medium" {{ ($themeSettings['banner_height'] ?? '') == 'medium' ? 'selected' : '' }}>Medium</option>
+                                <option value="large" {{ ($themeSettings['banner_height'] ?? '') == 'large' ? 'selected' : '' }}>Large</option>
+                                <option value="full" {{ ($themeSettings['banner_height'] ?? '') == 'full' ? 'selected' : '' }}>Full Screen</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="banner_cta_url" class="block text-sm font-medium text-primary mb-1">Button URL</label>
+                            <input type="text" name="banner_cta_url" id="banner_cta_url" value="{{ $themeSettings['banner_cta_url'] ?? '/products' }}" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary focus:ring-accent focus:border-accent">
+                        </div>
+                    </div>
+                    
+                    <!-- Banner Colors -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        <div>
+                            <label for="banner_bg_color" class="block text-sm font-medium text-primary mb-1">Background Color</label>
+                            <div class="flex">
+                                <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                    <input type="color" name="banner_bg_color" id="banner_bg_color_picker" value="{{ $themeSettings['banner_bg_color'] ?? '#4F46E5' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                </span>
+                                <input type="text" name="banner_bg_color" id="banner_bg_color" value="{{ $themeSettings['banner_bg_color'] ?? '#4F46E5' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="banner_text_color" class="block text-sm font-medium text-primary mb-1">Text Color</label>
+                            <div class="flex">
+                                <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                    <input type="color" name="banner_text_color" id="banner_text_color_picker" value="{{ $themeSettings['banner_text_color'] ?? '#FFFFFF' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                </span>
+                                <input type="text" name="banner_text_color" id="banner_text_color" value="{{ $themeSettings['banner_text_color'] ?? '#FFFFFF' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="banner_cta_bg_color" class="block text-sm font-medium text-primary mb-1">Button Background</label>
+                            <div class="flex">
+                                <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                    <input type="color" name="banner_cta_bg_color" id="banner_cta_bg_color_picker" value="{{ $themeSettings['banner_cta_bg_color'] ?? '#FFFFFF' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                </span>
+                                <input type="text" name="banner_cta_bg_color" id="banner_cta_bg_color" value="{{ $themeSettings['banner_cta_bg_color'] ?? '#FFFFFF' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="banner_cta_text_color" class="block text-sm font-medium text-primary mb-1">Button Text Color</label>
+                            <div class="flex">
+                                <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                    <input type="color" name="banner_cta_text_color" id="banner_cta_text_color_picker" value="{{ $themeSettings['banner_cta_text_color'] ?? '#4F46E5' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                </span>
+                                <input type="text" name="banner_cta_text_color" id="banner_cta_text_color" value="{{ $themeSettings['banner_cta_text_color'] ?? '#4F46E5' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Banner Image -->
+                    <div class="mt-2">
+                        <label for="banner_image" class="block text-sm font-medium text-primary mb-1">Banner Image</label>
+                        <input type="file" name="banner" id="banner_image" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary focus:ring-accent focus:border-accent">
+                        <p class="mt-1 text-xs text-secondary">Recommended size: 1200×400px</p>
+                        @if(!empty($themeSettings['banner_image']))
+                        <div class="mt-2">
+                            <img src="{{ Storage::url($themeSettings['banner_image']) }}" alt="Current Banner" class="h-20 object-cover rounded">
+                        </div>
+                        @endif
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Brand Colors -->
-                    <div class="col-span-2">
+                    <div class="col-span-2 mt-6 pt-6 border-t border-border-color">
                         <h3 class="text-lg font-medium text-primary mb-4">Brand Colors</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -914,7 +1019,12 @@ document.addEventListener('DOMContentLoaded', function() {
         { picker: document.getElementById('body_bg_color_picker'), text: document.getElementById('body_bg_color') },
         { picker: document.getElementById('card_bg_color_picker'), text: document.getElementById('card_bg_color') },
         { picker: document.getElementById('text_color_picker'), text: document.getElementById('text_color') },
-        { picker: document.getElementById('cart_badge_bg_color_picker'), text: document.getElementById('cart_badge_bg_color') }
+        { picker: document.getElementById('cart_badge_bg_color_picker'), text: document.getElementById('cart_badge_bg_color') },
+        // New banner color pickers
+        { picker: document.getElementById('banner_bg_color_picker'), text: document.getElementById('banner_bg_color') },
+        { picker: document.getElementById('banner_text_color_picker'), text: document.getElementById('banner_text_color') },
+        { picker: document.getElementById('banner_cta_bg_color_picker'), text: document.getElementById('banner_cta_bg_color') },
+        { picker: document.getElementById('banner_cta_text_color_picker'), text: document.getElementById('banner_cta_text_color') }
     ].filter(item => item.picker && item.text); // Filter out any that don't exist
     
     console.log('Found color pickers:', colorPickers.length);
