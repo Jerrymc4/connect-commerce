@@ -7,33 +7,6 @@
         <p class="text-secondary mt-1">Manage all aspects of your store</p>
     </div>
     
-    <!-- Notifications -->
-    @if(session('success'))
-    <div class="bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
-        <div class="flex">
-            <div class="flex-shrink-0">
-                <i class="fas fa-check-circle text-green-600 dark:text-green-400"></i>
-            </div>
-            <div class="ml-3">
-                <p class="text-sm text-green-700 dark:text-green-300">{{ session('success') }}</p>
-            </div>
-        </div>
-    </div>
-    @endif
-    
-    @if(session('error'))
-    <div class="bg-red-100 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
-        <div class="flex">
-            <div class="flex-shrink-0">
-                <i class="fas fa-exclamation-circle text-red-600 dark:text-red-400"></i>
-            </div>
-            <div class="ml-3">
-                <p class="text-sm text-red-700 dark:text-red-300">{{ session('error') }}</p>
-            </div>
-        </div>
-    </div>
-    @endif
-    
     <!-- Tabs -->
     <div class="mb-6 border-b border-border-color">
         <div class="flex flex-wrap -mb-px">
@@ -351,6 +324,17 @@
                                 </div>
                                 <p class="mt-1 text-xs text-secondary">Background color for cards and containers</p>
                             </div>
+                            
+                            <div>
+                                <label for="footer_bg_color" class="block text-sm font-medium text-primary mb-1">Footer Background</label>
+                                <div class="flex">
+                                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                        <input type="color" name="footer_bg_color" id="footer_bg_color_picker" value="{{ $themeSettings['footer_bg_color'] ?? '#1F2937' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                    </span>
+                                    <input type="text" name="footer_bg_color" id="footer_bg_color" value="{{ $themeSettings['footer_bg_color'] ?? '#1F2937' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                </div>
+                                <p class="mt-1 text-xs text-secondary">Background color for the footer section</p>
+                            </div>
                         </div>
                     </div>
 
@@ -559,6 +543,16 @@
                                     <p class="text-secondary">Display product descriptions on cards</p>
                                 </div>
                             </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="enable_rating_system" id="enable_rating_system" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['enable_rating_system'] ?? true) ? 'checked' : '' }}>
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="enable_rating_system" class="font-medium text-primary">Enable Rating System</label>
+                                    <p class="text-secondary">Allow customers to leave ratings and reviews for products</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -588,6 +582,16 @@
                                     <option value="spacious" {{ ($themeSettings['menu_item_spacing'] ?? '') == 'spacious' ? 'selected' : '' }}>Spacious</option>
                                 </select>
                                 <p class="mt-1 text-xs text-secondary">Spacing between menu items</p>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="sticky_navbar" id="sticky_navbar" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['sticky_navbar'] ?? true) ? 'checked' : '' }}>
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="sticky_navbar" class="font-medium text-primary">Sticky Navbar</label>
+                                    <p class="text-secondary">Keep the navigation bar fixed at the top when scrolling</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -637,11 +641,89 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Newsletter Section -->
+                    <div class="col-span-2 pt-6 border-t border-border-color">
+                        <h3 class="text-lg font-medium text-primary mb-4">Newsletter</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input type="checkbox" name="show_newsletter" id="show_newsletter" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['show_newsletter'] ?? true) ? 'checked' : '' }}>
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="show_newsletter" class="font-medium text-primary">Show Newsletter Section</label>
+                                    <p class="text-secondary">Display newsletter signup section on homepage</p>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="newsletter_title" class="block text-sm font-medium text-primary mb-1">Newsletter Title</label>
+                                    <input type="text" name="newsletter_title" id="newsletter_title" value="{{ $themeSettings['newsletter_title'] ?? 'Subscribe to Our Newsletter' }}" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                </div>
+                                
+                                <div>
+                                    <label for="newsletter_subtitle" class="block text-sm font-medium text-primary mb-1">Newsletter Subtitle</label>
+                                    <input type="text" name="newsletter_subtitle" id="newsletter_subtitle" value="{{ $themeSettings['newsletter_subtitle'] ?? 'Stay updated with the latest products, promotions, and exclusive offers.' }}" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                </div>
+                                
+                                <div>
+                                    <label for="newsletter_button_text" class="block text-sm font-medium text-primary mb-1">Button Text</label>
+                                    <input type="text" name="newsletter_button_text" id="newsletter_button_text" value="{{ $themeSettings['newsletter_button_text'] ?? 'Subscribe' }}" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                </div>
+                                
+                                <div>
+                                    <label for="newsletter_placeholder" class="block text-sm font-medium text-primary mb-1">Email Placeholder</label>
+                                    <input type="text" name="newsletter_placeholder" id="newsletter_placeholder" value="{{ $themeSettings['newsletter_placeholder'] ?? 'Your email address' }}" class="w-full px-3 py-2 border border-border-color rounded-md bg-input text-primary shadow-sm focus:ring-accent focus:border-accent">
+                                </div>
+                                
+                                <div>
+                                    <label for="newsletter_bg_color" class="block text-sm font-medium text-primary mb-1">Background Color</label>
+                                    <div class="flex">
+                                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                            <input type="color" name="newsletter_bg_color" id="newsletter_bg_color_picker" value="{{ $themeSettings['newsletter_bg_color'] ?? $themeSettings['primary_color'] ?? '#3B82F6' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                        </span>
+                                        <input type="text" name="newsletter_bg_color" id="newsletter_bg_color" value="{{ $themeSettings['newsletter_bg_color'] ?? $themeSettings['primary_color'] ?? '#3B82F6' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label for="newsletter_text_color" class="block text-sm font-medium text-primary mb-1">Text Color</label>
+                                    <div class="flex">
+                                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                            <input type="color" name="newsletter_text_color" id="newsletter_text_color_picker" value="{{ $themeSettings['newsletter_text_color'] ?? '#FFFFFF' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                        </span>
+                                        <input type="text" name="newsletter_text_color" id="newsletter_text_color" value="{{ $themeSettings['newsletter_text_color'] ?? '#FFFFFF' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label for="newsletter_button_color" class="block text-sm font-medium text-primary mb-1">Button Color</label>
+                                    <div class="flex">
+                                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                            <input type="color" name="newsletter_button_color" id="newsletter_button_color_picker" value="{{ $themeSettings['newsletter_button_color'] ?? '#FFFFFF' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                        </span>
+                                        <input type="text" name="newsletter_button_color" id="newsletter_button_color" value="{{ $themeSettings['newsletter_button_color'] ?? '#FFFFFF' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label for="newsletter_button_text_color" class="block text-sm font-medium text-primary mb-1">Button Text Color</label>
+                                    <div class="flex">
+                                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-border-color bg-body">
+                                            <input type="color" name="newsletter_button_text_color" id="newsletter_button_text_color_picker" value="{{ $themeSettings['newsletter_button_text_color'] ?? $themeSettings['newsletter_bg_color'] ?? '#3B82F6' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                        </span>
+                                        <input type="text" name="newsletter_button_text_color" id="newsletter_button_text_color" value="{{ $themeSettings['newsletter_button_text_color'] ?? $themeSettings['newsletter_bg_color'] ?? '#3B82F6' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-border-color bg-input text-primary focus:ring-accent focus:border-accent">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Platform Selection -->
-                    <div class="col-span-2">
+                    <div class="col-span-2 pt-6 border-t border-border-color">
                         <h3 class="text-lg font-medium text-primary mb-4">Platform Selection</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-4">
                             <div class="flex items-center space-x-3">
                                 <div class="flex items-center h-5">
                                     <input type="checkbox" name="show_facebook" id="show_facebook" class="focus:ring-accent h-4 w-4 text-accent border-border-color rounded" {{ ($themeSettings['show_facebook'] ?? true) ? 'checked' : '' }}>
@@ -1024,7 +1106,12 @@ document.addEventListener('DOMContentLoaded', function() {
         { picker: document.getElementById('banner_bg_color_picker'), text: document.getElementById('banner_bg_color') },
         { picker: document.getElementById('banner_text_color_picker'), text: document.getElementById('banner_text_color') },
         { picker: document.getElementById('banner_cta_bg_color_picker'), text: document.getElementById('banner_cta_bg_color') },
-        { picker: document.getElementById('banner_cta_text_color_picker'), text: document.getElementById('banner_cta_text_color') }
+        { picker: document.getElementById('banner_cta_text_color_picker'), text: document.getElementById('banner_cta_text_color') },
+        { picker: document.getElementById('footer_bg_color_picker'), text: document.getElementById('footer_bg_color') },
+        { picker: document.getElementById('newsletter_bg_color_picker'), text: document.getElementById('newsletter_bg_color') },
+        { picker: document.getElementById('newsletter_text_color_picker'), text: document.getElementById('newsletter_text_color') },
+        { picker: document.getElementById('newsletter_button_color_picker'), text: document.getElementById('newsletter_button_color') },
+        { picker: document.getElementById('newsletter_button_text_color_picker'), text: document.getElementById('newsletter_button_text_color') }
     ].filter(item => item.picker && item.text); // Filter out any that don't exist
     
     console.log('Found color pickers:', colorPickers.length);

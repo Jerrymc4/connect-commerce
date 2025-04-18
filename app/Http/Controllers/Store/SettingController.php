@@ -269,11 +269,14 @@ class SettingController extends Controller
                 $files['banner'] = $request->file('banner');
             }
             
+            // Get the current active tab
+            $currentTab = $request->input('current_tab', 'colors');
+            
             // Use the theme service to update settings
             $this->themeService->updateThemeSettings($settings, $files);
             
-            return redirect()->route('admin.settings', ['tab' => 'theme'])
-                ->with('success', 'Theme settings updated successfully!');
+            return redirect()->route('admin.settings', ['tab' => 'theme', 'sub_tab' => $currentTab])
+                ->with('success', 'Theme settings updated successfully!!!!');
         }
         
         // If we made it here, something went wrong
@@ -369,5 +372,19 @@ class SettingController extends Controller
         
         return redirect()->route('admin.settings', ['tab' => 'discounts'])
             ->with('success', 'Discount deleted successfully');
+    }
+
+    /**
+     * Test flash messages
+     */
+    public function testFlash(Request $request)
+    {
+        $type = $request->query('type', 'success');
+
+        if ($type === 'success') {
+            return back()->with('success', 'This is a test success message!');
+        } else {
+            return back()->with('error', 'This is a test error message!');
+        }
     }
 } 

@@ -79,6 +79,8 @@ class ThemeService
         $css .= "  --text-secondary: {$settings['navbar_text_color']};\n";
         $css .= "  --header-bg: {$settings['body_bg_color']};\n";
         $css .= "  --footer-bg: {$settings['footer_bg_color']};\n";
+        $css .= "  --newsletter-bg: " . (isset($settings['newsletter_bg_color']) ? $settings['newsletter_bg_color'] : $settings['primary_color']) . ";\n";
+        $css .= "  --newsletter-text: " . (isset($settings['newsletter_text_color']) ? $settings['newsletter_text_color'] : '#FFFFFF') . ";\n";
         $css .= "  --heading-font: {$settings['font_family']};\n";
         $css .= "  --body-font: {$settings['font_family']};\n";
         $css .= "  --base-font-size: 16px;\n";

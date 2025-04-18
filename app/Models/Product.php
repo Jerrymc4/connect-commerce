@@ -162,4 +162,28 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
+    
+    /**
+     * Get the reviews for the product.
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class);
+    }
+    
+    /**
+     * Get the average rating for the product.
+     */
+    public function getAverageRatingAttribute()
+    {
+        return $this->reviews()->avg('rating') ?? 0;
+    }
+    
+    /**
+     * Get the number of reviews for the product.
+     */
+    public function getReviewsCountAttribute()
+    {
+        return $this->reviews()->count();
+    }
 } 

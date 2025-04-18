@@ -73,6 +73,10 @@ Route::middleware([
         // Product routes
         Route::get('/products', [App\Http\Controllers\Storefront\ProductController::class, 'index'])->name('storefront.products.index');
         Route::get('/products/{slug}', [App\Http\Controllers\Storefront\ProductController::class, 'show'])->name('storefront.products.show');
+        
+        // Product review routes
+        Route::post('/products/{product}/review', [App\Http\Controllers\Storefront\ProductReviewController::class, 'store'])->name('storefront.products.review');
+        Route::get('/products/{product}/reviews', [App\Http\Controllers\Storefront\ProductReviewController::class, 'index'])->name('storefront.products.reviews');
 
         // Shopping Cart Routes
         Route::get('/cart', function () {
@@ -247,6 +251,7 @@ Route::middleware([
         // Integrated Settings
         Route::get('/settings', [SettingController::class, 'index'])->name('admin.settings');
         Route::put('/settings', [SettingController::class, 'update'])->name('admin.settings.update');
+        Route::get('/test-flash', [SettingController::class, 'testFlash'])->name('admin.test-flash');
         
         // Categories Management
         Route::get('/settings/categories/create', [CategoryController::class, 'create'])->name('admin.settings.categories.create');

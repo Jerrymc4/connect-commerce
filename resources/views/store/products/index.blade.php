@@ -16,29 +16,6 @@
         </div>
     </div>
     
-    <!-- Flash Messages -->
-    @if(session('success'))
-    <div id="success-alert" class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-        <div class="flex justify-between items-center">
-            <span>{{ session('success') }}</span>
-            <button type="button" class="ml-4 text-green-700 hover:text-green-900 focus:outline-none" onclick="closeAlert('success-alert')">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    </div>
-    @endif
-    
-    @if(session('error'))
-    <div id="error-alert" class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-        <div class="flex justify-between items-center">
-            <span>{{ session('error') }}</span>
-            <button type="button" class="ml-4 text-red-700 hover:text-red-900 focus:outline-none" onclick="closeAlert('error-alert')">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    </div>
-    @endif
-    
     <!-- Products Table -->
     <div class="card-enhanced">
         <div class="card-header">
@@ -126,36 +103,6 @@
 
 @push('scripts')
 <script>
-    // Close alert function
-    function closeAlert(id) {
-        document.getElementById(id).style.display = 'none';
-    }
-    
-    // Auto-dismiss alerts after 5 seconds
-    document.addEventListener('DOMContentLoaded', function() {
-        // Success alerts
-        const successAlert = document.getElementById('success-alert');
-        if (successAlert) {
-            setTimeout(function() {
-                successAlert.style.opacity = '0';
-                successAlert.style.transition = 'opacity 1s';
-                setTimeout(function() {
-                    successAlert.style.display = 'none';
-                }, 1000);
-            }, 5000);
-        }
-        
-        // Error alerts
-        const errorAlert = document.getElementById('error-alert');
-        if (errorAlert) {
-            setTimeout(function() {
-                errorAlert.style.opacity = '0';
-                errorAlert.style.transition = 'opacity 1s';
-                setTimeout(function() {
-                    errorAlert.style.display = 'none';
-                }, 1000);
-            }, 5000);
-        }
-    });
+    // Auto-dismiss alerts already handled in dashboard layout
 </script>
 @endpush 

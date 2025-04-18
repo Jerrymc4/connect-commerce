@@ -562,6 +562,49 @@
                 </div>
             </header>
 
+            <!-- Flash Messages -->
+            <div class="px-4 pt-4">
+                @if(session('success'))
+                <div id="success-alert" class="bg-green-500 text-white px-4 py-3 rounded shadow-md mb-4 relative">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle mr-2 text-lg"></i>
+                            <p class="font-bold">{{ session('success') }}</p>
+                        </div>
+                        <button type="button" onclick="document.getElementById('success-alert').remove()" class="text-white hover:text-gray-200">
+                            <span class="text-2xl">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <script>
+                    setTimeout(function() {
+                        var element = document.getElementById('success-alert');
+                        if (element) element.remove();
+                    }, 5000);
+                </script>
+                @endif
+                
+                @if(session('error'))
+                <div id="error-alert" class="bg-red-500 text-white px-4 py-3 rounded shadow-md mb-4 relative">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i class="fas fa-exclamation-circle mr-2 text-lg"></i>
+                            <p class="font-bold">{{ session('error') }}</p>
+                        </div>
+                        <button type="button" onclick="document.getElementById('error-alert').remove()" class="text-white hover:text-gray-200">
+                            <span class="text-2xl">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <script>
+                    setTimeout(function() {
+                        var element = document.getElementById('error-alert');
+                        if (element) element.remove();
+                    }, 5000);
+                </script>
+                @endif
+            </div>
+
             <!-- Page Content -->
             <main class="flex-1 overflow-auto p-4">
                 @yield('content')

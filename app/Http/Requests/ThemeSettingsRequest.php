@@ -34,6 +34,10 @@ class ThemeSettingsRequest extends FormRequest
             'link_color' => 'required|string|max:25',
             'card_bg_color' => 'required|string|max:25',
             'border_radius' => 'required|string|max:25',
+            'button_style' => 'nullable|string|in:filled,outline,flat,3d,gradient',
+            'button_border_radius' => 'nullable|string|max:25',
+            'button_hover_effect' => 'nullable|string|in:darken,lighten,zoom,glow,none',
+            'newsletter_button_color' => 'nullable|string|max:25',
             'logo' => 'nullable|image|max:2048',
             'banner' => 'nullable|image|max:2048',
         ];
