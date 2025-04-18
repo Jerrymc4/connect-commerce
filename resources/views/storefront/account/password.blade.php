@@ -79,7 +79,7 @@
                     </div>
                     
                     <div class="border-t border-gray-200 pt-6 mt-6">
-                        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                        <button type="submit" class="py-2 px-4 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors" style="background-color: var(--primary-color)">
                             Update Password
                         </button>
                         

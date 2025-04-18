@@ -36,7 +36,7 @@
             <!-- Sort and filter controls -->
             <div class="w-full md:w-auto flex flex-col sm:flex-row gap-3">
                 <!-- Mobile filters toggle -->
-                <button id="filter-toggle" class="md:hidden bg-white px-4 py-2 border border-gray-300 rounded-lg text-gray-700 flex items-center justify-center shadow-sm hover:bg-gray-50 transition-colors">
+                <button id="filter-toggle" class="md:hidden px-4 py-2 border border-gray-300 rounded-lg text-gray-700 flex items-center justify-center shadow-sm hover:bg-gray-50 transition-colors" style="background-color: white;">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                     </svg>
@@ -76,7 +76,7 @@
                     <div class="space-y-3">
                         <div class="flex items-center">
                             <a href="{{ route('storefront.products.index') }}" 
-                               class="{{ !request('category') ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600' }} transition-colors">
+                               class="{{ !request('category') ? 'font-medium' : 'text-gray-700 hover:text-primary' }} transition-colors" style="color: {{ !request('category') ? 'var(--primary-color)' : '' }}; --text-primary: var(--primary-color);">
                                 All Categories
                             </a>
                         </div>
@@ -84,7 +84,7 @@
                         @foreach($categories as $category)
                             <div class="flex items-center">
                                 <a href="{{ route('storefront.products.index', ['category' => $category->id]) }}" 
-                                   class="{{ request('category') == $category->id ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600' }} transition-colors">
+                                   class="{{ request('category') == $category->id ? 'font-medium' : 'text-gray-700 hover:text-primary' }} transition-colors" style="color: {{ request('category') == $category->id ? 'var(--primary-color)' : '' }}; --text-primary: var(--primary-color);">
                                     {{ $category->name }}
                                 </a>
                             </div>
@@ -108,9 +108,11 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
                             </div>
                         </div>
-                        <button type="button" id="apply-price-mobile" 
-                                class="w-full py-2 px-4 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            Apply
+                        <!-- Apply price filter button (Mobile) -->
+                        <button type="button" id="apply-price-mobile"
+                            class="mt-2 w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            style="background-color: var(--primary-color)">
+                            Apply Filter
                         </button>
                     </div>
                 </div>
@@ -123,7 +125,7 @@
                     <div class="space-y-3">
                         <div class="flex items-center">
                             <a href="{{ route('storefront.products.index') }}" 
-                               class="{{ !request('category') ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600' }} transition-colors">
+                               class="{{ !request('category') ? 'font-medium' : 'text-gray-700 hover:text-primary' }} transition-colors" style="color: {{ !request('category') ? 'var(--primary-color)' : '' }}; --text-primary: var(--primary-color);">
                                 All Categories
                             </a>
                         </div>
@@ -131,7 +133,7 @@
                         @foreach($categories as $category)
                             <div class="flex items-center">
                                 <a href="{{ route('storefront.products.index', ['category' => $category->id]) }}" 
-                                   class="{{ request('category') == $category->id ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600' }} transition-colors">
+                                   class="{{ request('category') == $category->id ? 'font-medium' : 'text-gray-700 hover:text-primary' }} transition-colors" style="color: {{ request('category') == $category->id ? 'var(--primary-color)' : '' }}; --text-primary: var(--primary-color);">
                                     {{ $category->name }}
                                 </a>
                             </div>
@@ -155,9 +157,11 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
                             </div>
                         </div>
-                        <button type="button" id="apply-price" 
-                                class="w-full py-2 px-4 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            Apply
+                        <!-- Apply price filter button (Desktop) -->
+                        <button type="button" id="apply-price"
+                            class="mt-2 w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            style="background-color: var(--primary-color)">
+                            Apply Filter
                         </button>
                     </div>
                 </div>
@@ -196,7 +200,7 @@
                         </svg>
                         <h3 class="text-lg font-medium text-gray-900 mb-2">No products found</h3>
                         <p class="text-gray-500 mb-6">We couldn't find any products matching your criteria.</p>
-                        <a href="{{ route('storefront.products.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                        <a href="{{ route('storefront.products.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors" style="background-color: var(--primary-color)">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                             </svg>
@@ -225,7 +229,7 @@
                                             </div>
                                         @endif
                                         <a href="{{ route('storefront.products.show', $product->slug) }}" class="block">
-                                            <h3 class="text-gray-900 font-medium text-lg group-hover:text-blue-600 transition-colors">
+                                            <h3 class="text-gray-900 font-medium text-lg group-hover:text-primary transition-colors" style="--text-primary: var(--primary-color);">
                                                 {{ $product->name }}
                                             </h3>
                                         </a>
@@ -243,7 +247,7 @@
                                             @endif
                                         </div>
                                         <a href="{{ route('storefront.products.show', $product->slug) }}" 
-                                           class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-1.5 rounded text-sm font-medium transition-colors">
+                                           class="text-white px-4 py-1.5 rounded text-sm font-medium transition-colors" style="background-color: var(--primary-color)">
                                             View
                                         </a>
                                     </div>
@@ -378,9 +382,9 @@
     }
     
     .pagination li.active .page-link {
-        background-color: #2563EB;
+        background-color: var(--primary-color);
         color: white;
-        border-color: #2563EB;
+        border-color: var(--primary-color);
     }
     
     .pagination li.disabled .page-link {

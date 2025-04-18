@@ -121,6 +121,27 @@
     <!-- Custom styles -->
     <style>
         [x-cloak] { display: none !important; }
+        
+        /* Add classes for use in the templates that map to theme variables */
+        .bg-button {
+            background-color: var(--primary-color);
+        }
+        .bg-button-hover:hover {
+            opacity: 0.9;
+        }
+        .text-button {
+            color: var(--primary-color);
+        }
+        .text-button-hover:hover {
+            opacity: 0.8;
+        }
+        .ring-button {
+            --tw-ring-color: var(--primary-color);
+        }
+        .focus-primary:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 1px var(--primary-color);
+        }
     </style>
     
     @stack('styles')
