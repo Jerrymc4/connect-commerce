@@ -1,74 +1,77 @@
 @extends('layouts.storefront')
 
-@section('title', 'Customer Login')
+@section('title', 'Login to Your Account')
 
 @section('content')
-<div class="container mx-auto px-4 py-12">
-    <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="py-4 px-6 bg-gray-50 border-b">
-            <h2 class="text-2xl font-bold text-gray-800">Customer Login</h2>
-            <p class="text-sm text-gray-600 mt-1">Access your account to manage orders and preferences</p>
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Sign in to your account
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Or
+                <a href="{{ route('customer.register') }}" class="font-medium" style="color: var(--primary-color)">
+                    create a new account
+                </a>
+            </p>
         </div>
         
-        <div class="py-6 px-6">
-            @if(session('error'))
-                <div class="mb-4 p-4 bg-red-100 border border-red-300 text-red-800 rounded">
-                    {{ session('error') }}
+        @if ($errors->any())
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-exclamation-circle text-red-400"></i>
                 </div>
-            @endif
-
-            <form method="POST" action="{{ route('customer.login.attempt') }}">
-                @csrf
-                
-                <div class="mb-4">
-                    <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
-                    <input type="email" name="email" id="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" required autofocus>
-                    @error('email')
-                        <span class="text-red-600 text-xs mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
-                
-                <div class="mb-4">
-                    <label for="password" class="block text-gray-700 text-sm font-medium mb-2">Password</label>
-                    <input type="password" name="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" required>
-                    @error('password')
-                        <span class="text-red-600 text-xs mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
-                
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center">
-                        <input type="checkbox" name="remember" id="remember" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
-                    </div>
-                    
-                    <a href="#" class="text-sm text-blue-600 hover:underline">
-                        Forgot your password?
-                    </a>
-                </div>
-                
-                <div>
-                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                        Sign In
-                    </button>
-                </div>
-            </form>
-            
-            <div class="mt-6 text-center">
-                <p class="text-sm text-gray-600">
-                    Don't have an account? 
-                    <a href="#" class="text-blue-600 hover:underline">
-                        Register now
-                    </a>
-                </p>
-                
-                <div class="mt-4">
-                    <a href="{{ route('storefront.home') }}" class="text-sm text-gray-600 hover:underline">
-                        <i class="fas fa-arrow-left mr-1"></i> Back to store
-                    </a>
+                <div class="ml-3">
+                    <p class="text-sm text-red-700">
+                        Please check the errors below and try again.
+                    </p>
                 </div>
             </div>
         </div>
+        @endif
+        
+        <form class="mt-8 space-y-6" action="{{ route('customer.login.attempt') }}" method="POST">
+            @csrf
+            <div class="rounded-md shadow-sm -space-y-px">
+                <div>
+                    <label for="email" class="sr-only">Email address</label>
+                    <input id="email" name="email" type="email" autocomplete="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Email address" value="{{ old('email') }}">
+                    @error('email')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="password" class="sr-only">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Password">
+                    @error('password')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember" name="remember" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="remember" class="ml-2 block text-sm text-gray-900">
+                        Remember me
+                    </label>
+                </div>
+
+                <div class="text-sm">
+                    <a href="#" class="font-medium" style="color: var(--primary-color)">
+                        Forgot your password?
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="w-full py-2 px-4 rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors text-white" style="background-color: var(--primary-color)">
+                    Sign in
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 @endsection 

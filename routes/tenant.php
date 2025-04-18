@@ -79,24 +79,15 @@ Route::middleware([
         Route::get('/products/{product}/reviews', [App\Http\Controllers\Storefront\ProductReviewController::class, 'index'])->name('storefront.products.reviews');
 
         // Shopping Cart Routes
-        Route::get('/cart', function () {
-            return view('storefront.cart');
-        })->name('storefront.cart');
-
-        Route::post('/cart/add', function (Illuminate\Http\Request $request) {
-            // Cart add logic will go here
-            return response()->json(['success' => true]);
-        })->name('storefront.cart.add');
-
-        Route::post('/cart/update', function (Illuminate\Http\Request $request) {
-            // Cart update logic
-            return response()->json(['success' => true]);
-        })->name('storefront.cart.update');
-
-        Route::post('/cart/remove', function (Illuminate\Http\Request $request) {
-            // Cart remove item logic
-            return response()->json(['success' => true]);
-        })->name('storefront.cart.remove');
+        Route::get('/cart', [App\Http\Controllers\Storefront\CartController::class, 'index'])->name('storefront.cart');
+        Route::post('/cart/add', [App\Http\Controllers\Storefront\CartController::class, 'add'])->name('storefront.cart.add');
+        Route::post('/cart/update', [App\Http\Controllers\Storefront\CartController::class, 'update'])->name('storefront.cart.update');
+        Route::post('/cart/remove', [App\Http\Controllers\Storefront\CartController::class, 'remove'])->name('storefront.cart.remove');
+        Route::post('/cart/clear', [App\Http\Controllers\Storefront\CartController::class, 'clear'])->name('storefront.cart.clear');
+        
+        // Checkout Routes
+        Route::get('/checkout', [App\Http\Controllers\Storefront\CheckoutController::class, 'index'])->name('storefront.checkout');
+        Route::post('/checkout/process', [App\Http\Controllers\Storefront\CheckoutController::class, 'process'])->name('storefront.checkout.process');
 
         // Customer Authentication Routes
         Route::get('/login', function() {

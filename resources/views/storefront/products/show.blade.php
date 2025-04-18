@@ -567,6 +567,147 @@
             });
         }
 
+        // Add to cart form submission with AJAX
+        const addToCartForm = document.getElementById('addToCartForm');
+        
+        if (addToCartForm) {
+            addToCartForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Adding...';
+                
+                // Get form data
+                const formData = new FormData(this);
+                
+                // Send AJAX request
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success notification
+                        showCartNotification('Product added to cart successfully!');
+                        
+                        // Update cart count in header if it exists
+                        const cartCountElement = document.querySelector('.cart-count');
+                        if (cartCountElement && data.cart_count) {
+                            cartCountElement.textContent = data.cart_count;
+                            cartCountElement.classList.remove('hidden');
+                        }
+                    } else {
+                        // Show error notification
+                        showCartNotification(data.message || 'Error adding product to cart', 'error');
+                    }
+                    
+                    // Reset button state
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                })
+                .catch(error => {
+                    console.error('Error adding to cart:', error);
+                    showCartNotification('Error adding product to cart. Please try again.', 'error');
+                    
+                    // Reset button state
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                });
+            });
+        }
+        
+        // Mobile add to cart button
+        const mobileAddToCartBtn = document.getElementById('mobileAddToCart');
+        if (mobileAddToCartBtn && addToCartForm) {
+            mobileAddToCartBtn.addEventListener('click', function() {
+                // Trigger form submission
+                const submitEvent = new Event('submit', { cancelable: true });
+                addToCartForm.dispatchEvent(submitEvent);
+            });
+        }
+        
+        // Show notification function
+        function showCartNotification(message, type = 'success') {
+            // Create notification if it doesn't exist
+            let notification = document.getElementById('cartNotification');
+            
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.id = 'cartNotification';
+                notification.className = 'fixed top-4 right-4 p-4 rounded-md shadow-md z-50 transform transition-transform duration-300 translate-x-full';
+                document.body.appendChild(notification);
+            }
+            
+            // Set notification style based on type
+            if (type === 'success') {
+                notification.className = 'fixed top-4 right-4 bg-green-50 border-l-4 border-green-400 p-4 rounded-md shadow-md z-50 transform transition-transform duration-300';
+                notification.innerHTML = `
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-green-700">${message}</p>
+                            <div class="mt-2 flex space-x-3">
+                                <a href="${window.location.origin}/cart" class="text-sm font-medium text-green-700 hover:text-green-600">View cart</a>
+                                <button type="button" class="dismiss-notification text-sm font-medium text-green-700 hover:text-green-600">
+                                    Dismiss
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                notification.className = 'fixed top-4 right-4 bg-red-50 border-l-4 border-red-400 p-4 rounded-md shadow-md z-50 transform transition-transform duration-300';
+                notification.innerHTML = `
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-red-700">${message}</p>
+                            <button type="button" class="dismiss-notification mt-2 text-sm font-medium text-red-700 hover:text-red-600">
+                                Dismiss
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+            }, 5000);
+            
+            // Add event listener to dismiss button
+            setTimeout(() => {
+                const dismissBtn = notification.querySelector('.dismiss-notification');
+                if (dismissBtn) {
+                    dismissBtn.addEventListener('click', function() {
+                        notification.classList.add('translate-x-full');
+                    });
+                }
+            }, 100);
+        }
+
         // Rating system
         const writeReviewBtn = document.getElementById('writeReviewButton');
         const reviewForm = document.getElementById('reviewForm');
@@ -660,7 +801,7 @@
                 notification.innerHTML = `
                     <div class="flex">
                         <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                             </svg>
                         </div>

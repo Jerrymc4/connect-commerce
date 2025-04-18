@@ -3,92 +3,94 @@
 @section('title', 'Create an Account')
 
 @section('content')
-<div class="container mx-auto px-4 py-12">
-    <div class="max-w-lg mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="py-4 px-6 bg-gray-50 border-b">
-            <h2 class="text-2xl font-bold text-gray-800">Create an Account</h2>
-            <p class="text-sm text-gray-600 mt-1">Join us to track orders, save items, and get personalized recommendations</p>
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Create your account
+            </h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Or
+                <a href="{{ route('customer.login') }}" class="font-medium" style="color: var(--primary-color)">
+                    sign in to your existing account
+                </a>
+            </p>
         </div>
         
-        <div class="py-6 px-6">
-            <form method="POST" action="{{ route('customer.register.store') }}">
-                @csrf
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="name" class="block text-gray-700 text-sm font-medium mb-2">Full Name</label>
-                        <input type="text" name="name" id="name" value="{{ old('name') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" required autofocus>
-                        @error('name')
-                            <span class="text-red-600 text-xs mt-1">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    
-                    <div>
-                        <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
-                        <input type="email" name="email" id="email" value="{{ old('email') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" required>
-                        @error('email')
-                            <span class="text-red-600 text-xs mt-1">{{ $message }}</span>
-                        @enderror
-                    </div>
+        @if ($errors->any())
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-exclamation-circle text-red-400"></i>
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="password" class="block text-gray-700 text-sm font-medium mb-2">Password</label>
-                        <input type="password" name="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" required>
-                        @error('password')
-                            <span class="text-red-600 text-xs mt-1">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    
-                    <div>
-                        <label for="password_confirmation" class="block text-gray-700 text-sm font-medium mb-2">Confirm Password</label>
-                        <input type="password" name="password_confirmation" id="password_confirmation" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" required>
-                    </div>
+                <div class="ml-3">
+                    <p class="text-sm text-red-700">
+                        Please check the errors below and try again.
+                    </p>
                 </div>
-                
-                <div class="mb-6">
-                    <label for="phone" class="block text-gray-700 text-sm font-medium mb-2">Phone Number (optional)</label>
-                    <input type="tel" name="phone" id="phone" value="{{ old('phone') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
-                    @error('phone')
-                        <span class="text-red-600 text-xs mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
-                
-                <div class="mb-6">
-                    <div class="flex items-center">
-                        <input type="checkbox" name="terms" id="terms" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" required>
-                        <label for="terms" class="ml-2 block text-sm text-gray-700">
-                            I agree to the <a href="#" class="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>
-                        </label>
-                    </div>
-                    @error('terms')
-                        <span class="text-red-600 text-xs mt-1">{{ $message }}</span>
+            </div>
+        </div>
+        @endif
+        
+        <form class="mt-8 space-y-6" action="{{ route('customer.register.store') }}" method="POST">
+            @csrf
+            <div class="rounded-md shadow-sm space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input id="name" name="name" type="text" required class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" value="{{ old('name') }}">
+                    @error('name')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
                 </div>
                 
                 <div>
-                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                        Create Account
-                    </button>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+                    <input id="email" name="email" type="email" autocomplete="email" required class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" value="{{ old('email') }}">
+                    @error('email')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
-            </form>
-            
-            <div class="mt-6 text-center">
-                <p class="text-sm text-gray-600">
-                    Already have an account? 
-                    <a href="{{ route('customer.login') }}" class="text-blue-600 hover:underline">
-                        Sign in
-                    </a>
-                </p>
                 
-                <div class="mt-4">
-                    <a href="{{ route('storefront.home') }}" class="text-sm text-gray-600 hover:underline">
-                        <i class="fas fa-arrow-left mr-1"></i> Back to store
-                    </a>
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number (optional)</label>
+                    <input id="phone" name="phone" type="text" class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" value="{{ old('phone') }}">
+                    @error('phone')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input id="password" name="password" type="password" required class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm">
+                    @error('password')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                
+                <div>
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                    <input id="password_confirmation" name="password_confirmation" type="password" required class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm">
                 </div>
             </div>
-        </div>
+
+            <div class="flex items-start">
+                <div class="flex items-center h-5">
+                    <input id="terms" name="terms" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="1">
+                </div>
+                <div class="ml-3 text-sm">
+                    <label for="terms" class="font-medium text-gray-700">I agree to the Terms of Service and Privacy Policy</label>
+                    @error('terms')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="w-full py-2 px-4 rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors text-white" style="background-color: var(--primary-color)">
+                    Create Account
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 @endsection 
