@@ -5,15 +5,26 @@
 @section('content')
     <div class="min-h-screen">
         <!-- Hero Section -->
-        <div class="relative bg-gradient-to-r from-primary to-secondary">
+        <div class="relative" style="background-color: {{ $themeSettings['banner_bg_color'] ?? '#4F46E5' }};">
             <div class="max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
-                    <h1 class="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl">
-                        {{ $storeName }}
+                    <h1 class="text-4xl font-extrabold sm:text-5xl md:text-6xl" style="color: {{ $themeSettings['banner_text_color'] ?? '#FFFFFF' }};">
+                        {{ $themeSettings['banner_title'] ?? $storeName }}
                     </h1>
-                    <p class="mt-3 max-w-md mx-auto text-base text-white sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-                        Discover amazing products at great prices
+                    <p class="mt-3 max-w-md mx-auto text-base sm:text-lg md:mt-5 md:text-xl md:max-w-3xl" style="color: {{ $themeSettings['banner_text_color'] ?? '#FFFFFF' }};">
+                        {{ $themeSettings['banner_subtitle'] ?? 'Discover amazing products at great prices' }}
                     </p>
+                    @if(isset($themeSettings['banner_cta_text']) && !empty($themeSettings['banner_cta_text']))
+                    <div class="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
+                        <div class="rounded-md shadow">
+                            <a href="{{ $themeSettings['banner_cta_url'] ?? '/products' }}" 
+                               class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md md:py-4 md:text-lg md:px-10"
+                               style="background-color: {{ $themeSettings['banner_cta_bg_color'] ?? '#FFFFFF' }}; color: {{ $themeSettings['banner_cta_text_color'] ?? '#4F46E5' }};">
+                                {{ $themeSettings['banner_cta_text'] }}
+                            </a>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
