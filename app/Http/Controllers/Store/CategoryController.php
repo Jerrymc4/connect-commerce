@@ -8,6 +8,8 @@ use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Services\AuditLogService;
 use Illuminate\View\View;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -60,7 +62,7 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:categories',
+            'slug' => 'nullable|string|max:255|unique:categories,slug',
             'description' => 'nullable|string',
             'parent_id' => 'nullable|exists:categories,id',
             'image' => 'nullable|image|max:2048',
@@ -71,14 +73,38 @@ class CategoryController extends Controller
             $validated['slug'] = Str::slug($validated['name']);
         }
         
+        // Handle image upload
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('categories', 'public');
-            $validated['image'] = $imagePath;
+            try {
+                // Ensure categories directory exists
+                $directory = 'categories';
+                Storage::disk('public')->makeDirectory($directory);
+                
+                // Store the image with a unique filename
+                $imagePath = $request->file('image')->store($directory, 'public');
+                $validated['image'] = $imagePath;
+                
+                // Log success for debugging
+                Log::info('Category image uploaded successfully', [
+                    'path' => $imagePath,
+                    'original_name' => $request->file('image')->getClientOriginalName(),
+                    'size' => $request->file('image')->getSize(),
+                    'tenant_id' => tenant('id')
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Category image upload failed', [
+                    'error' => $e->getMessage(),
+                    'original_name' => $request->file('image')->getClientOriginalName(),
+                    'tenant_id' => tenant('id')
+                ]);
+                
+                return back()->withInput()->with('error', 'Failed to upload image: ' . $e->getMessage());
+            }
         }
         
         $category = $this->categoryRepository->create($validated);
         
-        // Log category creation to audit log
+        // Log to audit trail
         $this->auditLogService->logCreated($category, ['module' => 'categories']);
         
         return redirect()->route('admin.settings', ['tab' => 'categories'])
@@ -94,6 +120,16 @@ class CategoryController extends Controller
         
         if (!$category) {
             abort(404, 'Category not found');
+        }
+        
+        // Debug logging for the image path
+        if ($category->image) {
+            Log::debug('Category image path', [
+                'category_id' => $category->id,
+                'image_path' => $category->image,
+                'tenant_asset_url' => tenant_asset($category->image),
+                'tenant_id' => tenant('id')
+            ]);
         }
         
         $parentCategories = $this->categoryRepository->getParentCategories()->filter(function($item) use ($id) {
@@ -123,6 +159,7 @@ class CategoryController extends Controller
             'description' => 'nullable|string',
             'parent_id' => 'nullable|exists:categories,id',
             'image' => 'nullable|image|max:2048',
+            'remove_image' => 'nullable|boolean',
         ]);
         
         // Generate a slug if not provided
@@ -135,9 +172,27 @@ class CategoryController extends Controller
             $validated['parent_id'] = null;
         }
         
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('categories', 'public');
+        // Handle image removal
+        if (isset($validated['remove_image']) && $validated['remove_image'] && $category->image) {
+            Storage::disk('public')->delete($category->image);
+            $validated['image'] = null;
+        } elseif ($request->hasFile('image')) {
+            // Ensure categories directory exists
+            $directory = 'categories';
+            Storage::disk('public')->makeDirectory($directory);
+            
+            // Delete old image if one exists
+            if ($category->image) {
+                Storage::disk('public')->delete($category->image);
+            }
+            
+            $imagePath = $request->file('image')->store($directory, 'public');
             $validated['image'] = $imagePath;
+        }
+        
+        // Remove remove_image from validated data before updating
+        if (array_key_exists('remove_image', $validated)) {
+            unset($validated['remove_image']);
         }
         
         $this->categoryRepository->update($category, $validated);
@@ -145,7 +200,7 @@ class CategoryController extends Controller
         // Log category update to audit log
         $this->auditLogService->logUpdated($category, $originalValues, ['module' => 'categories']);
         
-        return redirect()->route('store.settings', ['tab' => 'categories'])
+        return redirect()->route('admin.settings', ['tab' => 'categories'])
             ->with('success', 'Category updated successfully');
     }
 
@@ -163,13 +218,13 @@ class CategoryController extends Controller
         // Check if category has children
         $children = $this->categoryRepository->getChildCategories($id);
         if ($children->isNotEmpty()) {
-            return redirect()->route('store.settings', ['tab' => 'categories'])
+            return redirect()->route('admin.settings', ['tab' => 'categories'])
                 ->with('error', 'Cannot delete category with sub-categories. Please delete sub-categories first.');
         }
         
         // Check if category has products
         if ($category->products->isNotEmpty()) {
-            return redirect()->route('store.settings', ['tab' => 'categories'])
+            return redirect()->route('admin.settings', ['tab' => 'categories'])
                 ->with('error', 'Cannot delete category with associated products. Please remove the products first or change their category.');
         }
         
@@ -178,7 +233,7 @@ class CategoryController extends Controller
         
         $this->categoryRepository->delete($category);
         
-        return redirect()->route('store.settings', ['tab' => 'categories'])
+        return redirect()->route('admin.settings', ['tab' => 'categories'])
             ->with('success', 'Category deleted successfully');
     }
 } 

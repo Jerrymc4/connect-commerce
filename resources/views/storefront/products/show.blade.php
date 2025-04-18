@@ -11,7 +11,7 @@
                 <div class="aspect-w-1 aspect-h-1 w-full">
                     <div class="relative h-96 w-full overflow-hidden rounded-lg bg-gray-100">
                         @if($product->images->isNotEmpty())
-                            <img src="{{ $product->images->first()->url }}" alt="{{ $product->name }}" class="h-full w-full object-cover object-center">
+                            <img src="{{ tenant_asset($product->images->first()->url) }}" alt="{{ $product->name }}" class="h-full w-full object-cover object-center">
                         @else
                             <div class="h-full w-full flex items-center justify-center">
                                 <span class="text-muted">No image available</span>
@@ -24,7 +24,7 @@
                         @foreach($product->images as $image)
                             <div class="aspect-w-1 aspect-h-1 w-full">
                                 <div class="relative h-24 w-full overflow-hidden rounded-lg bg-gray-100">
-                                    <img src="{{ $image->url }}" alt="{{ $product->name }}" class="h-full w-full object-cover object-center">
+                                    <img src="{{ tenant_asset($image->url) }}" alt="{{ $product->name }}" class="h-full w-full object-cover object-center">
                                 </div>
                             </div>
                         @endforeach
@@ -392,7 +392,7 @@
                 <div class="group relative">
                     <div class="w-full min-h-80 bg-gray-100 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75">
                         @if($relatedProduct->images->isNotEmpty())
-                            <img src="{{ $relatedProduct->images->first()->url }}" alt="{{ $relatedProduct->name }}" class="w-full h-full object-center object-cover">
+                            <img src="{{ tenant_asset($relatedProduct->images->first()->url) }}" alt="{{ $relatedProduct->name }}" class="w-full h-full object-center object-cover">
                         @else
                             <div class="h-full w-full flex items-center justify-center">
                                 <span class="text-muted">No image available</span>
@@ -425,7 +425,7 @@
                 <div class="group relative">
                     <div class="w-full min-h-80 bg-gray-100 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75">
                         @if($viewedProduct->images->isNotEmpty())
-                            <img src="{{ $viewedProduct->images->first()->url }}" alt="{{ $viewedProduct->name }}" class="w-full h-full object-center object-cover">
+                            <img src="{{ tenant_asset($viewedProduct->images->first()->url) }}" alt="{{ $viewedProduct->name }}" class="w-full h-full object-center object-cover">
                         @else
                             <div class="h-full w-full flex items-center justify-center">
                                 <span class="text-muted">No image available</span>
@@ -458,7 +458,7 @@
                 <div class="group relative">
                     <div class="w-full min-h-80 bg-gray-100 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75">
                         @if($alsoViewedProduct->images->isNotEmpty())
-                            <img src="{{ $alsoViewedProduct->images->first()->url }}" alt="{{ $alsoViewedProduct->name }}" class="w-full h-full object-center object-cover">
+                            <img src="{{ tenant_asset($alsoViewedProduct->images->first()->url) }}" alt="{{ $alsoViewedProduct->name }}" class="w-full h-full object-center object-cover">
                         @else
                             <div class="h-full w-full flex items-center justify-center">
                                 <span class="text-muted">No image available</span>

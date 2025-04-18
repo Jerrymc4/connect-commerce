@@ -214,7 +214,7 @@
                                 <a href="{{ route('storefront.products.show', $product->slug) }}" class="block">
                                     <div class="aspect-w-1 aspect-h-1 bg-gray-100 overflow-hidden">
                                         <img 
-                                            src="{{ $product->image ?? 'https://via.placeholder.com/300x300?text=' . urlencode($product->name) }}" 
+                                            src="{{ $product->image ? tenant_asset($product->image) : 'https://via.placeholder.com/300x300?text=' . urlencode($product->name) }}" 
                                             alt="{{ $product->name }}"
                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                             loading="lazy"

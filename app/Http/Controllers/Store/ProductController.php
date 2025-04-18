@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Services\AuditLogService;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -64,7 +65,11 @@ class ProductController extends Controller
         ]);
         
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
+            // Ensure product directory exists
+            $directory = 'products';
+            Storage::disk('public')->makeDirectory($directory);
+            
+            $imagePath = $request->file('image')->store($directory, 'public');
             $validated['image'] = $imagePath;
         }
 
@@ -136,7 +141,11 @@ class ProductController extends Controller
         ]);
         
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
+            // Ensure product directory exists
+            $directory = 'products';
+            Storage::disk('public')->makeDirectory($directory);
+            
+            $imagePath = $request->file('image')->store($directory, 'public');
             $validated['image'] = $imagePath;
         }
 

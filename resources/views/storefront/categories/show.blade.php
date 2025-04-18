@@ -3,7 +3,7 @@
                                     <a href="{{ route('storefront.products.show', $product->slug) }}" class="block relative">
                                         <div class="h-52 bg-gray-100 relative overflow-hidden">
                                             @if($product->image)
-                                                <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                                                <img src="{{ tenant_asset($product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
                                             @else
                                                 <div class="absolute inset-0 flex items-center justify-center">
                                                     <span class="text-gray-400"><i class="fas fa-box text-4xl"></i></span>

@@ -21,6 +21,7 @@ use App\Http\Controllers\Store\SettingController;
 use App\Http\Controllers\Store\DiscountController;
 use App\Http\Controllers\Store\CategoryController;
 use App\Http\Controllers\Store\AuditLogController;
+use App\Http\Controllers\Store\ProductImageController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Storefront\ProductController as StorefrontProductController;
 use App\Http\Controllers\Storefront\CategoryController as StorefrontCategoryController;
@@ -218,6 +219,14 @@ Route::middleware([
         Route::put('/products/{id}', [ProductController::class, 'update'])->name('admin.products.update');
         Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
         
+        // Product Images Management
+        Route::get('/products/{productId}/images', [ProductImageController::class, 'index'])->name('admin.products.images');
+        Route::post('/products/{productId}/images', [ProductImageController::class, 'store'])->name('admin.products.images.store');
+        Route::put('/products/{productId}/images/{imageId}', [ProductImageController::class, 'update'])->name('admin.products.images.update');
+        Route::delete('/products/{productId}/images/{imageId}', [ProductImageController::class, 'destroy'])->name('admin.products.images.destroy');
+        Route::post('/products/{productId}/images/{imageId}/main', [ProductImageController::class, 'setMain'])->name('admin.products.images.main');
+        Route::post('/products/{productId}/images/reorder', [ProductImageController::class, 'reorder'])->name('admin.products.images.reorder');
+        
         // Orders Management
         Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders');
         Route::get('/orders/{id}', [OrderController::class, 'show'])->name('admin.orders.show');
@@ -287,5 +296,22 @@ Route::middleware([
         Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
         Route::put('password', [PasswordController::class, 'update'])->name('tenant.password.update');
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('tenant.logout');
+    });
+
+    // Store routes (authenticated store owner routes)
+    Route::middleware(['auth', 'role:store_owner'])->prefix('store')->name('store.')->group(function () {
+        // Product images routes
+        Route::get('products/{product}/images', [App\Http\Controllers\Store\ProductImageController::class, 'index'])
+            ->name('products.images');
+        Route::post('products/{product}/images/upload', [App\Http\Controllers\Store\ProductImageController::class, 'upload'])
+            ->name('products.images.upload');
+        Route::put('products/{product}/images/{image}', [App\Http\Controllers\Store\ProductImageController::class, 'update'])
+            ->name('products.images.update');
+        Route::get('products/{product}/images/{image}/delete', [App\Http\Controllers\Store\ProductImageController::class, 'destroy'])
+            ->name('products.images.delete');
+        Route::get('products/{product}/images/{image}/main', [App\Http\Controllers\Store\ProductImageController::class, 'setMain'])
+            ->name('products.images.main');
+        Route::post('products/{product}/images/reorder', [App\Http\Controllers\Store\ProductImageController::class, 'reorder'])
+            ->name('products.images.reorder');
     });
 });

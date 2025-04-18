@@ -7,7 +7,7 @@
         <!-- Hero Section -->
         <div class="relative" style="background-color: {{ $themeSettings['banner_bg_color'] ?? '#4F46E5' }};">
             @if(($themeSettings['banner_layout'] ?? '') === 'overlay' && isset($themeSettings['banner_image']))
-            <div class="absolute inset-0 w-full h-full" style="background: url('{{ asset('storage/' . $themeSettings['banner_image']) }}') center/cover no-repeat; opacity: 0.7;"></div>
+            <div class="absolute inset-0 w-full h-full" style="background: url('{{ tenant_asset($themeSettings['banner_image']) }}') center/cover no-repeat; opacity: 0.7;"></div>
             @endif
             
             <!-- Set text alignment and height based on layout setting -->
@@ -78,7 +78,7 @@
                             <a href="{{ route('storefront.products.index', ['category' => $category->id]) }}" class="group">
                                 <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 h-full">
                                     <div class="h-40 bg-gray-200 overflow-hidden">
-                                        <img src="{{ $category->image ?? 'https://via.placeholder.com/300x150?text=' . urlencode($category->name) }}" 
+                                        <img src="{{ $category->image ? tenant_asset($category->image) : 'https://via.placeholder.com/300x150?text=' . urlencode($category->name) }}" 
                                              alt="{{ $category->name }}"
                                              class="w-full h-full object-cover group-hover:opacity-90 transition-opacity">
                                     </div>
@@ -107,7 +107,7 @@
                     <div class="group relative card shadow-color">
                         <div class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75">
                             @if($product->images && $product->images->isNotEmpty())
-                                <img src="{{ $product->images->first()->url }}" alt="{{ $product->name }}" class="w-full h-full object-center object-cover">
+                                <img src="{{ tenant_asset($product->images->first()->url) }}" alt="{{ $product->name }}" class="w-full h-full object-center object-cover">
                             @else
                                 <div class="w-full h-full flex items-center justify-center bg-gray-100">
                                     <span class="text-muted">No image</span>
@@ -145,7 +145,7 @@
                                 <div class="relative">
                                     <a href="{{ route('storefront.products.show', $product->slug) }}" class="block">
                                         <div class="h-48 bg-gray-100 overflow-hidden">
-                                            <img src="{{ $product->image ?? 'https://via.placeholder.com/300x300?text=' . urlencode($product->name) }}" 
+                                            <img src="{{ $product->image ? tenant_asset($product->image) : 'https://via.placeholder.com/300x300?text=' . urlencode($product->name) }}" 
                                                  alt="{{ $product->name }}"
                                                  class="w-full h-full object-cover hover:opacity-90 transition-opacity">
                                         </div>
