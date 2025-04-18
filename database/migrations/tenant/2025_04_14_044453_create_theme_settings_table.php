@@ -39,6 +39,10 @@ return new class extends Migration
             ['key' => 'link_color', 'value' => '#2563EB'],
             ['key' => 'card_bg_color', 'value' => '#FFFFFF'],
             ['key' => 'border_radius', 'value' => '6'],
+            ['key' => 'newsletter_button_color', 'value' => '#FFFFFF'],
+            ['key' => 'newsletter_button_text_color', 'value' => '#3B82F6'],
+            ['key' => 'enable_rating_system', 'value' => 'true'],
+            ['key' => 'enable_reviews', 'value' => 'true'],
         ];
         
         foreach ($defaultSettings as $setting) {

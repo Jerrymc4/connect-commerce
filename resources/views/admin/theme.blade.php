@@ -39,6 +39,9 @@
                     <a href="#colors" class="block px-3 py-2 rounded-md bg-blue-50 text-blue-700 font-medium">
                         <i class="fas fa-palette mr-2"></i> Colors
                     </a>
+                    <a href="#buttons" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-mouse-pointer mr-2"></i> Buttons
+                    </a>
                     <a href="#typography" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-font mr-2"></i> Typography
                     </a>
@@ -164,6 +167,80 @@
                                     <span>Text</span>
                                 </div>
                                 <span class="mt-1 text-xs text-gray-500">Background & Text</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Button Customization Section -->
+                <div id="buttons" class="bg-gray-50 rounded-lg border border-gray-200 p-6">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">Button Customization</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="button_bg_color" class="block text-sm font-medium text-gray-700 mb-1">Button Background Color</label>
+                            <div class="flex rounded-md shadow-sm">
+                                <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 w-10">
+                                    <input type="color" name="button_bg_color" id="button_bg_color" value="{{ $theme->button_bg_color ?? '#3B82F6' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                </span>
+                                <input type="text" name="button_bg_color_hex" id="button_bg_color_hex" value="{{ $theme->button_bg_color ?? '#3B82F6' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500">Background color for primary buttons</p>
+                        </div>
+                        
+                        <div>
+                            <label for="button_text_color" class="block text-sm font-medium text-gray-700 mb-1">Button Text Color</label>
+                            <div class="flex rounded-md shadow-sm">
+                                <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 w-10">
+                                    <input type="color" name="button_text_color" id="button_text_color" value="{{ $theme->button_text_color ?? '#FFFFFF' }}" class="h-6 w-6 rounded-full overflow-hidden cursor-pointer">
+                                </span>
+                                <input type="text" name="button_text_color_hex" id="button_text_color_hex" value="{{ $theme->button_text_color ?? '#FFFFFF' }}" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500">Text color for primary buttons</p>
+                        </div>
+
+                        <div>
+                            <label for="button_style" class="block text-sm font-medium text-gray-700 mb-1">Button Style</label>
+                            <select name="button_style" id="button_style" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                <option value="filled" {{ ($theme->button_style ?? 'filled') == 'filled' ? 'selected' : '' }}>Filled</option>
+                                <option value="outline" {{ ($theme->button_style ?? '') == 'outline' ? 'selected' : '' }}>Outline</option>
+                                <option value="flat" {{ ($theme->button_style ?? '') == 'flat' ? 'selected' : '' }}>Flat</option>
+                                <option value="3d" {{ ($theme->button_style ?? '') == '3d' ? 'selected' : '' }}>3D</option>
+                                <option value="gradient" {{ ($theme->button_style ?? '') == 'gradient' ? 'selected' : '' }}>Gradient</option>
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500">Visual style for all buttons</p>
+                        </div>
+                        
+                        <div>
+                            <label for="button_border_radius" class="block text-sm font-medium text-gray-700 mb-1">Button Border Radius</label>
+                            <div class="flex rounded-md shadow-sm">
+                                <input type="range" name="button_border_radius" id="button_border_radius" min="0" max="24" value="{{ $theme->button_border_radius ?? '6' }}" class="w-full">
+                                <span class="ml-2" id="button_border_radius_value">{{ $theme->button_border_radius ?? '6' }}px</span>
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500">Roundness of button corners</p>
+                        </div>
+                        
+                        <div>
+                            <label for="button_hover_effect" class="block text-sm font-medium text-gray-700 mb-1">Button Hover Effect</label>
+                            <select name="button_hover_effect" id="button_hover_effect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                <option value="darken" {{ ($theme->button_hover_effect ?? 'darken') == 'darken' ? 'selected' : '' }}>Darken</option>
+                                <option value="lighten" {{ ($theme->button_hover_effect ?? '') == 'lighten' ? 'selected' : '' }}>Lighten</option>
+                                <option value="zoom" {{ ($theme->button_hover_effect ?? '') == 'zoom' ? 'selected' : '' }}>Zoom</option>
+                                <option value="glow" {{ ($theme->button_hover_effect ?? '') == 'glow' ? 'selected' : '' }}>Glow</option>
+                                <option value="none" {{ ($theme->button_hover_effect ?? '') == 'none' ? 'selected' : '' }}>None</option>
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500">Effect when hovering over buttons</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <h3 class="text-sm font-medium text-gray-700 mb-3">Button Preview</h3>
+                        <div class="p-4 border border-gray-200 rounded-md bg-gray-50 flex flex-wrap gap-4">
+                            <div class="flex flex-col items-center">
+                                <button type="button" id="preview_button" class="px-4 py-2 border border-transparent rounded-md text-sm font-medium transition-all duration-300" style="background-color: {{ $theme->button_bg_color ?? '#3B82F6' }}; color: {{ $theme->button_text_color ?? '#FFFFFF' }}; border-radius: {{ $theme->button_border_radius ?? '6' }}px;">
+                                    Button Preview
+                                </button>
+                                <span class="mt-1 text-xs text-gray-500">Hover to see effects</span>
                             </div>
                         </div>
                     </div>
@@ -359,6 +436,53 @@
                     </div>
                 </div>
                 
+                <!-- Product Pages -->
+                <div id="product-pages" class="bg-gray-50 rounded-lg border border-gray-200 p-6">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">Product Pages</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="enable_rating_system" id="enable_rating_system" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" {{ ($theme->enable_rating_system ?? true) ? 'checked' : '' }}>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="enable_rating_system" class="font-medium text-gray-700">Enable Rating System</label>
+                                <p class="text-gray-500">Display star ratings on product pages</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="enable_reviews" id="enable_reviews" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" {{ ($theme->enable_reviews ?? true) ? 'checked' : '' }}>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="enable_reviews" class="font-medium text-gray-700">Enable Customer Reviews</label>
+                                <p class="text-gray-500">Allow customers to write and view product reviews</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="show_related_products" id="show_related_products" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" {{ ($theme->show_related_products ?? true) ? 'checked' : '' }}>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="show_related_products" class="font-medium text-gray-700">Show Related Products</label>
+                                <p class="text-gray-500">Display related products on product pages</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="show_product_breadcrumbs" id="show_product_breadcrumbs" class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" {{ ($theme->show_product_breadcrumbs ?? true) ? 'checked' : '' }}>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="show_product_breadcrumbs" class="font-medium text-gray-700">Show Breadcrumbs</label>
+                                <p class="text-gray-500">Display navigation breadcrumbs on product pages</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Custom CSS Section -->
                 <div id="custom-css" class="bg-gray-50 rounded-lg border border-gray-200 p-6">
                     <h2 class="text-lg font-medium text-gray-900 mb-4">Custom CSS</h2>
@@ -397,6 +521,8 @@
     document.querySelectorAll('input[type="color"]').forEach(colorInput => {
         const hexInput = document.getElementById(colorInput.id + '_hex');
         
+        if (!hexInput) return;
+        
         // Update hex input when color changes
         colorInput.addEventListener('input', () => {
             hexInput.value = colorInput.value;
@@ -412,5 +538,101 @@
     document.getElementById('show_announcements').addEventListener('change', function() {
         document.getElementById('announcement_text').disabled = !this.checked;
     });
+    
+    // Button preview updates
+    const previewButton = document.getElementById('preview_button');
+    const buttonBorderRadius = document.getElementById('button_border_radius');
+    const buttonBorderRadiusValue = document.getElementById('button_border_radius_value');
+    const buttonStyle = document.getElementById('button_style');
+    const buttonHoverEffect = document.getElementById('button_hover_effect');
+    
+    // Update border radius value display
+    buttonBorderRadius.addEventListener('input', () => {
+        buttonBorderRadiusValue.textContent = buttonBorderRadius.value + 'px';
+        updateButtonPreview();
+    });
+    
+    // Update button style
+    buttonStyle.addEventListener('change', updateButtonPreview);
+    buttonHoverEffect.addEventListener('change', updateButtonPreview);
+    
+    function updateButtonPreview() {
+        const bgColor = document.getElementById('button_bg_color').value;
+        const textColor = document.getElementById('button_text_color').value;
+        const borderRadius = buttonBorderRadius.value + 'px';
+        const style = buttonStyle.value;
+        const hoverEffect = buttonHoverEffect.value;
+        
+        // Set button properties
+        previewButton.style.borderRadius = borderRadius;
+        previewButton.style.color = textColor;
+        
+        // Apply button style
+        switch (style) {
+            case 'filled':
+                previewButton.style.backgroundColor = bgColor;
+                previewButton.style.borderColor = 'transparent';
+                previewButton.style.boxShadow = 'none';
+                break;
+            case 'outline':
+                previewButton.style.backgroundColor = 'transparent';
+                previewButton.style.borderColor = bgColor;
+                previewButton.style.border = `2px solid ${bgColor}`;
+                previewButton.style.color = bgColor;
+                previewButton.style.boxShadow = 'none';
+                break;
+            case 'flat':
+                previewButton.style.backgroundColor = bgColor;
+                previewButton.style.borderColor = 'transparent';
+                previewButton.style.boxShadow = 'none';
+                break;
+            case '3d':
+                previewButton.style.backgroundColor = bgColor;
+                previewButton.style.borderColor = 'transparent';
+                previewButton.style.boxShadow = `0 4px 0 ${adjustColor(bgColor, -20)}`;
+                previewButton.style.transform = 'translateY(0)';
+                break;
+            case 'gradient':
+                const lighterColor = adjustColor(bgColor, 20);
+                previewButton.style.background = `linear-gradient(to bottom, ${lighterColor}, ${bgColor})`;
+                previewButton.style.borderColor = 'transparent';
+                break;
+        }
+        
+        // Store hover effect as data attribute
+        previewButton.dataset.hoverEffect = hoverEffect;
+        
+        // Add hover class to show specific hover effects in CSS
+        previewButton.className = 'px-4 py-2 border rounded-md text-sm font-medium transition-all duration-300 hover-effect-' + hoverEffect;
+    }
+    
+    // Helper function to adjust a color's lightness
+    function adjustColor(color, amount) {
+        return '#' + color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
+    }
+    
+    // Add CSS for hover effects
+    const style = document.createElement('style');
+    style.textContent = `
+        .hover-effect-darken:hover {
+            filter: brightness(0.85);
+        }
+        .hover-effect-lighten:hover {
+            filter: brightness(1.15);
+        }
+        .hover-effect-zoom:hover {
+            transform: scale(1.05);
+        }
+        .hover-effect-glow:hover {
+            box-shadow: 0 0 8px var(--button-bg-color, #3B82F6);
+        }
+        .hover-effect-none:hover {
+            /* No effect */
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Initialize button preview
+    updateButtonPreview();
 </script>
 @endpush 

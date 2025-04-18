@@ -6,25 +6,59 @@
     <div class="min-h-screen">
         <!-- Hero Section -->
         <div class="relative" style="background-color: {{ $themeSettings['banner_bg_color'] ?? '#4F46E5' }};">
-            <div class="max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h1 class="text-4xl font-extrabold sm:text-5xl md:text-6xl" style="color: {{ $themeSettings['banner_text_color'] ?? '#FFFFFF' }};">
-                        {{ $themeSettings['banner_title'] ?? $storeName }}
-                    </h1>
-                    <p class="mt-3 max-w-md mx-auto text-base sm:text-lg md:mt-5 md:text-xl md:max-w-3xl" style="color: {{ $themeSettings['banner_text_color'] ?? '#FFFFFF' }};">
-                        {{ $themeSettings['banner_subtitle'] ?? 'Discover amazing products at great prices' }}
-                    </p>
-                    @if(isset($themeSettings['banner_cta_text']) && !empty($themeSettings['banner_cta_text']))
-                    <div class="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-                        <div class="rounded-md shadow">
-                            <a href="{{ $themeSettings['banner_cta_url'] ?? '/products' }}" 
-                               class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md md:py-4 md:text-lg md:px-10"
-                               style="background-color: {{ $themeSettings['banner_cta_bg_color'] ?? '#FFFFFF' }}; color: {{ $themeSettings['banner_cta_text_color'] ?? '#4F46E5' }};">
-                                {{ $themeSettings['banner_cta_text'] }}
-                            </a>
+            @if(($themeSettings['banner_layout'] ?? '') === 'overlay' && isset($themeSettings['banner_image']))
+            <div class="absolute inset-0 w-full h-full" style="background: url('{{ asset('storage/' . $themeSettings['banner_image']) }}') center/cover no-repeat; opacity: 0.7;"></div>
+            @endif
+            
+            <!-- Set text alignment and height based on layout setting -->
+            @php
+                $layout = $themeSettings['banner_layout'] ?? 'center';
+                $contentClass = 'max-w-md';
+                $alignment = 'text-center mx-auto';
+                
+                if ($layout === 'left-aligned') {
+                    $alignment = 'text-left';
+                } elseif ($layout === 'right-aligned') {
+                    $alignment = 'text-right ml-auto';
+                }
+                
+                // Set banner height based on setting
+                $heightClass = 'py-24';
+                $minHeightStyle = 'min-height: 20rem;'; // Default minimum height
+                
+                if (($themeSettings['banner_height'] ?? '') === 'small') {
+                    $heightClass = 'py-12';
+                    $minHeightStyle = 'min-height: 15rem;';
+                } elseif (($themeSettings['banner_height'] ?? '') === 'large') {
+                    $heightClass = 'py-32';
+                    $minHeightStyle = 'min-height: 30rem;';
+                } elseif (($themeSettings['banner_height'] ?? '') === 'full') {
+                    $heightClass = 'py-48';
+                    $minHeightStyle = 'min-height: 40rem;';
+                }
+            @endphp
+            
+            <div class="max-w-7xl mx-auto {{ $heightClass }} px-4 sm:px-6 lg:px-8 flex items-center" style="{{ $minHeightStyle }}">
+                <div class="flex {{ $layout === 'right-aligned' ? 'justify-end' : ($layout === 'left-aligned' ? 'justify-start' : 'justify-center') }}">
+                    <div class="{{ $contentClass }} {{ $alignment }} relative z-10">
+                        <h1 class="text-4xl font-extrabold sm:text-5xl md:text-6xl" style="color: {{ $themeSettings['banner_text_color'] ?? '#FFFFFF' }};">
+                            {{ $themeSettings['banner_title'] ?? $storeName }}
+                        </h1>
+                        <p class="mt-3 text-base sm:text-lg md:mt-5 md:text-xl" style="color: {{ $themeSettings['banner_text_color'] ?? '#FFFFFF' }};">
+                            {{ $themeSettings['banner_subtitle'] ?? 'Discover amazing products at great prices' }}
+                        </p>
+                        @if(isset($themeSettings['banner_cta_text']) && !empty($themeSettings['banner_cta_text']))
+                        <div class="mt-5 {{ $layout === 'center' ? 'flex justify-center' : '' }} md:mt-8">
+                            <div class="rounded-md shadow">
+                                <a href="{{ $themeSettings['banner_cta_url'] ?? '/products' }}" 
+                                class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md md:py-4 md:text-lg md:px-10"
+                                style="background-color: {{ $themeSettings['banner_cta_bg_color'] ?? '#FFFFFF' }}; color: {{ $themeSettings['banner_cta_text_color'] ?? '#4F46E5' }};">
+                                    {{ $themeSettings['banner_cta_text'] }}
+                                </a>
+                            </div>
                         </div>
+                        @endif
                     </div>
-                    @endif
                 </div>
             </div>
         </div>
@@ -174,19 +208,22 @@
         </div>
         
         <!-- Newsletter Section -->
-        <div class="bg-primary text-white py-12">
+        @if($themeSettings['show_newsletter'] ?? true)
+        <div class="py-12" style="background-color: {{ $themeSettings['newsletter_bg_color'] ?? $themeSettings['primary_color'] ?? '#3B82F6' }}; color: {{ $themeSettings['newsletter_text_color'] ?? '#FFFFFF' }}">
             <div class="container mx-auto px-4">
                 <div class="max-w-2xl mx-auto text-center">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-4">Subscribe to Our Newsletter</h2>
-                    <p class="mb-6">Stay updated with the latest products, promotions, and exclusive offers.</p>
+                    <h2 class="text-2xl md:text-3xl font-bold mb-4">{{ $themeSettings['newsletter_title'] ?? 'Subscribe to Our Newsletter' }}</h2>
+                    <p class="mb-6">{{ $themeSettings['newsletter_subtitle'] ?? 'Stay updated with the latest products, promotions, and exclusive offers.' }}</p>
                     <form class="flex flex-col sm:flex-row gap-2 justify-center">
-                        <input type="email" placeholder="Your email address" class="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-white text-gray-800 flex-grow max-w-md">
-                        <button type="submit" class="px-6 py-2 bg-white text-primary rounded-lg font-medium hover:bg-gray-100 transition-colors">
-                            Subscribe
+                        <input type="email" placeholder="{{ $themeSettings['newsletter_placeholder'] ?? 'Your email address' }}" class="px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-white text-gray-800 flex-grow max-w-md">
+                        <button type="submit" class="px-6 py-2 rounded-lg font-medium hover:opacity-90 transition-colors" 
+                            style="background-color: {{ $themeSettings['newsletter_button_color'] ?? '#FFFFFF' }}; color: {{ $themeSettings['newsletter_button_text_color'] ?? $themeSettings['newsletter_bg_color'] ?? '#3B82F6' }};">
+                            {{ $themeSettings['newsletter_button_text'] ?? 'Subscribe' }}
                         </button>
                     </form>
                 </div>
             </div>
         </div>
+        @endif
     </div>
 @endsection 
